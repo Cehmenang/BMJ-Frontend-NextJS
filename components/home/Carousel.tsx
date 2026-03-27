@@ -1,0 +1,262 @@
+"use client";
+
+import { useEffect, useRef, useState, useCallback } from "react";
+import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+
+const SLIDES = [
+  {
+    id: 1,
+    tag: "Selamat Datang",
+    title: "Bandar Musik",
+    titleEm: "Jakarta",
+    sub: "Selamat Berbelanja di Bandar Musik Jakarta — Surga alat musik terlengkap untuk para musisi.",
+    cta: "Jelajahi Koleksi",
+    href: "/",
+    bg: "/Banner.png",
+    glow: "radial-gradient(ellipse 80% 60% at 70% 40%, rgba(249,173,82,0.18) 0%, transparent 70%)",
+  },
+  {
+    id: 2,
+    tag: "Koleksi Terbaru 2025",
+    title: "Gitar & Bass",
+    titleEm: "Premium",
+    sub: "Temukan koleksi gitar elektrik dan akustik terbaru dari brand ternama dunia. Fender, Gibson, Taylor.",
+    cta: "Lihat Koleksi",
+    href: "/kategori/gitar-bass",
+    bg: "/DonnerBanner.webp",
+    glow: "radial-gradient(ellipse 70% 70% at 30% 50%, rgba(249,173,82,0.12) 0%, transparent 70%)",
+  },
+  {
+    id: 3,
+    tag: "Promo Spesial",
+    title: "Keyboard &",
+    titleEm: "Piano Digital",
+    sub: "Diskon hingga 30% untuk keyboard dan piano digital pilihan. Yamaha, Roland, Kawai — semua level musisi.",
+    cta: "Ambil Promo",
+    href: "/promo",
+    bg: "/PocketAmpBanner.webp",
+    glow: "radial-gradient(ellipse 90% 60% at 60% 40%, rgba(249,173,82,0.2) 0%, transparent 65%)",
+  },
+  {
+    id: 4,
+    tag: "Studio & Recording",
+    title: "Drum &",
+    titleEm: "Perkusi",
+    sub: "Lengkapi setup drum kamu dengan pilihan snare, cymbal, hardware, dan kit dari Pearl, Tama, Zildjian.",
+    cta: "Eksplorasi Drum",
+    href: "/kategori/drum",
+    bg: "",
+    bgClass: "from-[#0a0c0e] via-[#1c2026] to-[#252c2e]",
+    glow: "radial-gradient(ellipse 60% 80% at 80% 30%, rgba(249,173,82,0.1) 0%, transparent 70%)",
+  },
+];
+
+const DURATION = 5000;
+
+export default function Carousel() {
+  const [current, setCurrent] = useState(0);
+  const progressRef  = useRef<HTMLDivElement>(null);
+  const gsapRef      = useRef<any>(null);
+  const currentRef   = useRef(0);
+  const animatingRef = useRef(false);
+  const contentRefs  = useRef<(HTMLDivElement | null)[]>([]);
+  const slideRefs    = useRef<(HTMLDivElement | null)[]>([]);
+
+  const getEls = (idx: number) => {
+    const el = contentRefs.current[idx];
+    if (!el) return null;
+    return {
+      tag:   el.querySelector<HTMLElement>("[data-tag]"),
+      title: el.querySelector<HTMLElement>("[data-title]"),
+      sub:   el.querySelector<HTMLElement>("[data-sub]"),
+      cta:   el.querySelector<HTMLElement>("[data-cta]"),
+      bg:    slideRefs.current[idx]?.querySelector<HTMLElement>("[data-bg]"),
+      wrap:  slideRefs.current[idx],
+    };
+  };
+
+  const startProgress = useCallback((onComplete: () => void) => {
+    const gsap = gsapRef.current;
+    if (!gsap || !progressRef.current) return;
+    gsap.killTweensOf(progressRef.current);
+    gsap.fromTo(
+      progressRef.current,
+      { width: "0%" },
+      { width: "100%", duration: DURATION / 1000, ease: "none", onComplete }
+    );
+  }, []);
+
+  const goTo = useCallback((idx: number) => {
+    const gsap = gsapRef.current;
+    if (!gsap || animatingRef.current || idx === currentRef.current) return;
+
+    animatingRef.current = true;
+    const prev = currentRef.current;
+    currentRef.current = idx;
+    setCurrent(idx);
+
+    const from = getEls(prev);
+    const to   = getEls(idx);
+    if (!from || !to) { animatingRef.current = false; return; }
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        animatingRef.current = false;
+        if (from.wrap) from.wrap.style.zIndex = "0";
+        if (to.wrap)   to.wrap.style.zIndex   = "10";
+      },
+    });
+
+    tl.to(
+      [from.tag, from.title, from.sub, from.cta],
+      { opacity: 0, y: -10, duration: 0.28, ease: "power2.in", stagger: 0.03 },
+      0
+    );
+    tl.to(from.wrap, { opacity: 0, duration: 0.4, ease: "power1.inOut" }, 0.1);
+
+    if (to.wrap) to.wrap.style.zIndex = "9";
+    tl.fromTo(to.wrap, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.inOut" }, 0.1);
+
+    if (to.bg) {
+      gsap.killTweensOf(to.bg);
+      gsap.fromTo(to.bg, { scale: 1.07 }, { scale: 1, duration: 6, ease: "power1.out" });
+    }
+
+    tl.fromTo(to.tag,   { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.42, ease: "power2.out" }, 0.22);
+    tl.fromTo(to.title, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.52, ease: "power2.out" }, 0.32);
+    tl.fromTo(to.sub,   { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.42, ease: "power2.out" }, 0.43);
+    tl.fromTo(to.cta,   { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.38, ease: "power2.out" }, 0.52);
+
+    startProgress(() => goTo((currentRef.current + 1) % SLIDES.length));
+  }, [startProgress]);
+
+  useEffect(() => {
+    import("gsap").then((mod) => {
+      const gsap = mod.gsap ?? mod.default;
+      gsapRef.current = gsap;
+
+      const first = getEls(0);
+      if (first) {
+        if (first.bg) gsap.fromTo(first.bg, { scale: 1.07 }, { scale: 1, duration: 6, ease: "power1.out" });
+        gsap.fromTo(first.tag,   { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5,  ease: "power2.out", delay: 0.2  });
+        gsap.fromTo(first.title, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.6,  ease: "power2.out", delay: 0.35 });
+        gsap.fromTo(first.sub,   { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5,  ease: "power2.out", delay: 0.5  });
+        gsap.fromTo(first.cta,   { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out", delay: 0.65 });
+      }
+
+      startProgress(() => goTo(1));
+    });
+  }, [goTo, startProgress]);
+
+  const next = () => goTo((currentRef.current + 1) % SLIDES.length);
+  const prev = () => goTo((currentRef.current - 1 + SLIDES.length) % SLIDES.length);
+
+  return (
+    <section className="relative w-full h-screen overflow-hidden">
+      {/* Progress bar */}
+      <div
+        ref={progressRef}
+        className="absolute top-0 left-0 h-0.5 bg-second z-20 opacity-70"
+        style={{ width: "0%" }}
+      />
+
+      {/* Slides */}
+      {SLIDES.map((slide, i) => (
+        <div
+          key={slide.id}
+          data-slide
+          ref={(el) => { slideRefs.current[i] = el; }}
+          className="absolute inset-0 flex items-center"
+          style={{ opacity: i === 0 ? 1 : 0, zIndex: i === 0 ? 10 : 0 }}
+        >
+          {/* BG */}
+          <div
+            data-bg
+            className={`absolute inset-0 bg-gradient-to-br ${slide.bgClass ?? ""}`}
+            style={{ backgroundImage: slide.glow }}
+          >
+            {slide.bg && (
+              <img
+                src={slide.bg}
+                loading="eager"
+                alt={slide.title}
+                className="absolute inset-0 w-full h-full object-cover object-center"
+              />
+            )}
+          </div>
+
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[rgba(10,10,5,0.97)] via-[rgba(10,10,5,0.92)] via-[50%] to-[rgba(10,10,5,0.45)]" />
+
+          {/* Content */}
+          <div
+            ref={(el) => { contentRefs.current[i] = el; }}
+            className="relative z-10 left-[120px] top-[40px] max-w-3xl"
+          >
+            <div
+              data-tag
+              className="inline-block text-[10px] font-semibold tracking-[0.18em] uppercase text-second border border-second/40 px-3.5 py-1.5 rounded-full mb-5 bg-second/8"
+              style={{ opacity: 0 }}
+            >
+              {slide.tag}
+            </div>
+            <h1
+              data-title
+              className="font-poppins text-[clamp(44px,6vw,80px)] font-bold tracking-tighter text-primary leading-18"
+              style={{ opacity: 0 }}
+            >
+              <span>{slide.title}</span>
+              <br />
+              <em className="text-second italic font-play">{slide.titleEm}</em>
+            </h1>
+            <p
+              data-sub
+              className="text-[15px] font-light text-primary/72 leading-[1.65] max-w-xl mb-8 mt-5"
+              style={{ opacity: 0 }}
+            >
+              {slide.sub}
+            </p>
+            <a
+              data-cta
+              href={slide.href}
+              className="inline-flex items-center gap-2.5 text-[13px] font-medium tracking-[0.04em] text-third bg-second px-6 py-3 rounded-lg transition-all duration-200 hover:bg-[#fbbe74] hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(249,173,82,0.45)]"
+              style={{ opacity: 0 }}
+            >
+              {slide.cta}
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </div>
+        </div>
+      ))}
+
+      {/* Dots */}
+      <div className="absolute bottom-9 left-1/2 -translate-x-1/2 flex gap-2.5 z-20">
+        {SLIDES.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => goTo(i)}
+            className={`h-[3px] rounded-sm transition-all duration-300 ${
+              i === current ? "w-11 bg-second" : "w-7 bg-white/30"
+            }`}
+          />
+        ))}
+      </div>
+
+      {/* Arrows */}
+      <div className="absolute top-1/2 -translate-y-1/2 w-full flex justify-between px-6 z-20 pointer-events-none">
+        {[
+          { fn: prev, Icon: ChevronLeft },
+          { fn: next, Icon: ChevronRight },
+        ].map(({ fn, Icon }, i) => (
+          <button
+            key={i}
+            onClick={fn}
+            className="w-11 h-11 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center pointer-events-auto transition-colors duration-200 hover:bg-second/25 hover:border-second/50"
+          >
+            <Icon className="w-[18px] h-[18px]" />
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
