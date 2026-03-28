@@ -194,7 +194,7 @@ function BrandCard({ brand }: { brand: {name: string, image: string, description
         alt={brand.name}
         className="w-full h-12 object-contain grayscale opacity-55 transition-all duration-220 group-hover:grayscale-0 group-hover:opacity-100"
         loading="lazy"
-        placeholder="blur"
+        // placeholder="blur"
       />
     </a>
   );
