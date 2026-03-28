@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { liveSearching } from "@/action/search";
+import CartSidebar from "./CartSideBar";
 
 const NAV_LINKS = [
   { label: "Beranda", href: "/" },
@@ -65,6 +66,7 @@ export default function MainNav() {
   const [isSearching, setIsSearching] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const [cartOpen, setCartOpen] = useState(false)
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
@@ -168,7 +170,7 @@ export default function MainNav() {
             </button>
 
             <div className="relative">
-              <button className={`w-[36px] h-[36px] md:w-[38px] md:h-[38px] rounded-lg flex items-center justify-center border transition-colors duration-200 ${iconBtnBase}`} title="Keranjang">
+              <button className={`w-[36px] h-[36px] md:w-[38px] md:h-[38px] rounded-lg flex items-center justify-center border transition-colors duration-200 ${iconBtnBase}`} title="Keranjang" onClick={() => setCartOpen(true)}>
                 <svg className="w-[16px] h-[16px] md:w-[17px] md:h-[17px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
                   <line x1="3" y1="6" x2="21" y2="6" />
@@ -225,6 +227,7 @@ export default function MainNav() {
             </button>
           </div>
         </div>
+        <CartSidebar open={cartOpen} onClose={() => setCartOpen(false)} />
       </nav>
 
       {/* Mobile backdrop */}
