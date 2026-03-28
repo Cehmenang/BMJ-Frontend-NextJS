@@ -189,10 +189,12 @@ function BrandCard({ brand }: { brand: {name: string, image: string, description
       <Image
         width={300}
         height={300}
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${brand.image}`}
         alt={brand.name}
         className="w-full h-12 object-contain grayscale opacity-55 transition-all duration-220 group-hover:grayscale-0 group-hover:opacity-100"
         loading="lazy"
+        placeholder="blur"
       />
     </a>
   );

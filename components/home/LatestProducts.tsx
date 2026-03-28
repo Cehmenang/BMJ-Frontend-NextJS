@@ -41,15 +41,20 @@ function ProductCard({ product }: { product: Product | any }) {
     <div className="flex flex-shrink-0 w-[260px] group flex-col gap-y-4">
       <div className="md:w-[100%] transition group relative overflow-hidden rounded-2xl border-1 border-slate-200 hover:border-slate-300 hover:bg-gray-200 transition">
         <Image width={500} height={500} alt={product.name}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0]}`}
           className={`translate-y-0 opacity-100 ${product.images.length > 1 && "group-hover:translate-y-[280px] group-hover:opacity-0"} transition duration-700`}
+          loading="lazy"
+          placeholder="blur"
         />
         <Image width={500} height={500} alt={product.name}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           src={
             product.images.length > 1
               ? `${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[1]}`
               : `${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0]}`
-          } loading="eager" 
+          } loading="lazy" 
+          placeholder="blur"
           className={`translate-y-[-280px] opacity-0 ${product.images.length > 1 && "group-hover:translate-y-0 group-hover:opacity-100"} transition duration-700 absolute top-0`}
         />
 
