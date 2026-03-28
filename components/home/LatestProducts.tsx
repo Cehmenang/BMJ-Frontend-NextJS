@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { Navigation, Eye, ShoppingCart, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import axios from "axios";
+import Image from "next/image";
+import { getLatestProducts } from "@/action/product";
 
 export type Product = {
   id: string;
@@ -38,11 +40,11 @@ function ProductCard({ product }: { product: Product | any }) {
   return (
     <div className="flex flex-shrink-0 w-[260px] group flex-col gap-y-4">
       <div className="md:w-[100%] transition group relative overflow-hidden rounded-2xl border-1 border-slate-200 hover:border-slate-300 hover:bg-gray-200 transition">
-        <img
+        <Image width={500} height={500} alt={product.name}
           src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0]}`}
           className={`translate-y-0 opacity-100 ${product.images.length > 1 && "group-hover:translate-y-[280px] group-hover:opacity-0"} transition duration-700`}
         />
-        <img
+        <Image width={500} height={500} alt={product.name}
           src={
             product.images.length > 1
               ? `${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[1]}`
@@ -135,13 +137,11 @@ function ProductCard({ product }: { product: Product | any }) {
 export default function LatestProducts() {
   const [products, setProducts] = useState<any>([]);
 
-  async function getLatestProducts(setProducts: React.SetStateAction<any>) {
-    const { data } = await axios.get("/api/products/latest");
-    return setProducts(data);
-  }
-
   useEffect(() => {
-    getLatestProducts(setProducts);
+    (async function(){
+      const produk = await getLatestProducts();
+      setProducts(produk)
+    })()
   }, []);
 
   const scrollRef = useRef<HTMLDivElement>(null);

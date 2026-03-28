@@ -3,6 +3,9 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import axios from "axios";
+import Image from "next/image";
+import axiosClient from "@/config/axios";
+import { getBrands } from "@/action/brand";
 
 export type Brand = {
   id: string;
@@ -84,8 +87,8 @@ export default function BrandShowcase() {
 
   useEffect(() => {
     (async () => {
-      const response = await axios.get("/api/brands");
-      setBrands(response.data.brands);
+      const data = await getBrands();
+      setBrands(data);
     })();
   }, []);
 
@@ -112,46 +115,67 @@ export default function BrandShowcase() {
       </div>
 
       {/* Grid + arrows */}
-      <div className="relative overflow-hidden">
-        <button
-          onClick={prev}
-          disabled={page === 0}
-          className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white border border-third/15 text-third flex items-center justify-center transition-colors duration-150 hover:bg-bg-site disabled:opacity-25 disabled:cursor-default"
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
+<div className="relative overflow-hidden">
+  <button
+    onClick={prev}
+    disabled={page === 0 || brands.length === 0}
+    className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white border border-third/15 text-third flex items-center justify-center transition-colors duration-150 hover:bg-bg-site disabled:opacity-25 disabled:cursor-default"
+  >
+    <ChevronLeft className="w-4 h-4" />
+  </button>
 
-        <div className="px-14 overflow-hidden">
+  <div className="px-14 overflow-hidden">
+    {/* Skeleton */}
+    {brands.length === 0 ? (
+      <div className="grid grid-cols-12 gap-3">
+        {[...Array(36)].map((_, i) => (
           <div
-            className={`grid grid-cols-12 gap-3 transition-all duration-[420ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${animClass}`}
-          >
-            {visibleBrands.map((brand, i: number) => (
-              <BrandCard key={`${page}-${i}`} brand={brand} />
-            ))}
-          </div>
-        </div>
-
-        <button
-          onClick={next}
-          disabled={page === totalPages - 1}
-          className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white border border-third/15 text-third flex items-center justify-center transition-colors duration-150 hover:bg-bg-site disabled:opacity-25 disabled:cursor-default"
-        >
-          <ChevronRight className="w-4 h-4" />
-        </button>
-      </div>
-
-      {/* Dots */}
-      <div className="flex justify-center gap-2 mt-16">
-        {Array.from({ length: totalPages }, (_, i) => (
-          <button
             key={i}
-            onClick={() => goTo(i, i > page ? "left" : "right")}
-            className={`h-[3px] rounded-sm transition-all duration-300 border-none ${
-              i === page ? "w-9 bg-second" : "w-6 bg-third/20"
-            }`}
-          />
+            className="aspect-square rounded-xl border border-third/8 flex items-center justify-center overflow-hidden"
+          >
+            <div className="w-full h-full bg-gradient-to-br from-third/6 to-third/10 animate-pulse" />
+          </div>
         ))}
       </div>
+    ) : (
+      <div
+        className={`grid grid-cols-12 gap-3 transition-all duration-[420ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${animClass}`}
+      >
+        {visibleBrands.map((brand, i: number) => (
+          <BrandCard key={`${page}-${i}`} brand={brand} />
+        ))}
+      </div>
+    )}
+  </div>
+
+  <button
+    onClick={next}
+    disabled={page === totalPages - 1 || brands.length === 0}
+    className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white border border-third/15 text-third flex items-center justify-center transition-colors duration-150 hover:bg-bg-site disabled:opacity-25 disabled:cursor-default"
+  >
+    <ChevronRight className="w-4 h-4" />
+  </button>
+</div>
+
+{/* Dots — skeleton juga */}
+<div className="flex justify-center gap-2 mt-16">
+  {brands.length === 0 ? (
+    [...Array(3)].map((_, i) => (
+      <div key={i} className={`h-[3px] rounded-sm bg-third/10 animate-pulse ${i === 0 ? "w-9" : "w-6"}`} />
+    ))
+  ) : (
+    Array.from({ length: totalPages }, (_, i) => (
+      <button
+        key={i}
+        onClick={() => goTo(i, i > page ? "left" : "right")}
+        className={`h-[3px] rounded-sm transition-all duration-300 border-none ${
+          i === page ? "w-9 bg-second" : "w-6 bg-third/20"
+        }`}
+      />
+    ))
+  )}
+</div>
+
     </section>
   );
 }
@@ -162,7 +186,9 @@ function BrandCard({ brand }: { brand: {name: string, image: string, description
       href={`/brand/${brand.name}`}
       className="aspect-square rounded-xl border border-third/8 flex flex-col items-center justify-center gap-1 px-1 py-2 cursor-pointer group transition-all duration-200 hover:border-third/20 hover:-translate-y-0.5 hover:shadow-[0_4px_16px_rgba(62,63,32,0.08)]"
     >
-      <img
+      <Image
+        width={300}
+        height={300}
         src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${brand.image}`}
         alt={brand.name}
         className="w-full h-12 object-contain grayscale opacity-55 transition-all duration-220 group-hover:grayscale-0 group-hover:opacity-100"
