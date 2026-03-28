@@ -17,7 +17,9 @@ export default function RootLayout({
       <head>
           <link rel="dns-prefetch" href="https://server.bandarmusikjakarta.com" />
           <link rel="preconnect" href="https://server.bandarmusikjakarta.com" crossOrigin={'anonymous'} />
+          <script defer src="https://analytics.bandarmusikjakarta.com/script.js" data-website-id="9b499a3d-a083-4aa8-8dbd-1a894483150c"></script>
       </head>
+
 
       <body className={"font-poppins antialiased"}>
         <MainNav/>
