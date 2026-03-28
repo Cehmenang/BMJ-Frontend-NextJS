@@ -14,6 +14,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+          <link rel="dns-prefetch" href="https://server.bandarmusikjakarta.com" />
+          <link rel="preconnect" href="https://server.bandarmusikjakarta.com" crossOrigin={'anonymous'} />
+      </head>
+
       <body className={"font-poppins antialiased"}>
         <MainNav/>
         <div className="wrap">
