@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { createPortal } from "react-dom";
 
 type CartItem = {
   id: string;
@@ -35,6 +36,11 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
   const [items, setItems] = useState<CartItem[]>(DUMMY_CART);
   const [isLoading, setIsLoading] = useState(false);
   const backdropRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Lock body scroll
   useEffect(() => {
@@ -67,7 +73,8 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  return (
+  if (!mounted) return null;
+  return createPortal(
     <>
       {/* Backdrop */}
       <div
@@ -240,6 +247,6 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
           </div>
         )}
       </div>
-    </>
+    </>, document.body
   );
 }

@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { liveSearching } from "@/action/search";
 import CartSidebar from "./CartSideBar";
+import { useRouter } from "next/navigation";
+import { logOut } from "@/action/user";
 
 const NAV_LINKS = [
   { label: "Beranda", href: "/" },
@@ -54,7 +56,7 @@ type SearchResult = {
   categories: { id: number; title: string; slug: string }[];
 } | null;
 
-export default function MainNav() {
+export default function MainNav({ token }: { token: string | null }) {
   const [navState, setNavState] = useState<NavState>("at-top");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -67,6 +69,7 @@ export default function MainNav() {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const [cartOpen, setCartOpen] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
@@ -185,9 +188,9 @@ export default function MainNav() {
             </div>
 
             <div className="hidden md:flex items-center gap-2">
-              {!isLoggedIn ? (
+              {!token ? (
                 <button
-                  onClick={() => setIsLoggedIn(true)}
+                  onClick={() => router.push('/login')}
                   className="font-poppins text-[12.5px] font-medium px-[18px] py-2 rounded-lg bg-second text-third border-none cursor-pointer tracking-[0.02em] whitespace-nowrap transition-all duration-200 hover:bg-[#fbbe74] hover:-translate-y-px hover:shadow-[0_4px_16px_rgba(249,173,82,0.4)]"
                 >
                   Masuk
@@ -199,7 +202,10 @@ export default function MainNav() {
                     <span className={`text-[12px] font-medium ${atTop ? "text-third" : "text-primary"}`}>Andi</span>
                   </div>
                   <button
-                    onClick={() => setIsLoggedIn(false)}
+                    onClick={async() =>{ 
+                      const result = await logOut()
+                      console.log(result)
+                    }}
                     className={`font-poppins text-[12.5px] font-medium px-[18px] py-2 rounded-lg cursor-pointer tracking-[0.02em] whitespace-nowrap transition-all duration-200 bg-transparent border ${atTop ? "text-third/75 border-third/25 hover:text-third hover:bg-third/6" : "text-primary/80 border-primary/22 hover:text-primary hover:border-primary/50 hover:bg-white/6"}`}
                   >
                     Keluar
@@ -262,9 +268,9 @@ export default function MainNav() {
           ))}
         </div>
         <div className="px-4 py-5 border-t border-third/10 flex-shrink-0">
-          {!isLoggedIn ? (
+          {!token ? (
             <button
-              onClick={() => { setIsLoggedIn(true); setMobileMenuOpen(false); }}
+              onClick={() => { router.push('/login'); setMobileMenuOpen(false); }}
               className="w-full py-2.5 rounded-lg bg-second text-third text-[13px] font-poppins font-medium tracking-[0.02em] transition-all duration-200 hover:bg-[#fbbe74]"
             >
               Masuk
