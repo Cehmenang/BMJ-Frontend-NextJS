@@ -1,7 +1,5 @@
 'use server'
 
-import axiosClient from "@/config/axios"
-
 export async function getBrands(){
     try{
         const response = await fetch(`${process.env.SERVER_API}/api/brand`, { 

@@ -21,7 +21,7 @@ export default function BrandPage(){
     if(!products) return <h1>loading</h1>
 
     return (
-        <div className="brand-section">
+        <div className="brand-section mt-32">
             <ProductsLayout products={products} setPagination={setPagination}/>
         </div>
     )
