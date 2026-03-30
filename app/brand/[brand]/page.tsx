@@ -18,13 +18,10 @@ export default async function BrandPage({
 }) {
 
     const { brand } = await params
-    const page = Number(searchParams.page) || 1
-    const q = searchParams.q || ""
-    const sort = searchParams.sort || "latest"
-    const kategori = searchParams.kategori || ""
-    const stock = searchParams.stock || ""
+    const { page, q, sort, kategori, stock } = await searchParams
 
-    const result = await getProductByBrand(brand, page)
+    const pageValue = Number(page) || 1
+    const result = await getProductByBrand(brand, pageValue)
 
   return (
     <div className="mt-[60px] md:mt-[66px]">
@@ -44,10 +41,10 @@ export default async function BrandPage({
         totalPages={result.last_page}
         totalProducts={result.total}
         currentPage={result.current_page}
-        initialSort={sort}
-        initialKategori={kategori}
+        initialSort={sort!}
+        initialKategori={kategori!}
         initialBrand="Semua"
-        initialQuery={q}
+        initialQuery={q!}
         initialStock={stock === "1"}
         hideBrandFilter
       />}

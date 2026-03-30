@@ -158,7 +158,7 @@ export default function ProductsLayout({
     const current = new URLSearchParams(Array.from(searchParams.entries()));
     current.set("page", String(newPage));
     router.push(`${pathname}?${current.toString()}`);
-    router.refresh(); // ← tambah ini
+    router.refresh();
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
