@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import MainNav from "../components/navbar/MainNav";
 import LayoutNav from "@/components/navbar/LayoutNav";
+import Footer from "@/components/footer/MainFooter";
 
 export const metadata: Metadata = {
   title: "Bandar Musik Jakarta BMJ",
@@ -27,6 +28,7 @@ export default function RootLayout({
         <div className="wrap">
           {children}
         </div>
+        <Footer/>
       </body>
     </html>
   );
