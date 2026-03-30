@@ -1,5 +1,6 @@
 "use client";
 
+import { useTransition } from "react";
 import { useState, useEffect, useRef } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import {
@@ -20,10 +21,11 @@ const CATEGORIES = ["Semua", "Gitar & Bass", "Drum", "Keyboard", "Studio", "Akse
 const BRANDS = ["Semua", "Fender", "Gibson", "Yamaha", "Roland", "Pearl", "Kawai", "Taylor"];
 
 // ── Pagination ──
-function Pagination({ currentPage, totalPages, onPageChange }: {
+function Pagination({ currentPage, totalPages, onPageChange, isPending }: {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  isPending? : boolean
 }) {
   const getPages = (): (number | "...")[] => {
     if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -38,7 +40,7 @@ function Pagination({ currentPage, totalPages, onPageChange }: {
   };
 
   return (
-    <div className="flex items-center justify-center gap-1 mt-10">
+    <div className={`flex items-center justify-center gap-1 mt-10 ${isPending ? "opacity-50 pointer-events-none" : ""}`}>
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
@@ -108,6 +110,7 @@ export default function ProductsLayout({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const [isPending, startTransition] = useTransition();
   const [gridCols, setGridCols] = useState<2 | 3>(3);
   const [sortOpen, setSortOpen] = useState(false);
   const [sort, setSort] = useState(SORT_OPTIONS.find(o => o.value === initialSort) ?? SORT_OPTIONS[0]);
@@ -150,8 +153,10 @@ export default function ProductsLayout({
       if (val) current.set(key, val);
       else current.delete(key);
     });
-    router.push(`${pathname}?${current.toString()}`);
-    router.refresh()
+    startTransition(() => {
+        router.push(`${pathname}?${current.toString()}`);
+        router.refresh();
+    });
   };
 
   const handlePageChange = (newPage: number) => {
@@ -269,7 +274,6 @@ export default function ProductsLayout({
       </div>
 
       {/* Brand */}
-      {/* Brand — sembunyiin kalau hideBrandFilter */}
 {!hideBrandFilter && (
   <div className="border-b border-third/8">
     <button
@@ -374,12 +378,17 @@ export default function ProductsLayout({
           </button>
 
           {/* Product count */}
-          <p className="flex-1 text-center font-poppins text-[11.5px] text-third/35">
-            {totalProducts} produk
-            {searchParams.get("q") && (
-              <> · "<span className="text-third/55">{searchParams.get("q")}</span>"</>
-            )}
-          </p>
+<p className="flex-1 text-center font-poppins text-[11.5px] text-third/35 flex items-center justify-center gap-2">
+  {isPending && (
+    <svg className="w-3 h-3 animate-spin text-second flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+    </svg>
+  )}
+  {totalProducts} produk
+  {searchParams.get("q") && (
+    <> · "<span className="text-third/55">{searchParams.get("q")}</span>"</>
+  )}
+</p>
 
           {/* Search desktop */}
           <form onSubmit={handleSearch} className="hidden md:flex items-center gap-2 flex-shrink-0">
@@ -483,25 +492,55 @@ export default function ProductsLayout({
           </div>
 
           {/* Products */}
-          <div className="flex-1 min-w-0">
-            <div className={`grid gap-5 ${
-              gridCols === 2 ? "grid-cols-2" : "grid-cols-2 md:grid-cols-3"
-            }`}>
-              {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+<div className="flex-1 min-w-0 relative">
+
+  {/* Skeleton overlay saat pending */}
+  {isPending && (
+    <div className="absolute inset-0 z-10">
+      <div className={`grid gap-5 ${
+        gridCols === 2 ? "grid-cols-2" : "grid-cols-2 md:grid-cols-3"
+      }`}>
+        {[...Array(36)].map((_, i) => (
+          <div key={i} className="flex flex-col gap-2.5">
+            <div className="aspect-square rounded-xl bg-third/8 animate-pulse" />
+            <div className="space-y-2 px-0.5">
+              <div className="h-3 w-16 bg-third/8 rounded-full animate-pulse" />
+              <div className="h-3.5 w-full bg-third/8 rounded-full animate-pulse" />
+              <div className="h-3.5 w-3/4 bg-third/8 rounded-full animate-pulse" />
+              <div className="flex justify-between items-center mt-1">
+                <div className="h-4 w-24 bg-third/8 rounded-full animate-pulse" />
+                <div className="h-7 w-14 bg-third/8 rounded-lg animate-pulse" />
+              </div>
             </div>
-
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
-
-            <p className="text-center font-poppins text-[11px] text-third/25 mt-3">
-              Halaman {currentPage} dari {totalPages}
-            </p>
           </div>
+        ))}
+      </div>
+    </div>
+  )}
+
+  {/* Products — dim saat pending */}
+  <div className={`transition-opacity duration-200 ${isPending ? "opacity-30 pointer-events-none" : "opacity-100"}`}>
+    <div className={`grid gap-5 ${
+      gridCols === 2 ? "grid-cols-2" : "grid-cols-2 md:grid-cols-3"
+    }`}>
+      {products.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
+  </div>
+
+  <Pagination
+    currentPage={currentPage}
+    totalPages={totalPages}
+    onPageChange={handlePageChange}
+    isPending={isPending}
+  />
+
+  <p className="text-center font-poppins text-[11px] text-third/25 mt-3">
+    Halaman {currentPage} dari {totalPages}
+  </p>
+</div>
+
         </div>
       </div>
 
