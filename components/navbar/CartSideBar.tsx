@@ -93,7 +93,7 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-third/10 flex-shrink-0">
           <div className="flex items-center gap-3">
-            <h2 className="font-play text-[20px] font-bold text-third tracking-tight">
+            <h2 className="text-[20px] font-extrabold text-third tracking-tight">
               Keranjang
             </h2>
             {items.length > 0 && (

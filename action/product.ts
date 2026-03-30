@@ -18,3 +18,17 @@ export async function getLatestProducts(){
         if(response.ok) return await response.json().then(res=>res.produk)
     }catch(err){ console.log(err) }
 }
+
+export async function getProductByBrand(brandName: string, pagination: number){
+    try{
+        const response = await fetch(`${process.env.SERVER_API}/api/produk/brand/${brandName}?page=${pagination}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json', "Accept": "application/json" },
+            next: { revalidate: 300 }
+        })
+        const result= await response.json()
+        if(response.ok) {
+            return await result.produk.data
+        }
+    }catch(err){ console.log(err) }
+}
