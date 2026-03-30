@@ -21,6 +21,8 @@ export async function getLatestProducts(){
 
 export async function getProductByBrand(brandName: string, pagination: number){
     try{
+        console.log(brandName, "HASIL")
+        console.log(pagination, "HAIJIAWJRAIOJO")
         const response = await fetch(`${process.env.SERVER_API}/api/produk/brand/${brandName}?page=${pagination}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json', "Accept": "application/json" },
@@ -28,7 +30,7 @@ export async function getProductByBrand(brandName: string, pagination: number){
         })
         const result= await response.json()
         if(response.ok) {
-            return await result.produk.data
+            return await result.produk
         }
     }catch(err){ console.log(err) }
 }
