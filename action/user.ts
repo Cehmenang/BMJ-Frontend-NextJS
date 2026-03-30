@@ -9,13 +9,26 @@ export async function login(data: { username: string, password: string }){
         if(response.data){
              const cookieStore = await cookies()
                 cookieStore.set('access_token', response.data.api_token,{  
+                    httpOnly: true,
+                    maxAge: 3600,
+                    secure: false,
+                    sameSite: "lax"
+                })
+
+            const roleResult = await axiosClient.get('api/user/role', { headers: 
+                { Authorization: `Bearer ${response.data.api_token}`, Accept: "application/json" }
+            })
+        
+            cookieStore.set('role', roleResult.data.role, {
                 httpOnly: true,
                 maxAge: 3600,
                 secure: false,
                 sameSite: "lax"
             })
+
             return cookieStore.get('access_token')!.value
         }
+
     }catch(err){ return err }
 }
 
@@ -27,6 +40,7 @@ export async function logOut(){
         })
         if(response.data){ 
             cookieStore.delete('access_token')
+            cookieStore.delete('role')
             return response.data
          }
     }catch(err){ console.log(err) }

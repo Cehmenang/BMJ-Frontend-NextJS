@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 
-// ─── Marquee Strip ────────────────────────────────────────────────────────────
 const MarqueeItem = () => (
   <span className="inline-flex items-center gap-3 px-6 py-3 text-sm font-bold uppercase tracking-widest shrink-0 text-third">
     <svg
@@ -42,7 +41,6 @@ function MarqueeStrip() {
   );
 }
 
-// ─── Footer ───────────────────────────────────────────────────────────────────
 const companyLinks = [{ label: "Contact Us", href: "/contact" }];
 
 const shopLinks = [

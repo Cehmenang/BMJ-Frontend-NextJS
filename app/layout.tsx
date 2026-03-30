@@ -3,6 +3,7 @@ import "./globals.css";
 import MainNav from "../components/navbar/MainNav";
 import LayoutNav from "@/components/navbar/LayoutNav";
 import Footer from "@/components/footer/MainFooter";
+import AdminNav from "@/components/navbar/AdminNav";
 
 export const metadata: Metadata = {
   title: "Bandar Musik Jakarta BMJ",
@@ -25,6 +26,7 @@ export default function RootLayout({
 
       <body className={"font-poppins antialiased"}>
         <LayoutNav/>
+        <AdminNav/>
         <div className="wrap">
           {children}
         </div>
