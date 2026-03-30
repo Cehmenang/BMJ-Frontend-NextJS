@@ -1,7 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
-import { useState, useEffect, useRef } from "react";
+import { useTransition, useState, useEffect, useRef } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import {
   Navigation, ShoppingCart, InfoIcon,
@@ -20,12 +19,11 @@ const SORT_OPTIONS = [
 const CATEGORIES = ["Semua", "Gitar & Bass", "Drum", "Keyboard", "Studio", "Aksesori"];
 const BRANDS = ["Semua", "Fender", "Gibson", "Yamaha", "Roland", "Pearl", "Kawai", "Taylor"];
 
-// ── Pagination ──
 function Pagination({ currentPage, totalPages, onPageChange, isPending }: {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-  isPending? : boolean
+  isPending?: boolean;
 }) {
   const getPages = (): (number | "...")[] => {
     if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -40,7 +38,7 @@ function Pagination({ currentPage, totalPages, onPageChange, isPending }: {
   };
 
   return (
-    <div className={`flex items-center justify-center gap-1 mt-10 ${isPending ? "opacity-50 pointer-events-none" : ""}`}>
+    <div className={`flex items-center justify-center gap-1 mt-10 transition-opacity duration-200 ${isPending ? "opacity-40 pointer-events-none" : ""}`}>
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
@@ -80,7 +78,6 @@ function Pagination({ currentPage, totalPages, onPageChange, isPending }: {
   );
 }
 
-// ── Main ──
 type Props = {
   products: IProduct[];
   totalPages: number;
@@ -91,7 +88,7 @@ type Props = {
   initialBrand: string;
   initialQuery: string;
   initialStock: boolean;
-  hideBrandFilter?: boolean,
+  hideBrandFilter?: boolean;
 };
 
 export default function ProductsLayout({
@@ -104,13 +101,13 @@ export default function ProductsLayout({
   initialBrand,
   initialQuery,
   initialStock,
-  hideBrandFilter = false
+  hideBrandFilter = false,
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
   const [isPending, startTransition] = useTransition();
+
   const [gridCols, setGridCols] = useState<2 | 3>(3);
   const [sortOpen, setSortOpen] = useState(false);
   const [sort, setSort] = useState(SORT_OPTIONS.find(o => o.value === initialSort) ?? SORT_OPTIONS[0]);
@@ -124,7 +121,6 @@ export default function ProductsLayout({
   const [onlyInStock, setOnlyInStock] = useState(initialStock);
   const sortRef = useRef<HTMLDivElement>(null);
 
-  // Sync state saat URL berubah (back/forward)
   useEffect(() => {
     setSort(SORT_OPTIONS.find(o => o.value === (searchParams.get("sort") || "latest")) ?? SORT_OPTIONS[0]);
     setActiveCategory(searchParams.get("kategori") || "Semua");
@@ -146,7 +142,7 @@ export default function ProductsLayout({
     return () => { document.body.style.overflow = ""; };
   }, [filterOpen]);
 
-  // ── URL updater ──
+  // ── semua navigasi URL lewat sini, selalu pakai startTransition ──
   const updateURL = (params: Record<string, string>) => {
     const current = new URLSearchParams(Array.from(searchParams.entries()));
     Object.entries(params).forEach(([key, val]) => {
@@ -154,16 +150,14 @@ export default function ProductsLayout({
       else current.delete(key);
     });
     startTransition(() => {
-        router.push(`${pathname}?${current.toString()}`);
-        router.refresh();
+      router.push(`${pathname}?${current.toString()}`);
+      router.refresh();
     });
   };
 
+  // ← fix utama: handlePageChange sekarang pakai updateURL → startTransition
   const handlePageChange = (newPage: number) => {
-    const current = new URLSearchParams(Array.from(searchParams.entries()));
-    current.set("page", String(newPage));
-    router.push(`${pathname}?${current.toString()}`);
-    router.refresh();
+    updateURL({ page: String(newPage) });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -201,9 +195,6 @@ export default function ProductsLayout({
     onlyInStock,
   ].filter(Boolean).length;
 
-
-
-  // ── Filter sidebar ──
   const FilterSidebar = () => (
     <div>
       {activeFiltersCount > 0 && (
@@ -273,68 +264,42 @@ export default function ProductsLayout({
         </div>
       </div>
 
-      {/* Brand */}
-{!hideBrandFilter && (
-  <div className="border-b border-third/8">
-    <button
-      onClick={() => setBrandOpen(v => !v)}
-      className="w-full flex items-center justify-between py-3 font-poppins text-[11px] font-semibold tracking-[0.1em] uppercase text-third/55 hover:text-third transition-colors"
-    >
-      Brand
-      <ChevronDown className={`w-3.5 h-3.5 flex-shrink-0 transition-transform duration-200 ${brandOpen ? "rotate-180" : ""}`} />
-    </button>
-    <div className={`overflow-hidden transition-all duration-200 ${brandOpen ? "max-h-96 pb-3" : "max-h-0"}`}>
-      <div className="space-y-0.5">
-        {BRANDS.map(brand => (
+      {/* Brand — hanya tampil kalau hideBrandFilter = false */}
+      {!hideBrandFilter && (
+        <div className="border-b border-third/8">
           <button
-            key={brand}
-            onClick={() => setActiveBrand(brand)}
-            className={`w-full text-left font-poppins text-[12px] px-2 py-1.5 rounded-lg transition-colors ${
-              activeBrand === brand
-                ? "text-third font-semibold bg-third/6"
-                : "text-third/50 hover:text-third hover:bg-third/4"
-            }`}
+            onClick={() => setBrandOpen(v => !v)}
+            className="w-full flex items-center justify-between py-3 font-poppins text-[11px] font-semibold tracking-[0.1em] uppercase text-third/55 hover:text-third transition-colors"
           >
-            {brand}
+            Brand
+            <ChevronDown className={`w-3.5 h-3.5 flex-shrink-0 transition-transform duration-200 ${brandOpen ? "rotate-180" : ""}`} />
           </button>
-        ))}
-      </div>
-    </div>
-  </div>
-)}
-      <div className="border-b border-third/8">
-        <button
-          onClick={() => setBrandOpen(v => !v)}
-          className="w-full flex items-center justify-between py-3 font-poppins text-[11px] font-semibold tracking-[0.1em] uppercase text-third/55 hover:text-third transition-colors"
-        >
-          Brand
-          <ChevronDown className={`w-3.5 h-3.5 flex-shrink-0 transition-transform duration-200 ${brandOpen ? "rotate-180" : ""}`} />
-        </button>
-        <div className={`overflow-hidden transition-all duration-200 ${brandOpen ? "max-h-96 pb-3" : "max-h-0"}`}>
-          <div className="space-y-0.5">
-            {BRANDS.map(brand => (
-              <button
-                key={brand}
-                onClick={() => setActiveBrand(brand)}
-                className={`w-full text-left font-poppins text-[12px] px-2 py-1.5 rounded-lg transition-colors ${
-                  activeBrand === brand
-                    ? "text-third font-semibold bg-third/6"
-                    : "text-third/50 hover:text-third hover:bg-third/4"
-                }`}
-              >
-                {brand}
-              </button>
-            ))}
+          <div className={`overflow-hidden transition-all duration-200 ${brandOpen ? "max-h-96 pb-3" : "max-h-0"}`}>
+            <div className="space-y-0.5">
+              {BRANDS.map(brand => (
+                <button
+                  key={brand}
+                  onClick={() => setActiveBrand(brand)}
+                  className={`w-full text-left font-poppins text-[12px] px-2 py-1.5 rounded-lg transition-colors ${
+                    activeBrand === brand
+                      ? "text-third font-semibold bg-third/6"
+                      : "text-third/50 hover:text-third hover:bg-third/4"
+                  }`}
+                >
+                  {brand}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 
   return (
     <div className="min-h-screen bg-bg-site pt-[60px] md:pt-[66px]">
 
-      {/* ── Top bar ── */}
+      {/* Top bar */}
       <div className="sticky top-[60px] md:top-[66px] z-30 bg-bg-site/90 backdrop-blur-md border-b border-third/8">
         <div className="max-w-7xl mx-auto px-6 md:px-24 h-[50px] flex items-center gap-5">
 
@@ -377,18 +342,18 @@ export default function ProductsLayout({
             )}
           </button>
 
-          {/* Product count */}
-<p className="flex-1 text-center font-poppins text-[11.5px] text-third/35 flex items-center justify-center gap-2">
-  {isPending && (
-    <svg className="w-3 h-3 animate-spin text-second flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-    </svg>
-  )}
-  {totalProducts} produk
-  {searchParams.get("q") && (
-    <> · "<span className="text-third/55">{searchParams.get("q")}</span>"</>
-  )}
-</p>
+          {/* Product count + spinner */}
+          <p className="flex-1 text-center font-poppins text-[11.5px] text-third/35 flex items-center justify-center gap-2">
+            {isPending && (
+              <svg className="w-3 h-3 animate-spin text-second flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+              </svg>
+            )}
+            {totalProducts} produk
+            {searchParams.get("q") && (
+              <> · "<span className="text-third/55">{searchParams.get("q")}</span>"</>
+            )}
+          </p>
 
           {/* Search desktop */}
           <form onSubmit={handleSearch} className="hidden md:flex items-center gap-2 flex-shrink-0">
@@ -452,7 +417,7 @@ export default function ProductsLayout({
         </div>
       </div>
 
-      {/* ── Body ── */}
+      {/* Body */}
       <div className="max-w-7xl mx-auto px-6 md:px-24 py-8">
 
         {/* Mobile search */}
@@ -492,59 +457,54 @@ export default function ProductsLayout({
           </div>
 
           {/* Products */}
-<div className="flex-1 min-w-0 relative">
+          <div className="flex-1 min-w-0 relative">
 
-  {/* Skeleton overlay saat pending */}
-  {isPending && (
-    <div className="absolute inset-0 z-10">
-      <div className={`grid gap-5 ${
-        gridCols === 2 ? "grid-cols-2" : "grid-cols-2 md:grid-cols-3"
-      }`}>
-        {[...Array(36)].map((_, i) => (
-          <div key={i} className="flex flex-col gap-2.5">
-            <div className="aspect-square rounded-xl bg-third/8 animate-pulse" />
-            <div className="space-y-2 px-0.5">
-              <div className="h-3 w-16 bg-third/8 rounded-full animate-pulse" />
-              <div className="h-3.5 w-full bg-third/8 rounded-full animate-pulse" />
-              <div className="h-3.5 w-3/4 bg-third/8 rounded-full animate-pulse" />
-              <div className="flex justify-between items-center mt-1">
-                <div className="h-4 w-24 bg-third/8 rounded-full animate-pulse" />
-                <div className="h-7 w-14 bg-third/8 rounded-lg animate-pulse" />
+            {/* Skeleton overlay */}
+            {isPending && (
+              <div className="absolute inset-0 z-10">
+                <div className={`grid gap-5 ${gridCols === 2 ? "grid-cols-2" : "grid-cols-2 md:grid-cols-3"}`}>
+                  {[...Array(products.length || 36)].map((_, i) => (
+                    <div key={i} className="flex flex-col gap-2.5">
+                      <div className="aspect-square rounded-xl bg-third/8 animate-pulse" />
+                      <div className="space-y-2 px-0.5">
+                        <div className="h-2.5 w-14 bg-third/8 rounded-full animate-pulse" />
+                        <div className="h-3 w-full bg-third/8 rounded-full animate-pulse" />
+                        <div className="h-3 w-3/4 bg-third/8 rounded-full animate-pulse" />
+                        <div className="flex justify-between items-center mt-1">
+                          <div className="h-4 w-20 bg-third/8 rounded-full animate-pulse" />
+                          <div className="h-6 w-12 bg-third/8 rounded-lg animate-pulse" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Products — dim saat pending */}
+            <div className={`transition-opacity duration-200 ${isPending ? "opacity-25 pointer-events-none" : "opacity-100"}`}>
+              <div className={`grid gap-5 ${gridCols === 2 ? "grid-cols-2" : "grid-cols-2 md:grid-cols-3"}`}>
+                {products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
               </div>
             </div>
+
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              isPending={isPending}
+            />
+
+            <p className="text-center font-poppins text-[11px] text-third/25 mt-3">
+              Halaman {currentPage} dari {totalPages}
+            </p>
           </div>
-        ))}
-      </div>
-    </div>
-  )}
-
-  {/* Products — dim saat pending */}
-  <div className={`transition-opacity duration-200 ${isPending ? "opacity-30 pointer-events-none" : "opacity-100"}`}>
-    <div className={`grid gap-5 ${
-      gridCols === 2 ? "grid-cols-2" : "grid-cols-2 md:grid-cols-3"
-    }`}>
-      {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
-      ))}
-    </div>
-  </div>
-
-  <Pagination
-    currentPage={currentPage}
-    totalPages={totalPages}
-    onPageChange={handlePageChange}
-    isPending={isPending}
-  />
-
-  <p className="text-center font-poppins text-[11px] text-third/25 mt-3">
-    Halaman {currentPage} dari {totalPages}
-  </p>
-</div>
-
         </div>
       </div>
 
-      {/* ── Mobile filter drawer ── */}
+      {/* Mobile filter drawer */}
       <div className={`fixed inset-0 z-50 md:hidden transition-opacity duration-300 ${filterOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}>
         <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setFilterOpen(false)} />
         <div className={`absolute bottom-0 left-0 right-0 bg-bg-site rounded-t-2xl transition-transform duration-300 max-h-[85vh] flex flex-col ${filterOpen ? "translate-y-0" : "translate-y-full"}`}>
@@ -562,9 +522,7 @@ export default function ProductsLayout({
             </div>
             <div className="flex items-center gap-3">
               {activeFiltersCount > 0 && (
-                <button onClick={handleFilterReset} className="font-poppins text-[12px] text-second">
-                  Reset
-                </button>
+                <button onClick={handleFilterReset} className="font-poppins text-[12px] text-second">Reset</button>
               )}
               <button onClick={() => setFilterOpen(false)} className="w-7 h-7 rounded-lg bg-third/7 flex items-center justify-center text-third/55">
                 <X className="w-3.5 h-3.5" />
