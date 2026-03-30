@@ -151,10 +151,14 @@ export default function ProductsLayout({
       else current.delete(key);
     });
     router.push(`${pathname}?${current.toString()}`);
+    router.refresh()
   };
 
   const handlePageChange = (newPage: number) => {
-    updateURL({ page: String(newPage) });
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    current.set("page", String(newPage));
+    router.push(`${pathname}?${current.toString()}`);
+    router.refresh(); // ← tambah ini
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
