@@ -25,10 +25,10 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);
     try {
-        const token = await login(data) as string
+        const { token, role }= await login(data) as { token: string, role: string }
         if(token){
             router.refresh()
-            return router.push('/')
+            role == "ADMIN" ? router.push('/dashboard') : router.push('/')
         }
     } catch (e) {
       console.error(e);
