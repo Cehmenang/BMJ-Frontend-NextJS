@@ -64,3 +64,24 @@ export interface ApiResponse {
   success: boolean;
   produk: PaginationData;
 }
+
+export interface FormValues {
+  name: string;
+  description: string;
+  pricelist: string;
+  offlinePrice: string;
+  onlinePrice: string;
+  namaPromo: string;
+  promo: string;
+  brandId: string;
+  kategoriId: string;
+  stock: string;
+  url: string;
+  panjang: string;
+  lebar: string;
+  tinggi: string;
+  berat: string;
+  pajak: boolean;
+  kirim: boolean;
+  pasang: boolean;
+}

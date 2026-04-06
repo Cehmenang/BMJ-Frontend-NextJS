@@ -7,7 +7,7 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   const authRoutes = ['/login', '/register']
-  const protectedPaths = ['/dashboard', '/profile', '/settings']
+  const protectedPaths = ['/dashboard', '/profile', '/settings', '/upload']
   const adminPaths = ['/dashboard', '/upload']
 
   // 1. Jika user SUDAH LOGIN dan mencoba akses halaman login/register

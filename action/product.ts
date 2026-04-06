@@ -1,5 +1,6 @@
 "use server"
 
+import { FormValues } from "@/interface"
 import axios from "axios"
 
 export async function getProductByUrl(url: string){
@@ -30,5 +31,12 @@ export async function getProductByBrand(brandName: string, pagination: number){
         if(response.ok) {
             return await result.produk
         }
+    }catch(err){ console.log(err) }
+}
+
+export async function uploadProduct(formData: FormData){
+    try{
+        const response = await fetch(`${process.env.SERVER_API}/api/tambah/produk`, { method: 'POST', body: formData, headers: { 'Accept': 'application/json' } })
+        return await response.json()
     }catch(err){ console.log(err) }
 }
