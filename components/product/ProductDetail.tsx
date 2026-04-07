@@ -113,6 +113,8 @@ export default function ProductDetail({ product }: { product?: any }) {
   const [formattedPrice, setFormattedPrice] = useState("");
   const [lens, setLens]                     = useState<Lens>({ x: 0, y: 0, show: false });
 
+  const imageList = typeof product.images === 'string' ? JSON.parse(product.images) : product.images
+
   // refs
   const galleryRef = useRef<HTMLDivElement>(null);
   const mainImgRef = useRef<HTMLImageElement>(null);
@@ -178,7 +180,7 @@ export default function ProductDetail({ product }: { product?: any }) {
     <>
       {fsOpen && (
         <FullscreenViewer
-          images={product.images}
+          images={imageList}
           initialIndex={activeImg}
           onClose={() => setFsOpen(false)}
         />
@@ -210,7 +212,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                    
               {/* Thumbnails — outside main image, flex-start so they don't stretch */}
               <div className="flex gap-3">
-                {product.images.map((src: string, i: number) => (
+                {imageList.map((src: string, i: number) => (
                   <button
                     key={i}
                     onClick={() => switchImg(i)}
@@ -392,7 +394,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                     onClick={() => setVideoOpen(true)}
                   >
                     <img
-                      src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0]}`}
+                      src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${imageList[0]}`}
                       alt="Video thumbnail"
                       className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-200"
                     />

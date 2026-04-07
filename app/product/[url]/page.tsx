@@ -26,7 +26,7 @@ export default async function ProductPage({ params }: { params: { url: string } 
   return (
     <>
       <main className="pt-[66px]">
-        <ProductDetail product={product && product}/>
+        {product && <ProductDetail product={product}/>}
       </main>
     </>
   );
