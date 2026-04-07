@@ -51,7 +51,7 @@ const STATIC_TABS = [
 type NavState = "at-top" | "scrolled";
 
 type SearchResult = {
-  products: { id: number; name: string; slug: string; image: string; price: number }[];
+  products: { id: number; name: string; slug: string; images: string[]; price: number }[];
   brands: { id: number; name: string; slug: string; image: string }[];
   categories: { id: number; title: string; slug: string }[];
 } | null;
@@ -410,7 +410,8 @@ export default function MainNav({ token }: { token: string | null }) {
                           Produk · {searchResult.products.length}
                         </p>
                         <div className="space-y-0.5">
-                          {searchResult.products.slice(0, 4).map((product) => (
+                          {searchResult.products.slice(0, 4).map((product) => {
+                            return (
                             <Link
                               key={product.id}
                               href={`/produk/${product.slug}`}
@@ -418,14 +419,14 @@ export default function MainNav({ token }: { token: string | null }) {
                               className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-gray-50 transition-colors group"
                             >
                               <div className="w-8 h-8 rounded-md overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-100">
-                                <img src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.image}`} alt={product.name} className="w-full h-full object-cover" />
+                                <img src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0]}`} alt={product.name} className="w-full h-full object-cover" />
                               </div>
                               <span className="text-[13px] font-poppins text-gray-700 group-hover:text-gray-900 truncate flex-1">{product.name}</span>
                               <svg className="w-3 h-3 text-gray-300 group-hover:text-second flex-shrink-0 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
                               </svg>
                             </Link>
-                          ))}
+                          )})}
                         </div>
                       </div>
                     )}
