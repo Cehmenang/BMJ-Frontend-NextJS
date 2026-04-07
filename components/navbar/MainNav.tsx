@@ -6,6 +6,7 @@ import { liveSearching } from "@/action/search";
 import CartSidebar from "./CartSideBar";
 import { useRouter } from "next/navigation";
 import { logOut } from "@/action/user";
+import Image from "next/image";
 
 const NAV_LINKS = [
   { label: "Beranda", href: "/" },
@@ -419,7 +420,9 @@ export default function MainNav({ token }: { token: string | null }) {
                               className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-gray-50 transition-colors group"
                             >
                               <div className="w-8 h-8 rounded-md overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-100">
-                                <img src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0]}`} alt={product.name} className="w-full h-full object-cover" />
+                                <Image
+                                  width={200} height={200}
+                                 src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0]}`} alt={product.name} className="w-full h-full object-cover" />
                               </div>
                               <span className="text-[13px] font-poppins text-gray-700 group-hover:text-gray-900 truncate flex-1">{product.name}</span>
                               <svg className="w-3 h-3 text-gray-300 group-hover:text-second flex-shrink-0 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -576,7 +579,7 @@ export default function MainNav({ token }: { token: string | null }) {
                               className="flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-gray-50 transition-colors group"
                             >
                               <div className="w-8 h-8 rounded-md overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-100">
-                                <img src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.image}`} alt={product.name} className="w-full h-full object-cover" />
+                                <Image width={200} height={200} src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0]}`} alt={product.name} className="w-full h-full object-cover" />
                               </div>
                               <span className="text-[12.5px] font-poppins text-gray-700 group-hover:text-gray-900 truncate flex-1 leading-snug">{product.name}</span>
                               <svg className="w-3 h-3 text-gray-300 group-hover:text-second flex-shrink-0 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
