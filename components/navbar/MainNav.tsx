@@ -52,9 +52,9 @@ const STATIC_TABS = [
 type NavState = "at-top" | "scrolled";
 
 type SearchResult = {
-  products: { id: number; name: string; slug: string; images: string[]; price: number }[];
-  brands: { id: number; name: string; slug: string; image: string }[];
-  categories: { id: number; title: string; slug: string }[];
+  products: { id: number; name: string; url: string; images: string[]; price: number }[];
+  brands: { id: number; name: string; image: string }[];
+  categories: { id: number; title: string; }[];
 } | null;
 
 export default function MainNav({ token }: { token: string | null }) {
@@ -415,7 +415,7 @@ export default function MainNav({ token }: { token: string | null }) {
                             return (
                             <Link
                               key={product.id}
-                              href={`/produk/${product.slug}`}
+                              href={`/produk/${product.url}`}
                               onClick={() => setSearchOpen(false)}
                               className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-gray-50 transition-colors group"
                             >
@@ -444,7 +444,7 @@ export default function MainNav({ token }: { token: string | null }) {
                           {searchResult.brands.slice(0, 5).map((brand) => (
                             <Link
                               key={brand.id}
-                              href={`/brand/${brand.slug}`}
+                              href={`/brand/${brand.name}`}
                               onClick={() => setSearchOpen(false)}
                               className="w-14 h-10 rounded-lg border border-gray-100 bg-white hover:border-second/40 transition-colors flex items-center justify-center p-1.5 group"
                               title={brand.name}
@@ -470,7 +470,7 @@ export default function MainNav({ token }: { token: string | null }) {
                           {searchResult.categories.slice(0, 5).map((cat) => (
                             <Link
                               key={cat.id}
-                              href={`/kategori/${cat.slug}`}
+                              href={`/kategori/${cat.title}`}
                               onClick={() => setSearchOpen(false)}
                               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-poppins bg-gray-50 text-gray-600 hover:bg-second/10 hover:text-third border border-gray-100 hover:border-second/30 transition-colors"
                             >
@@ -574,7 +574,7 @@ export default function MainNav({ token }: { token: string | null }) {
                           {searchResult.products.map((product) => (
                             <Link
                               key={product.id}
-                              href={`/produk/${product.slug}`}
+                              href={`/produk/${product.name}`}
                               onClick={() => setSearchOpen(false)}
                               className="flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-gray-50 transition-colors group"
                             >
@@ -606,7 +606,7 @@ export default function MainNav({ token }: { token: string | null }) {
                           {searchResult.brands.map((brand) => (
                             <Link
                               key={brand.id}
-                              href={`/brand/${brand.slug}`}
+                              href={`/brand/${brand.name}`}
                               onClick={() => setSearchOpen(false)}
                               className="aspect-square rounded-xl border border-gray-100 bg-white hover:border-second/40 hover:shadow-sm transition-all flex items-center justify-center p-2 group"
                               title={brand.name}
@@ -634,7 +634,7 @@ export default function MainNav({ token }: { token: string | null }) {
                           {searchResult.categories.map((cat) => (
                             <Link
                               key={cat.id}
-                              href={`/kategori/${cat.slug}`}
+                              href={`/kategori/${cat.title}`}
                               onClick={() => setSearchOpen(false)}
                               className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-[12.5px] font-poppins text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors group"
                             >
