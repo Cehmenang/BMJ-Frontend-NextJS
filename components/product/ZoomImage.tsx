@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useState } from "react";
 
 export default function ZoomImage({
@@ -30,7 +31,10 @@ export default function ZoomImage({
           width: width
         }}
       >
-        <img
+        <Image
+          width={500} height={500}
+          loading="lazy"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           ref={productRef}
           src={src}
           style={{ height: height, width: width }}

@@ -14,6 +14,7 @@ import {
   Phone,
 } from "lucide-react";
 import ZoomImage from "./ZoomImage";
+import Image from "next/image";
 
 type Tab = "description" | "features" | "specifications";
 type Lens = { x: number; y: number; show: boolean };
@@ -67,9 +68,12 @@ function FullscreenViewer({
       >
         <ChevronLeft className="w-5 h-5" />
       </button>
-      <img
+      <Image
+        width={500} height={500}
+        loading="lazy"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${images[idx]}`}
-        alt=""
+        alt={`${images[idx]}`}
         className="max-w-[70vw] max-h-[70vh] object-contain rounded-lg"
         onClick={(e) => e.stopPropagation()}
       />
@@ -82,9 +86,12 @@ function FullscreenViewer({
               i === idx ? "border-second opacity-100" : "border-transparent opacity-50 hover:opacity-80"
             }`}
           >
-            <img
+            <Image
+              width={500} height={500}
+              loading="lazy"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              alt={`${src}`}
               src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${src}`}
-              alt=""
               className="w-full h-full object-contain bg-white/5 p-1"
             />
           </div>
@@ -207,7 +214,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
                 {/* Product image */}
                 <div className="w-full h-full object-contain p-8 duration-200 overflow-hidden border border-slate-300 rounded-4xl hover:bg-white transition">
-                  <ZoomImage src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[activeImg]}`} width="200" height="200" alt={product.name} productRef={mainImgRef}/>
+                  <ZoomImage src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${imageList[activeImg]}`} width="200" height="200" alt={product.name} productRef={mainImgRef}/>
                 </div>
                    
               {/* Thumbnails — outside main image, flex-start so they don't stretch */}
@@ -222,9 +229,12 @@ export default function ProductDetail({ product }: { product?: any }) {
                         : "border-transparent opacity-50 hover:opacity-80 hover:border-third/15"
                     }`}
                   >
-                    <img
+                    <Image
+                      width={500} height={500}
+                      loading="lazy"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${src}`}
-                      alt=""
+                      alt={`${src}`}
                       className="w-full h-full object-contain p-2"
                     />
                   </button>
