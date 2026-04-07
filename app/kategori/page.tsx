@@ -203,7 +203,7 @@ export default function Category() {
                 className="relative w-full rounded-2xl overflow-hidden mb-6 md:mb-8 group cursor-pointer"
                 style={{ opacity: 0 }}
               >
-                <Link href={`/kategori/${activeParentData.title.toLowerCase().replace(/\s+/g, "-")}`}>
+                <Link href={`/kategori/${activeParentData.title}`}>
                   <div className="relative h-[140px] sm:h-[180px] md:h-[200px] overflow-hidden">
                     <img
                       src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${activeParentData.image}`}
@@ -256,7 +256,7 @@ export default function Category() {
                     className="group cursor-pointer"
                     style={{ opacity: 0 }}
                   >
-                    <Link href={`/kategori/${sub.title.toLowerCase().replace(/\s+/g, "-")}`}>
+                    <Link href={`/kategori/${sub.title}`}>
                       {/* Image box */}
                       <div className="relative aspect-square rounded-xl md:rounded-2xl overflow-hidden bg-third/5 border border-third/8 group-hover:border-second/40 transition-colors duration-300">
                         <img
@@ -302,7 +302,7 @@ export default function Category() {
                 </svg>
                 <p className="font-poppins text-[13px]">Tidak ada sub-kategori</p>
                 <Link
-                  href={`/kategori/${activeParent?.toLowerCase().replace(/\s+/g, "-")}`}
+                  href={`/kategori/${activeParent}`}
                   className="mt-3 text-[12px] font-poppins text-second hover:underline"
                 >
                   Lihat produk langsung →

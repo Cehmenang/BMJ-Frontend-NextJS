@@ -34,6 +34,20 @@ export async function getProductByBrand(brandName: string, pagination: number){
     }catch(err){ console.log(err) }
 }
 
+export async function getProductByCategory(kategoriName: string, pagination: number){
+    try{
+        const response = await fetch(`${process.env.SERVER_API}/api/produk/kategori/${kategoriName}?page=${pagination}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json', "Accept": "application/json" },
+            next: { revalidate: 300 }
+        })
+        const result= await response.json()
+        if(response.ok) {
+            return await result.produk
+        }
+    }catch(err){ console.log(err) }
+}
+
 export async function uploadProduct(formData: FormData){
     try{
         const response = await fetch(`${process.env.SERVER_API}/api/tambah/produk`, { method: 'POST', body: formData, headers: { 'Accept': 'application/json' } })
