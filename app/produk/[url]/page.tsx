@@ -8,16 +8,11 @@ export async function generateMetadata({ params }: { params: { url: string } }):
   try{
     const { url } = await params
     const result = await getProductByUrl(url)
+    const thumbnail = JSON.parse(result.produk.images)[0][0]
     return {
       title: result.produk.name,
       description: result.produk.description,
-      openGraph: { 
-        images: [{
-          url: `${process.env.METADATA_API}/storage/${JSON.parse(result.produk.images)[0][0]}`,
-          width: 400,
-          height: 400
-        }]
-      }
+      openGraph: {  images: [`${process.env.METADATA_API}/storage/${thumbnail}`] }
     }
   }catch(err){ console.log(err) }
 }
