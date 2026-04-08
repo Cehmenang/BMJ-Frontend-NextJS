@@ -14,7 +14,7 @@ export default function Category() {
   useEffect(() => {
     (async function () {
       const result = await getCategories()
-      console.log(result)
+      console.log(result, 'ktegori')
       setCategories(result)
     })()
   }, [])

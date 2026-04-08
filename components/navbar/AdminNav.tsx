@@ -8,7 +8,7 @@ export default async function AdminNav(){
 
     if(isAdmin) {
         return (
-            <h1 className="w-full bg-second absolute z-50">ADMIN NAVBAR</h1>
+            <h1 className="w-full bg-second fixed top-50 left-0">ADMIN NAVBAR</h1>
         )
     }
 }

@@ -17,7 +17,7 @@ export function middleware(request: NextRequest) {
   }
 
   // 2. Jika bukan ADMIN dan mencoba akses halaman terproteksi
-  if ((token && isAdmin == false) && adminPaths.some(path => pathname.startsWith(path))) {
+  if ((token && isAdmin == false) && adminPaths.some(path => pathname.startsWith(`${path}/X`))) {
     return NextResponse.redirect(new URL('/', request.url))
   }
 
