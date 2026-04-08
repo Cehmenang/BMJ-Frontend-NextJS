@@ -1,3 +1,5 @@
+"use client"
+
 import { IProduct } from "@/interface";
 import { InfoIcon, Navigation, ShoppingCart } from "lucide-react";
 import Image from "next/image";
@@ -114,7 +116,7 @@ export default function ProductCard({ product }: { product: IProduct }) {
             {formatPrice(parseInt(product.offlinePrice))}
           </span>
           <Link
-            href={`/product/${product.url}`}
+            href={`/produk/${product.url}`}
             className="flex-shrink-0 text-[12px] font-semibold px-4 py-1.5 rounded-md border border-third/25 text-third hover:bg-third hover:text-primary hover:border-third transition-all duration-200"
           >
             Lihat

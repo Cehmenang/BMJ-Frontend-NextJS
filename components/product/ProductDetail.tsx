@@ -118,6 +118,7 @@ export default function ProductDetail({ product }: { product?: any }) {
   const [fsOpen, setFsOpen]                 = useState(false);
   const [videoOpen, setVideoOpen]           = useState(false);
   const [formattedPrice, setFormattedPrice] = useState("");
+  const [waUrl, setWaUrl] = useState<string | null>(null)
   const [lens, setLens]                     = useState<Lens>({ x: 0, y: 0, show: false });
 
   const imageList = typeof product.images === 'string' ? JSON.parse(product.images) : product.images
@@ -173,10 +174,15 @@ export default function ProductDetail({ product }: { product?: any }) {
     return LENS_PX / 2 - center;
   };
 
-  const waMessage = encodeURIComponent(
-    `Halo, saya ingin menanyakan ketersediaan produk: ${product?.name} (${product?.sku})`
-  );
-  const waUrl = `https://wa.me/${product?.whatsappNumber}?text=${waMessage}`;
+  useEffect(()=>{
+    if(product){
+      const waMessage = encodeURIComponent(
+        `Halo, saya ingin menanyakan ketersediaan produk: ${product?.name} dengan harga ${formatPrice(product.offlinePrice)}. Apakah barangnya tersedia?\n\nUntuk detailnya ada disini https://bandarmusikjakarta.com/produk/${product.url}.`
+      );
+      setWaUrl(`https://wa.me/6281929290560?text=${waMessage}`);
+    }
+  }, [product])
+
 
   if (!product) return null;
 
@@ -311,7 +317,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                 </button>
 
                 {/* WhatsApp */}
-                <a
+                {waUrl && <a
                   href={waUrl}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -319,7 +325,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                   title="Tanya ketersediaan via WhatsApp"
                 >
                   <Phone className="w-4 h-4 text-white" />
-                </a>
+                </a>}
               </div>
             </div>
           </div>
