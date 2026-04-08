@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: { params: { url: string } }):
     return {
       title: result.produk.name,
       description: result.produk.description,
-      openGraph: { images: [`${process.env.SERVER_API}/storage/${result.produk.images[0][0]}`] }
+      openGraph: { images: [`${process.env.METADATA_API}/storage/${result.produk.images[0][0]}`] }
     }
   }catch(err){ console.log(err) }
 }
