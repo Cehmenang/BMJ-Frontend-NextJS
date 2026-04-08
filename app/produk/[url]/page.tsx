@@ -11,7 +11,13 @@ export async function generateMetadata({ params }: { params: { url: string } }):
     return {
       title: result.produk.name,
       description: result.produk.description,
-      openGraph: { images: [`${process.env.METADATA_API}/storage/${result.produk.images[0][0]}`] }
+      openGraph: { 
+        images: [{
+          url: `${process.env.METADATA_API}/storage/${JSON.parse(result.produk.images)[0][0]}`,
+          width: 400,
+          height: 400
+        }]
+      }
     }
   }catch(err){ console.log(err) }
 }
