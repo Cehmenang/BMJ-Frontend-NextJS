@@ -4,6 +4,7 @@ import { useState, useRef } from "react"
 import { useForm } from "react-hook-form"
 import { Upload, X, ImageIcon, Loader2, CheckCircle2 } from "lucide-react"
 import { uploadBrand } from "@/action/brand"
+import { useRouter } from "next/navigation"
 
 type BrandForm = {
   name: string
@@ -19,6 +20,7 @@ export default function AddBrand() {
   const [serverError, setServerError] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const router = useRouter()
 
   const {
     register,
@@ -78,6 +80,7 @@ export default function AddBrand() {
           reset()
           clearImage()
           setTimeout(() => setSuccess(false), 3000)
+          router.refresh()
       }
     } catch (e: any) {
       setServerError(e.response?.data?.error ?? "Terjadi kesalahan, coba lagi.")

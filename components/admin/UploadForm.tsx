@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { FormValues, IBrand, ICategory } from "@/interface";
 import { uploadProduct } from "@/action/product";
+import { useRouter } from "next/navigation";
 
 interface ImageItem {
   url: string;
@@ -388,6 +389,8 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
     },
   });
 
+  const router = useRouter()
+
   const onSubmit = async (data: FormValues) => {
     if (images.length === 0) {
       setImageError("Minimal 1 foto produk wajib diupload");
@@ -420,8 +423,8 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
       formData.append("images[]", img.file)
     })
     const response = await uploadProduct(formData)
-    console.log(response)
     setSubmitted(true);
+    router.refresh()
   };
 
   const handleReset = () => {
