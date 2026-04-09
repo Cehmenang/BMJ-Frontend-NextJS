@@ -17,7 +17,7 @@ export default async function Products({ searchParams }: {
     const result = await getProducts(pageValue)
 
     return (
-        <div className="products-display">
+        <div className="products-display mt-16">
             {result && <ProductsLayout
                     products={result.data}
                     totalPages={result.last_page}

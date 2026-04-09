@@ -10,10 +10,10 @@ import Image from "next/image";
 
 const NAV_LINKS = [
   { label: "Beranda", href: "/" },
-  { label: "Terbaru", href: "/terbaru" },
   { label: "Promo", href: "/promo" },
   { label: "Kategori", href: "/kategori" },
   { label: "Brand", href: "/brand" },
+  { label: "Produk", href: "/produk" },
   { label: "News", href: "/news" },
   { label: "About", href: "/about" },
 ];
