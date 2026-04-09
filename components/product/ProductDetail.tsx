@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import ZoomImage from "./ZoomImage";
 import Image from "next/image";
+import { FaWhatsapp } from "react-icons/fa";
 
 type Tab = "description" | "features" | "specifications";
 type Lens = { x: number; y: number; show: boolean };
@@ -311,7 +312,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                 </div>
 
                 {/* Cart */}
-                <button className="flex-1 h-10 bg-second hover:bg-[#e89d42] text-white rounded-full font-semibold text-[13px] flex items-center justify-center gap-2 transition-colors duration-150 shadow-[0_4px_16px_rgba(249,173,82,0.3)]">
+                <button className="py-2 px-5 bg-second hover:bg-[#e89d42] text-white rounded-full font-semibold text-[13px] flex items-center justify-center gap-2 transition-colors duration-150 shadow-[0_4px_16px_rgba(249,173,82,0.3)]">
                   <ShoppingCart className="w-4 h-4" />
                   Keranjang
                 </button>
@@ -321,10 +322,11 @@ export default function ProductDetail({ product }: { product?: any }) {
                   href={waUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-[#25D366] hover:bg-[#1fba59] flex items-center justify-center flex-shrink-0 transition-colors duration-150 shadow-[0_4px_16px_rgba(37,211,102,0.3)]"
+                  className="py-2 px-5 rounded-full bg-lime-400 hover:bg-lime-400 items-center justify-center transition-colors duration-150 shadow-third-dark text-white flex gap-x-2"
                   title="Tanya ketersediaan via WhatsApp"
                 >
-                  <Phone className="w-4 h-4 text-white" />
+                  <FaWhatsapp size={24} className="text-white" /> 
+                  <span>Tanya Barang</span>
                 </a>}
               </div>
             </div>

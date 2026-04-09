@@ -111,16 +111,23 @@ export default function ProductCard({ product }: { product: IProduct }) {
         </p>
 
         {/* Price + CTA */}
-        <div className="flex items-center justify-between gap-3">
+        <div className="bott-card-product flex justify-between">
+
+        <div className="flex flex-col gap-y-1">
           <span className="font-bold text-[15px] text-red-500 leading-none">
-            {formatPrice(parseInt(product.offlinePrice))}
+            {product.offlinePrice && formatPrice(parseInt(product.offlinePrice.includes(" ") ? product.offlinePrice.split(' ')[0].trim() : product.offlinePrice.trim()))}
           </span>
+          {product.pricelist && <span className="font-semibold text-[10px] text-third/50 italic tracking-tighter leading-none">
+            Pricelist : { formatPrice(parseInt(product.pricelist.includes(" ") ? product.pricelist.split(' ')[0].trim() : product.pricelist.trim()))}
+          </span>}
+        </div>
           <Link
             href={`/produk/${product.url}`}
             className="flex-shrink-0 text-[12px] font-semibold px-4 py-1.5 rounded-md border border-third/25 text-third hover:bg-third hover:text-primary hover:border-third transition-all duration-200"
           >
             Lihat
           </Link>
+
         </div>
       </div>
     </div>
