@@ -25,8 +25,17 @@ export default function ProductCard({ product }: { product: IProduct }) {
     setTimeout(() => setToast({ msg: "", show: false }), 2500);
   };
 
+  const createDate = new Date(product.created_at)
+  const nowadays = new Date()
+  const weekDays = 7 * 24 * 60 * 60 * 1000
+  createDate.setHours(0,0,0,0)
+  nowadays.setHours(0,0,0,0)
+
+  const diff =  nowadays.getTime() - createDate.getTime()
+
   return (
-    <div className="flex flex-shrink-0 w-[260px] group flex-col gap-y-4">
+    <div className="flex flex-shrink-0 w-[260px] group flex-col gap-y-4 relative">
+      {diff >= 0 && diff <= weekDays && <span className="absolute h-[30px] w-[30px] bg-red-600 text-white z-40 top-[-8px] left-[-15px] text-[14px] font-bold">Baru</span>}
       <div className="md:w-[100%] transition group relative overflow-hidden rounded-2xl border-1 border-slate-200 hover:border-slate-300 hover:bg-gray-200 transition">
         <Image width={500} height={500} alt={product.name}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
