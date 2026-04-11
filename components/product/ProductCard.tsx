@@ -100,7 +100,7 @@ export default function ProductCard({ product }: { product: IProduct }) {
 
       { ((product.pricelist && product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim()) 
           && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && 
-        <span className="absolute bottom-[120px] left-[10px] z-[15] text-[11px] bg-amber-600 text-white px-2 py-[2px] rounded-sm font-bold">Disc -{Math.round(((parseInt(product.pricelist!)-parseInt(product.offlinePrice))/parseInt(product.pricelist!))*100)}%</span>
+        <span className="absolute bottom-[134px] left-[10px] z-[15] text-[11px] bg-amber-600 text-white px-2 py-[2px] rounded-sm font-bold">Disc -{Math.round(((parseInt(product.pricelist!)-parseInt(product.offlinePrice))/parseInt(product.pricelist!))*100)}%</span>
       }
 
       {/* Info */}
