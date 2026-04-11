@@ -6,13 +6,13 @@ import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 const SLIDES = [
   {
     id: 1,
-    tag: "Selamat Datang",
-    title: "Bandar Musik",
-    titleEm: "Jakarta",
-    sub: "Selamat Berbelanja di Bandar Musik Jakarta — Surga alat musik terlengkap untuk para musisi.",
-    cta: "Jelajahi Koleksi",
-    href: "/",
-    bg: "/Banner.png",
+    tag: "LIMITED STOCK",
+    title: "Schecter",
+    titleEm: "Synyster Gates",
+    sub: "Sustain tanpa batas dengan Pickup Sustainiac®️ dan Floyd Rose 1500. Senjata utama untuk shredding maksimal.",
+    cta: "Belanja Sekarang",
+    href: "/brand/schecter",
+    bg: "/SchecterBanner.webp",
     glow: "radial-gradient(ellipse 80% 60% at 70% 40%, rgba(249,173,82,0.18) 0%, transparent 70%)",
   },
   {

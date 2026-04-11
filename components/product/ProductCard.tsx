@@ -35,7 +35,7 @@ export default function ProductCard({ product }: { product: IProduct }) {
 
   return (
     <div className="flex flex-shrink-0 w-[260px] group flex-col gap-y-4 relative">
-      {diff >= 0 && diff <= weekDays && <span className="absolute bg-red-600 text-white z-40 top-[10px] left-[10px] text-[11px] font-bold px-3 py-[2px] rounded-sm">Baru</span>}
+      {diff >= 0 && diff <= weekDays && <span className="absolute bg-red-600 text-white z-[15] top-[10px] left-[10px] text-[11px] font-bold px-3 py-[2px] rounded-sm">Baru</span>}
       <div className="md:w-[100%] transition group relative overflow-hidden rounded-2xl border-1 border-slate-200 hover:border-slate-300 hover:bg-gray-200 transition">
         <Image width={500} height={500} alt={product.name}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -97,6 +97,11 @@ export default function ProductCard({ product }: { product: IProduct }) {
           </button>
         </div>
       </div>
+
+      { ((product.pricelist!.trim() && product.offlinePrice.trim()) 
+          && (parseInt(product.pricelist!) > parseInt(product.offlinePrice))) && 
+        <span className="absolute top-[10px] right-[10px] z-[15] text-[11px] bg-red-600 text-white">-{Math.round(((parseInt(product.pricelist!)-parseInt(product.offlinePrice))/parseInt(product.pricelist!))*100)}%</span>
+      }
 
       {/* Info */}
       <div className="px-0.5">
