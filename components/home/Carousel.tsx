@@ -12,7 +12,7 @@ const SLIDES = [
     sub: "Sustain tanpa batas dengan Pickup Sustainiac®️ dan Floyd Rose 1500. Senjata utama untuk shredding maksimal.",
     cta: "Belanja Sekarang",
     href: "/brand/schecter",
-    bg: "/SchecterBanner.webp",
+    bg: "/BannerSchecter.webp",
     glow: "radial-gradient(ellipse 80% 60% at 70% 40%, rgba(249,173,82,0.18) 0%, transparent 70%)",
   },
   {
