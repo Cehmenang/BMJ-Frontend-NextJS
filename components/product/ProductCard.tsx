@@ -98,11 +98,6 @@ export default function ProductCard({ product }: { product: IProduct }) {
         </div>
       </div>
 
-      { ((product.pricelist && product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim()) 
-          && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && 
-        <span className="absolute bottom-[130px] left-[10px] z-[15] text-[11px] bg-amber-600 text-white px-2 py-[2px] rounded-sm font-bold">Disc -{Math.round(((parseInt(product.pricelist!)-parseInt(product.offlinePrice))/parseInt(product.pricelist!))*100)}%</span>
-      }
-
       {/* Info */}
       <div className="px-0.5">
         {/* Category + stock */}
@@ -131,9 +126,15 @@ export default function ProductCard({ product }: { product: IProduct }) {
           <span className="font-bold text-[15px] text-red-500 leading-none">
             {product.offlinePrice && formatPrice(parseInt(product.offlinePrice.includes(" ") ? product.offlinePrice.split(' ')[0].trim() : product.offlinePrice.trim()))}
           </span>
-          {product.pricelist && <span className="font-semibold text-[10px] text-third/50 italic tracking-tighter leading-none">
-            Pricelist : { formatPrice(parseInt(product.pricelist.includes(" ") ? product.pricelist.split(' ')[0].trim() : product.pricelist.trim()))}
-          </span>}
+          {product.pricelist && <div className="font-semibold text-[10px] text-third/50 italic tracking-tighter leading-none">
+            <span>\
+              Pricelist : { formatPrice(parseInt(product.pricelist.includes(" ") ? product.pricelist.split(' ')[0].trim() : product.pricelist.trim()))}
+            </span>
+            { ((product.pricelist && product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim()) 
+              && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && 
+              <span className="text-[11px] bg-amber-600 text-white px-2 py-[2px] rounded-sm font-bold">Disc -{Math.round(((parseInt(product.pricelist!)-parseInt(product.offlinePrice))/parseInt(product.pricelist!))*100)}%</span>
+            }
+          </div>}
         </div>
           <Link
             href={`/produk/${product.url}`}
