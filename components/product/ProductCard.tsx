@@ -34,7 +34,7 @@ export default function ProductCard({ product }: { product: IProduct }) {
   const diff =  nowadays.getTime() - createDate.getTime()
 
   return (
-    <div className="flex flex-shrink-0 w-[260px] group flex-col gap-y-4 relative">
+    <Link href={`/produk/${product.url}`} className="flex flex-shrink-0 w-[260px] group flex-col gap-y-4 relative">
       {diff >= 0 && diff <= weekDays && <span className="absolute bg-red-600 text-white z-[15] top-[10px] left-[10px] text-[11px] font-bold px-3 py-[2px] rounded-sm">Baru</span>}
       <div className="md:w-[100%] transition group relative overflow-hidden rounded-2xl border-1 border-slate-200 hover:border-slate-300 hover:bg-gray-200 transition">
         <Image width={500} height={500} alt={product.name}
@@ -137,15 +137,8 @@ export default function ProductCard({ product }: { product: IProduct }) {
             
           </div>}
         </div>
-          <Link
-            href={`/produk/${product.url}`}
-            className="flex-shrink-0 text-[12px] font-semibold px-4 py-1.5 rounded-md border border-third/25 text-third hover:bg-third hover:text-primary hover:border-third transition-all duration-200"
-          >
-            Lihat
-          </Link>
-
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
