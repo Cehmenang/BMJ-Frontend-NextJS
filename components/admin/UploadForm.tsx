@@ -430,15 +430,21 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
       formData.append("images[]", img.file)
     })
 
-    if(addVariant && data.variant.trim() !== ""){
-      const variant = data.variant
-      console.log(options)
+    if(addVariant && data.variant.trim() !== "" && options.length > 0){
+      formData.append("variant", data.variant)
+      options.forEach((option, index) => {
+        formData.append(`options[${index}][name]`, option.name);
+        formData.append(`options[${index}][harga]`, option.harga);
+    
+        if (option.image) {
+          formData.append(`options[${index}][image]`, option.image);
+        }
+      });
     }
 
     const response = await uploadProduct(formData)
-    console.log(response, 'hasil')
     setSubmitted(true);
-    // router.refresh()
+    router.refresh()
   };
 
   const handleReset = () => {
