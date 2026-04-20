@@ -84,4 +84,10 @@ export interface FormValues {
   pajak: boolean;
   kirim: boolean;
   pasang: boolean;
+  variant: string;
+  options: [] | {id: number, name: string, image: string, harga: string}[]
+}
+
+export interface IOption {
+  id: number, name: string, image: string | null, imagePreview: string | null, harga: string
 }

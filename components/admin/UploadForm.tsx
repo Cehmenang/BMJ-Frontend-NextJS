@@ -2,15 +2,16 @@
 
 import { useState, useRef, useCallback, ReactNode } from "react";
 import { useForm, Controller, FieldError } from "react-hook-form";
-import { LucideIcon } from "lucide-react";
+import { LucideIcon, Toolbox } from "lucide-react";
 import {
   Package, Tag, Ruler, ImagePlus, X, Upload,
   ChevronDown, Percent, Truck, Wrench, Receipt,
   CheckCircle2, AlertCircle, Star,
 } from "lucide-react";
-import { FormValues, IBrand, ICategory } from "@/interface";
+import { FormValues, IBrand, ICategory, IOption } from "@/interface";
 import { uploadProduct } from "@/action/product";
 import { useRouter } from "next/navigation";
+import VariantOptions from "./VariantOption";
 
 interface ImageItem {
   url: string;
@@ -357,6 +358,8 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
   const [images, setImages] = useState<ImageItem[]>([]);
   const [imageError, setImageError] = useState<string>("");
   const [submitted, setSubmitted] = useState(false);
+  const [addVariant, setAddVariant] = useState(false)
+  const [options, setOptions] = useState<[]|IOption[]>([])
 
   const {
     register,
@@ -386,12 +389,15 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
       pajak: false,
       kirim: false,
       pasang: false,
+      variant: "",
+      options: []
     },
   });
 
   const router = useRouter()
 
   const onSubmit = async (data: FormValues) => {
+   
     if (images.length === 0) {
       setImageError("Minimal 1 foto produk wajib diupload");
       return;
@@ -400,6 +406,7 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
     const url = watch("name").toLocaleLowerCase().split(' ').join('-').trim().replace(/[^a-zA-Z0-9-]/g, "")
     // Simulate API call — replace with your actual fetch/axios here
     const formData = new FormData()
+    
     formData.append("name", data.name)
     formData.append("url", url)
     formData.append("brand", data.brandId)
@@ -422,9 +429,16 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
     images.forEach(img=>{
       formData.append("images[]", img.file)
     })
+
+    if(addVariant && data.variant.trim() !== ""){
+      const variant = data.variant
+      console.log(options)
+    }
+
     const response = await uploadProduct(formData)
+    console.log(response, 'hasil')
     setSubmitted(true);
-    router.refresh()
+    // router.refresh()
   };
 
   const handleReset = () => {
@@ -597,6 +611,39 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
               </div>
             </div>
           </SectionCard>
+
+                    <Controller
+                name="variant"
+                control={control}
+                render={({ field }) => (
+                  <ServiceRow
+                    icon={Toolbox}
+                    label="Gunakan Varian"
+                    desc="Produk bisa dikirim ke lokasi pembeli"
+                    checked={addVariant}
+                    onChange={()=>{
+                      addVariant ? setAddVariant(false) : setAddVariant(true)
+                    }}
+                  />
+                )}
+              />
+          
+          {/* VARIANT SECTION */}
+          {addVariant && 
+          <div>
+          <SectionCard  icon={Toolbox} title="Varian" subtitle="Variasi berupa warna, ukuran, dsb">
+              <Field label="Nama Produk" required error={errors.name}>
+                <input
+                  {...register("variant")}
+                  placeholder="Tipe Varian : Warna, Ukuran, dsb"
+                  className={inputCls(!!errors.name)}
+                />
+              </Field>
+          </SectionCard>
+          {watch("variant") !== "" && 
+             <VariantOptions options={options} setOptions={setOptions}/>
+          }
+          </div>}
 
           {/* ── DIMENSI ── */}
           <SectionCard icon={Ruler} title="Dimensi & Berat" subtitle="Untuk kalkulasi ongkir yang akurat">
