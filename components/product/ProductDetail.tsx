@@ -331,8 +331,8 @@ export default function ProductDetail({ product }: { product?: any }) {
                                   isSelected ? "border-second/40" : "border-third/10"
                                 }`}>
                                   <Image
-                                    width={80}
-                                    height={80}
+                                    width={50}
+                                    height={50}
                                     src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${option.image}`}
                                     alt={option.name}
                                     className="w-full h-full object-cover p-2"
