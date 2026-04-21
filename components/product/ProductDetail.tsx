@@ -356,8 +356,8 @@ export default function ProductDetail({ product }: { product?: any }) {
 
                               {/* Checkmark */}
                               {isSelected && (
-                                <div className="absolute -top-1.5 -right-1.5 w-10 h-10 rounded-full bg-second flex items-center justify-center shadow-sm">
-                                  <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                <div className="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-second flex items-center justify-center shadow-sm">
+                                  <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                     <polyline points="20 6 9 17 4 12" />
                                   </svg>
                                 </div>
