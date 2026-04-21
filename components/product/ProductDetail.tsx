@@ -327,7 +327,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                             >
                               {/* Option image */}
                               {option.image && (
-                                <div className={`w-8 h-8 rounded-lg overflow-hidden flex-shrink-0 border transition-colors ${
+                                <div className={`rounded-lg overflow-hidden flex-shrink-0 border transition-colors ${
                                   isSelected ? "border-second/40" : "border-third/10"
                                 }`}>
                                   <Image
@@ -335,7 +335,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                                     height={200}
                                     src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${option.image}`}
                                     alt={option.name}
-                                    className="w-full h-full object-cover"
+                                    className="w-full h-full object-cover p-2"
                                   />
                                 </div>
                               )}
