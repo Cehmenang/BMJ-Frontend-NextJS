@@ -319,7 +319,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                               key={option.id}
                               type="button"
                               onClick={() => toggleOption(variant.id, option)}
-                              className={`relative flex items-center gap-2.5 px-3 py-2 rounded-xl border-2 transition-all duration-200 ${
+                              className={`relative flex items-center gap-2.5 px-3 py-2 rounded-sm border-2 transition-all duration-200 ${
                                 isSelected
                                   ? "border-second bg-second/8 shadow-[0_2px_12px_rgba(249,173,82,0.2)]"
                                   : "border-third/12 bg-white hover:border-third/25 hover:bg-third/3"
@@ -327,7 +327,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                             >
                               {/* Option image */}
                               {option.image && (
-                                <div className={`rounded-lg overflow-hidden flex-shrink-0 border transition-colors ${
+                                <div className={`overflow-hidden flex-shrink-0 border transition-colors ${
                                   isSelected ? "border-second/40" : "border-third/10"
                                 }`}>
                                   <Image
@@ -335,7 +335,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                                     height={50}
                                     src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${option.image}`}
                                     alt={option.name}
-                                    className="w-full h-full object-cover p-2"
+                                    className="w-full h-full object-cover"
                                   />
                                 </div>
                               )}
@@ -357,7 +357,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                               {/* Checkmark */}
                               {isSelected && (
                                 <div className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-second flex items-center justify-center shadow-sm">
-                                  <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                  <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                     <polyline points="20 6 9 17 4 12" />
                                   </svg>
                                 </div>
