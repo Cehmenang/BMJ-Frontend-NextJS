@@ -331,8 +331,8 @@ export default function ProductDetail({ product }: { product?: any }) {
                                   isSelected ? "border-second/40" : "border-third/10"
                                 }`}>
                                   <Image
-                                    width={64}
-                                    height={64}
+                                    width={200}
+                                    height={200}
                                     src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${option.image}`}
                                     alt={option.name}
                                     className="w-full h-full object-cover"
@@ -342,16 +342,16 @@ export default function ProductDetail({ product }: { product?: any }) {
 
                               {/* Name + price */}
                               <div className="flex flex-col items-start">
-                                <span className={`font-poppins text-[12.5px] font-medium leading-tight transition-colors ${
+                                <span className={`font-poppins text-[20px] font-bold leading-tight transition-colors ${
                                   isSelected ? "text-third" : "text-third/65"
                                 }`}>
                                   {option.name}
                                 </span>
-                                <span className={`font-poppins text-[11px] leading-tight transition-colors ${
+                                {/* <span className={`font-poppins text-[11px] leading-tight transition-colors ${
                                   isSelected ? "text-second font-semibold" : "text-third/40"
                                 }`}>
                                   Rp {option.harga}
-                                </span>
+                                </span> */}
                               </div>
 
                               {/* Checkmark */}
