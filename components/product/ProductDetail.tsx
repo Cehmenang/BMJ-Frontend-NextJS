@@ -300,12 +300,12 @@ export default function ProductDetail({ product }: { product?: any }) {
                     <div key={variant.id}>
                       {/* Type label */}
                       <div className="flex items-center gap-2 mb-3">
-                        <p className="font-poppins text-[11.5px] font-semibold text-third/60 uppercase tracking-[0.1em]">
-                          {variant.type}
+                        <p className="font-poppins text-[14px] font-semibold text-third/60 uppercase tracking-[0.1em]">
+                          Pilih {variant.type} :
                         </p>
                         {selectedOptions[variant.id] && (
-                          <span className="font-poppins text-[11.5px] text-third/45">
-                            · <span className="text-third font-medium">{selectedOptions[variant.id].name}</span>
+                          <span className="font-poppins text-[14px] text-third/45">
+                            <span className="text-third font-bold">{selectedOptions[variant.id].name}</span>
                           </span>
                         )}
                       </div>
