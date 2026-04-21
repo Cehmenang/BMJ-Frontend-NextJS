@@ -311,7 +311,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                       </div>
 
                       {/* Options */}
-                      <div className="flex flex-wrap gap-2.5">
+                      <div className="flex flex-wrap gap-2.5 w-full ">
                         {variant.options.map((option) => {
                           const isSelected = selectedOptions[variant.id]?.id === option.id
                           return (
@@ -331,8 +331,8 @@ export default function ProductDetail({ product }: { product?: any }) {
                                   isSelected ? "border-second/40" : "border-third/10"
                                 }`}>
                                   <Image
-                                    width={200}
-                                    height={200}
+                                    width={80}
+                                    height={80}
                                     src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${option.image}`}
                                     alt={option.name}
                                     className="w-full h-full object-cover p-2"
