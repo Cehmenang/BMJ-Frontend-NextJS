@@ -8,17 +8,33 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  ZoomIn,
   X,
   Play,
-  Phone,
 } from "lucide-react";
 import ZoomImage from "./ZoomImage";
 import Image from "next/image";
 import { FaWhatsapp } from "react-icons/fa";
 
 type Tab = "description" | "features" | "specifications";
-type Lens = { x: number; y: number; show: boolean };
+
+type VariantOption = {
+  id: number
+  variant_id: number
+  name: string
+  image: string
+  harga: string
+  created_at: string
+  updated_at: string
+}
+
+type Variant = {
+  id: number
+  produk_id: string
+  type: string
+  options: VariantOption[]
+  created_at: string
+  updated_at: string
+}
 
 function formatPrice(price: number) {
   return new Intl.NumberFormat("id-ID", {
@@ -28,7 +44,7 @@ function formatPrice(price: number) {
   }).format(price);
 }
 
-// ── Fullscreen Viewer ──────────────────────────────────────────────────────
+// ── Fullscreen Viewer ──
 function FullscreenViewer({
   images,
   initialIndex,
@@ -45,8 +61,8 @@ function FullscreenViewer({
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight") nav(1);
-      if (e.key === "ArrowLeft")  nav(-1);
-      if (e.key === "Escape")     onClose();
+      if (e.key === "ArrowLeft") nav(-1);
+      if (e.key === "Escape") onClose();
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
@@ -111,27 +127,49 @@ function FullscreenViewer({
   );
 }
 
-// ── Main Component ─────────────────────────────────────────────────────────
+// ── Main Component ──
 export default function ProductDetail({ product }: { product?: any }) {
-  const [activeImg, setActiveImg]           = useState(0);
-  const [qty, setQty]                       = useState(1);
-  const [tab, setTab]                       = useState<Tab>("description");
-  const [fsOpen, setFsOpen]                 = useState(false);
-  const [videoOpen, setVideoOpen]           = useState(false);
+  const [activeImg, setActiveImg] = useState(0);
+  const [qty, setQty] = useState(1);
+  const [tab, setTab] = useState<Tab>("description");
+  const [fsOpen, setFsOpen] = useState(false);
+  const [videoOpen, setVideoOpen] = useState(false);
   const [formattedPrice, setFormattedPrice] = useState("");
-  const [waUrl, setWaUrl] = useState<string | null>(null)
-  const [lens, setLens]                     = useState<Lens>({ x: 0, y: 0, show: false });
+  const [waUrl, setWaUrl] = useState<string | null>(null);
+  const [selectedOptions, setSelectedOptions] = useState<Record<number, VariantOption>>({});
 
-  const imageList = typeof product.images === 'string' ? JSON.parse(product.images) : product.images
-
-  // refs
-  const galleryRef = useRef<HTMLDivElement>(null);
   const mainImgRef = useRef<HTMLImageElement>(null);
 
-  // Fix hydration
+  const imageList = typeof product.images === "string"
+    ? JSON.parse(product.images)
+    : product.images;
+
+  const variants: Variant[] = product.variants ?? [];
+  const allVariantsSelected = variants.length === 0 ||
+    variants.every((v) => selectedOptions[v.id])
+
+  // Harga aktif — ambil dari variant yang dipilih kalau ada
+  const activePrice = (() => {
+    const selected = Object.values(selectedOptions)
+    if (selected.length === 0) return product?.offlinePrice ?? 0
+    const last = selected.at(-1)
+    if (!last?.harga) return product?.offlinePrice ?? 0
+    const num = Number(last.harga.replace(/\./g, "").replace(/,/g, ""))
+    return isNaN(num) ? product?.offlinePrice ?? 0 : num
+  })()
+
   useEffect(() => {
-    setFormattedPrice(formatPrice(product?.offlinePrice ?? 0));
-  }, [product?.offlinePrice]);
+    setFormattedPrice(formatPrice(activePrice));
+  }, [activePrice]);
+
+  useEffect(() => {
+    if (product) {
+      const waMessage = encodeURIComponent(
+        `Halo, saya ingin menanyakan ketersediaan produk: ${product?.name} dengan harga ${formatPrice(product.offlinePrice)}. Apakah barangnya tersedia?\n\nUntuk detailnya ada disini https://bandarmusikjakarta.com/produk/${product.url}.`
+      );
+      setWaUrl(`https://wa.me/6281929290560?text=${waMessage}`);
+    }
+  }, [product]);
 
   const switchImg = (idx: number) => {
     if (mainImgRef.current) mainImgRef.current.style.opacity = "0";
@@ -141,54 +179,18 @@ export default function ProductDetail({ product }: { product?: any }) {
     }, 160);
   };
 
-  // Lens: track mouse position as percentage inside gallery container
-  const onLensMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = galleryRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    const x = ((e.clientX - rect.left) / rect.width)  * 100;
-    const y = ((e.clientY - rect.top)  / rect.height) * 100;
-    setLens({ x, y, show: true });
-  };
-
-  const ZOOM    = 3;    // zoom multiplier
-  const LENS_PX = 160;  // lens box size in px
-
-  // Position lens box, clamped so it never overflows the container
-  const lensLeft = (containerW: number) => {
-    const raw = (lens.x / 100) * containerW - LENS_PX / 2;
-    return Math.max(0, Math.min(containerW - LENS_PX, raw));
-  };
-  const lensTop = (containerH: number) => {
-    const raw = (lens.y / 100) * containerH - LENS_PX / 2;
-    return Math.max(0, Math.min(containerH - LENS_PX, raw));
-  };
-
-  // Position the zoomed image inside the lens box
-  // The zoomed image is ZOOM× the container size.
-  // We translate it so the point under the cursor is centered in the lens.
-  const imgLeft = (containerW: number) => {
-    const center = (lens.x / 100) * containerW * ZOOM;
-    return LENS_PX / 2 - center;
-  };
-  const imgTop = (containerH: number) => {
-    const center = (lens.y / 100) * containerH * ZOOM;
-    return LENS_PX / 2 - center;
-  };
-
-  useEffect(()=>{
-    if(product){
-      const waMessage = encodeURIComponent(
-        `Halo, saya ingin menanyakan ketersediaan produk: ${product?.name} dengan harga ${formatPrice(product.offlinePrice)}. Apakah barangnya tersedia?\n\nUntuk detailnya ada disini https://bandarmusikjakarta.com/produk/${product.url}.`
-      );
-      setWaUrl(`https://wa.me/6281929290560?text=${waMessage}`);
-    }
-  }, [product])
-
+  const toggleOption = (variantId: number, option: VariantOption) => {
+    setSelectedOptions(prev => {
+      if (prev[variantId]?.id === option.id) {
+        const next = { ...prev }
+        delete next[variantId]
+        return next
+      }
+      return { ...prev, [variantId]: option }
+    })
+  }
 
   if (!product) return null;
-
-  const containerW = galleryRef.current?.offsetWidth  ?? 0;
-  const containerH = galleryRef.current?.offsetHeight ?? 0;
 
   return (
     <>
@@ -202,7 +204,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
       <div className="min-h-screen bg-bg-site font-sans">
         {/* Breadcrumb */}
-        <div className="px-14 pt-8 pb-2 flex items-center gap-2 text-[12px] text-third/45">
+        <div className="px-4 md:px-14 pt-8 pb-2 flex items-center gap-2 text-[12px] text-third/45">
           <Link href="/" className="hover:text-third transition-colors">Beranda</Link>
           <span>/</span>
           <Link href={`/category/${product.kategoriId}`} className="hover:text-third transition-colors">
@@ -212,25 +214,27 @@ export default function ProductDetail({ product }: { product?: any }) {
           <span className="text-third/70 line-clamp-1">{product.name}</span>
         </div>
 
-        <div className="px-14 py-8">
+        <div className="px-4 md:px-14 py-8">
           {/* ── Top: Gallery + Info ── */}
-          <div className="grid grid-cols-[2fr_3fr] gap-14 items-start mb-14">
+          <div className="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-8 md:gap-14 items-start mb-14">
 
-            {/* ── Gallery col ── */}
+            {/* Gallery */}
             <div className="flex flex-col gap-3">
-
-                {/* Product image */}
-                <div className="w-full h-full object-contain p-8 duration-200 overflow-hidden border border-slate-300 rounded-4xl hover:bg-white transition">
-                  <ZoomImage src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${imageList[activeImg]}`} width="200" height="200" alt={product.name} productRef={mainImgRef}/>
-                </div>
-                   
-              {/* Thumbnails — outside main image, flex-start so they don't stretch */}
-              <div className="flex gap-3">
+              <div className="w-full object-contain p-8 duration-200 overflow-hidden border border-slate-300 rounded-4xl hover:bg-white transition">
+                <ZoomImage
+                  src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${imageList[activeImg]}`}
+                  width="200"
+                  height="200"
+                  alt={product.name}
+                  productRef={mainImgRef}
+                />
+              </div>
+              <div className="flex gap-3 flex-wrap">
                 {imageList.map((src: string, i: number) => (
                   <button
                     key={i}
                     onClick={() => switchImg(i)}
-                    className={`w-[80px] h-[80px] rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white transition-all duration-150 ${
+                    className={`w-[72px] h-[72px] md:w-[80px] md:h-[80px] rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white transition-all duration-150 ${
                       i === activeImg
                         ? "border-second"
                         : "border-transparent opacity-50 hover:opacity-80 hover:border-third/15"
@@ -239,7 +243,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                     <Image
                       width={500} height={500}
                       loading="lazy"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      sizes="80px"
                       src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${src}`}
                       alt={`${src}`}
                       className="w-full h-full object-contain p-2"
@@ -249,8 +253,9 @@ export default function ProductDetail({ product }: { product?: any }) {
               </div>
             </div>
 
-            {/* ── Info col ── */}
+            {/* Info */}
             <div className="flex flex-col gap-5">
+
               {/* Badges + name */}
               <div>
                 <div className="flex gap-2 flex-wrap mb-3">
@@ -268,7 +273,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                     {product.stock > 0 ? "On-Stock" : "Out-Stock"}
                   </span>
                 </div>
-                <h1 className="font-display text-[26px] font-bold text-third leading-snug">
+                <h1 className="font-display text-[22px] md:text-[26px] font-bold text-third leading-snug">
                   {product.name}
                 </h1>
               </div>
@@ -280,7 +285,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                 <p className="text-[11px] text-third/45 mb-1">Harga</p>
                 <p
                   suppressHydrationWarning
-                  className="font-display text-[32px] font-bold text-red-500 leading-none"
+                  className="font-display text-[28px] md:text-[32px] font-bold text-red-500 leading-none transition-all duration-200"
                 >
                   {formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}
                 </p>
@@ -288,8 +293,101 @@ export default function ProductDetail({ product }: { product?: any }) {
 
               <div className="h-px bg-third/8" />
 
+              {/* ── Variants ── */}
+              {variants.length > 0 && (
+                <div className="flex flex-col gap-5">
+                  {variants.map((variant) => (
+                    <div key={variant.id}>
+                      {/* Type label */}
+                      <div className="flex items-center gap-2 mb-3">
+                        <p className="font-poppins text-[11.5px] font-semibold text-third/60 uppercase tracking-[0.1em]">
+                          {variant.type}
+                        </p>
+                        {selectedOptions[variant.id] && (
+                          <span className="font-poppins text-[11.5px] text-third/45">
+                            · <span className="text-third font-medium">{selectedOptions[variant.id].name}</span>
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Options */}
+                      <div className="flex flex-wrap gap-2.5">
+                        {variant.options.map((option) => {
+                          const isSelected = selectedOptions[variant.id]?.id === option.id
+                          return (
+                            <button
+                              key={option.id}
+                              type="button"
+                              onClick={() => toggleOption(variant.id, option)}
+                              className={`relative flex items-center gap-2.5 px-3 py-2 rounded-xl border-2 transition-all duration-200 ${
+                                isSelected
+                                  ? "border-second bg-second/8 shadow-[0_2px_12px_rgba(249,173,82,0.2)]"
+                                  : "border-third/12 bg-white hover:border-third/25 hover:bg-third/3"
+                              }`}
+                            >
+                              {/* Option image */}
+                              {option.image && (
+                                <div className={`w-8 h-8 rounded-lg overflow-hidden flex-shrink-0 border transition-colors ${
+                                  isSelected ? "border-second/40" : "border-third/10"
+                                }`}>
+                                  <Image
+                                    width={64}
+                                    height={64}
+                                    src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${option.image}`}
+                                    alt={option.name}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                              )}
+
+                              {/* Name + price */}
+                              <div className="flex flex-col items-start">
+                                <span className={`font-poppins text-[12.5px] font-medium leading-tight transition-colors ${
+                                  isSelected ? "text-third" : "text-third/65"
+                                }`}>
+                                  {option.name}
+                                </span>
+                                <span className={`font-poppins text-[11px] leading-tight transition-colors ${
+                                  isSelected ? "text-second font-semibold" : "text-third/40"
+                                }`}>
+                                  Rp {option.harga}
+                                </span>
+                              </div>
+
+                              {/* Checkmark */}
+                              {isSelected && (
+                                <div className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-second flex items-center justify-center shadow-sm">
+                                  <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                    <polyline points="20 6 9 17 4 12" />
+                                  </svg>
+                                </div>
+                              )}
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Peringatan belum pilih */}
+                  {!allVariantsSelected && (
+                    <p className="font-poppins text-[11px] text-third/40 flex items-center gap-1.5">
+                      <svg className="w-3.5 h-3.5 text-second flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                      </svg>
+                      Pilih {variants
+                        .filter((v) => !selectedOptions[v.id])
+                        .map((v) => v.type)
+                        .join(", ")} terlebih dahulu
+                    </p>
+                  )}
+                </div>
+              )}
+
+              <div className="h-px bg-third/8" />
+
               {/* Qty + Cart + WA */}
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2.5 flex-wrap">
                 {/* Qty pill */}
                 <div className="flex items-center border border-third/20 rounded-full overflow-hidden bg-white flex-shrink-0">
                   <div className="w-9 h-9 rounded-full border border-third/20 bg-white flex items-center justify-center font-semibold text-[14px] text-third -m-px flex-shrink-0">
@@ -312,22 +410,26 @@ export default function ProductDetail({ product }: { product?: any }) {
                 </div>
 
                 {/* Cart */}
-                <button className="py-2 px-5 bg-second hover:bg-[#e89d42] text-white rounded-full font-semibold text-[13px] flex items-center justify-center gap-2 transition-colors duration-150 shadow-[0_4px_16px_rgba(249,173,82,0.3)]">
+                <button
+                  disabled={!allVariantsSelected}
+                  className="py-2 px-5 bg-second hover:bg-[#e89d42] text-white rounded-full font-semibold text-[13px] flex items-center justify-center gap-2 transition-all duration-150 shadow-[0_4px_16px_rgba(249,173,82,0.3)] disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
+                >
                   <ShoppingCart className="w-4 h-4" />
                   Keranjang
                 </button>
 
                 {/* WhatsApp */}
-                {waUrl && <a
-                  href={waUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="py-2 px-5 rounded-full bg-lime-400 hover:bg-lime-400 items-center justify-center transition-colors duration-150 shadow-third-dark text-white flex gap-x-2"
-                  title="Tanya ketersediaan via WhatsApp"
-                >
-                  <FaWhatsapp size={24} className="text-white" /> 
-                  <span>Tanya Barang</span>
-                </a>}
+                {waUrl && (
+                  <Link
+                    href={waUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="py-2 px-5 rounded-full bg-lime-400 hover:bg-lime-500 items-center justify-center transition-colors duration-150 text-white flex gap-x-2"
+                  >
+                    <FaWhatsapp size={20} className="text-white" />
+                    <span className="text-[13px] font-semibold">Tanya Barang</span>
+                  </Link>
+                )}
               </div>
             </div>
           </div>
@@ -337,12 +439,12 @@ export default function ProductDetail({ product }: { product?: any }) {
 
             {/* Tabs */}
             <div>
-              <div className="flex border-b border-third/8 mb-6">
+              <div className="flex border-b border-third/8 mb-6 overflow-x-auto">
                 {(["description", "features", "specifications"] as Tab[]).map((t) => (
                   <button
                     key={t}
                     onClick={() => setTab(t)}
-                    className={`text-[13px] font-medium px-5 py-2.5 border-b-2 -mb-px transition-all duration-150 ${
+                    className={`text-[13px] font-medium px-5 py-2.5 border-b-2 -mb-px transition-all duration-150 whitespace-nowrap flex-shrink-0 ${
                       tab === t
                         ? "border-second text-third"
                         : "border-transparent text-third/45 hover:text-third/70"
@@ -366,7 +468,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                   </ul>
                 )}
                 {tab === "specifications" && (
-                  <div className="grid grid-cols-2 gap-x-12 gap-y-0 max-w-xl">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-0 max-w-xl">
                     {product.specifications?.map((s: { label: string; value: string }, i: number) => (
                       <div key={i} className="flex justify-between py-2.5 border-b border-third/6">
                         <span className="text-third/45 text-[13px]">{s.label}</span>
@@ -383,12 +485,12 @@ export default function ProductDetail({ product }: { product?: any }) {
               <p className="text-[10px] font-semibold tracking-[0.15em] uppercase text-third/40 mb-4">
                 Informasi Produk
               </p>
-              <div className="flex gap-10 flex-wrap">
+              <div className="flex gap-6 md:gap-10 flex-wrap">
                 {[
-                  { label: "Berat",   value: product.weight },
-                  { label: "SKU",     value: product.sku },
+                  { label: "Berat", value: product.weight },
+                  { label: "SKU", value: product.sku },
                   { label: "Garansi", value: product.warranty },
-                  { label: "Stok",    value: `${product.stock} unit` },
+                  { label: "Stok", value: `${product.stock} unit` },
                 ].map((m) => (
                   <div key={m.label} className="flex flex-col gap-1">
                     <span className="text-[10px] font-semibold tracking-[0.12em] uppercase text-third/35">
