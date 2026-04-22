@@ -220,7 +220,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
             {/* Gallery */}
             <div className="flex flex-col gap-3">
-              <div className="w-full object-contain p-8 duration-200 overflow-hidden border border-slate-300 rounded-4xl hover:bg-white transition">
+              <div className="w-full object-contain p-8 duration-200 overflow-hidden border border-slate-300 rounded-4xl hover:bg-white transition relative">
                 <ZoomImage
                   src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${imageList[activeImg]}`}
                   width="200"
@@ -228,6 +228,10 @@ export default function ProductDetail({ product }: { product?: any }) {
                   alt={product.name}
                   productRef={mainImgRef}
                 />
+                { ((product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim()) 
+                      && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && 
+                      <span className="text-[20px] absolute top-0 left-0 bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">-{Math.round(((parseInt(product.pricelist!)-parseInt(product.offlinePrice))/parseInt(product.pricelist!))*100)}%</span>
+                  }
               </div>
               <div className="flex gap-3 flex-wrap">
                 {imageList.map((src: string, i: number) => (
@@ -275,11 +279,8 @@ export default function ProductDetail({ product }: { product?: any }) {
                   {formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}
                 </p>
                 {product.pricelist && <div className="font-semibold text-[14px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center mt-2">
-                    { ((product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim()) 
-                      && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && 
-                      <span className="text-[14px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">-{Math.round(((parseInt(product.pricelist!)-parseInt(product.offlinePrice))/parseInt(product.pricelist!))*100)}%</span>
-                    }
-                    <span>
+                    <span className={`${((product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim()) 
+                      && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && 'line-through'}`}>
                         Pricelist : { formatPrice(parseInt(product.pricelist.includes(" ") ? product.pricelist.split(' ')[0].trim() : product.pricelist.trim()))}
                     </span>
             
