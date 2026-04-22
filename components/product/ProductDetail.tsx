@@ -407,7 +407,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                 {/* Cart */}
                 <button
                   disabled={!allVariantsSelected}
-                  className="py-2 px-5 bg-second hover:bg-[#e89d42] text-white rounded-full font-semibold text-[20px] flex items-center justify-center gap-2 transition-all duration-150 shadow-[0_4px_16px_rgba(249,173,82,0.3)] disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
+                  className="py-2 px-5 bg-second hover:bg-[#e89d42] text-white rounded-sm font-semibold text-[20px] flex items-center justify-center gap-2 transition-all duration-150 shadow-[0_4px_16px_rgba(249,173,82,0.3)] disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
                 >
                   <ShoppingCart className="w-8 h-8" />
                   Keranjang
@@ -419,7 +419,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                     href={waUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="py-2 px-5 bg-green-600 hover:bg-green-800 items-center justify-center transition-colors duration-150 text-white flex gap-x-2"
+                    className="py-2 px-5 bg-green-700 items-center justify-center transition-colors duration-150 text-white flex gap-x-2 rounded-sm"
                   >
                     <FaWhatsapp size={30} className="text-white" />
                     <span className="text-[20px] font-semibold">Tanya Barang</span>
