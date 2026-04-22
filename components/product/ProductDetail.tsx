@@ -202,7 +202,7 @@ export default function ProductDetail({ product }: { product?: any }) {
         />
       )}
 
-      <div className="min-h-screen bg-bg-site font-sans px-40 w-full border border-black">
+      <div className="min-h-screen bg-bg-site font-sans px-48 w-full">
         {/* Breadcrumb */}
         <div className="px-4 md:px-14 pt-8 pb-2 flex items-center gap-2 text-[12px] text-third/45">
           <Link href="/" className="hover:text-third transition-colors">Beranda</Link>
@@ -216,7 +216,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
         <div className="px-4 md:px-14 py-8">
           {/* ── Top: Gallery + Info ── */}
-          <div className="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-8 md:gap-14 items-start mb-14">
+          <div className="flex justify-center gap-8 md:gap-14 mb-14">
 
             {/* Gallery */}
             <div className="flex flex-col gap-3">
@@ -265,15 +265,8 @@ export default function ProductDetail({ product }: { product?: any }) {
                   <span className="text-[11px] font-medium px-3 py-1 rounded-full bg-second/12 text-[#854F0B] border border-second/30">
                     {product.kategoriId}
                   </span>
-                  <span className={`text-[11px] font-medium px-3 py-1 rounded-full border ${
-                    product.stock > 0
-                      ? "bg-green-50 text-green-700 border-green-200"
-                      : "bg-red-50 text-red-600 border-red-200"
-                  }`}>
-                    {product.stock > 0 ? "On-Stock" : "Out-Stock"}
-                  </span>
                 </div>
-                <h1 className="font-display text-[22px] md:text-[26px] font-bold text-third leading-snug">
+                <h1 className="font-display text-[22px] md:text-[30px] font-black text-third leading-snug">
                   {product.name}
                 </h1>
               </div>
