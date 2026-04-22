@@ -258,14 +258,6 @@ export default function ProductDetail({ product }: { product?: any }) {
 
               {/* Badges + name */}
               <div>
-                <div className="flex gap-2 flex-wrap mb-3">
-                  <span className="text-[11px] font-medium px-3 py-1 rounded-full bg-third/8 text-third border border-third/15">
-                    {product.brandId}
-                  </span>
-                  <span className="text-[11px] font-medium px-3 py-1 rounded-full bg-second/12 text-[#854F0B] border border-second/30">
-                    {product.kategoriId}
-                  </span>
-                </div>
                 <h1 className="font-display text-[22px] md:text-[30px] font-black text-third leading-snug">
                   {product.name}
                 </h1>
