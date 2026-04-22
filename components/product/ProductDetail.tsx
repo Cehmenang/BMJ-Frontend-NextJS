@@ -216,7 +216,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
         <div className="px-4 md:px-14 py-8">
           {/* ── Top: Gallery + Info ── */}
-          <div className="flex justify-center border border-black gap-8 md:gap-14 mb-14">
+          <div className="flex justify-center items-center border border-black gap-8 md:gap-14 mb-14">
 
             {/* Gallery */}
             <div className="flex flex-col gap-3">
