@@ -317,7 +317,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                               className={`relative flex items-center gap-2.5 px-3 py-2 rounded-sm border-2 transition-all duration-200 ${
                                 isSelected
                                   ? "border-second bg-second/8 shadow-[0_2px_12px_rgba(249,173,82,0.2)]"
-                                  : "border-third/12 bg-white hover:border-third/25 hover:bg-third/3"
+                                  : "border-third/12 hover:border-third/25 hover:bg-third/3"
                               }`}
                             >
                               {/* Option image */}
@@ -407,9 +407,9 @@ export default function ProductDetail({ product }: { product?: any }) {
                 {/* Cart */}
                 <button
                   disabled={!allVariantsSelected}
-                  className="py-2 px-5 bg-second hover:bg-[#e89d42] text-white rounded-full font-semibold text-[13px] flex items-center justify-center gap-2 transition-all duration-150 shadow-[0_4px_16px_rgba(249,173,82,0.3)] disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
+                  className="py-2 px-5 bg-second hover:bg-[#e89d42] text-white rounded-full font-semibold text-[20px] flex items-center justify-center gap-2 transition-all duration-150 shadow-[0_4px_16px_rgba(249,173,82,0.3)] disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
                 >
-                  <ShoppingCart className="w-4 h-4" />
+                  <ShoppingCart className="w-8 h-8" />
                   Keranjang
                 </button>
 
@@ -419,10 +419,10 @@ export default function ProductDetail({ product }: { product?: any }) {
                     href={waUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="py-2 px-5 rounded-full bg-lime-400 hover:bg-lime-500 items-center justify-center transition-colors duration-150 text-white flex gap-x-2"
+                    className="py-2 px-5 bg-green-600 hover:bg-green-800 items-center justify-center transition-colors duration-150 text-white flex gap-x-2"
                   >
-                    <FaWhatsapp size={20} className="text-white" />
-                    <span className="text-[13px] font-semibold">Tanya Barang</span>
+                    <FaWhatsapp size={30} className="text-white" />
+                    <span className="text-[20px] font-semibold">Tanya Barang</span>
                   </Link>
                 )}
               </div>
