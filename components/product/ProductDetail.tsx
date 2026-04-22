@@ -230,7 +230,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                 />
                 { ((product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim()) 
                       && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && 
-                      <span className="text-[18px] absolute top-4 right-4 bg-red-600 border border-red-900 text-white px-2 py-[2px] rounded-sm font-bold">-{Math.round(((parseInt(product.pricelist!)-parseInt(product.offlinePrice))/parseInt(product.pricelist!))*100)}%</span>
+                      <span className="text-[18px] absolute top-3 right-4 bg-red-600 border border-red-900 text-white px-2 py-[2px] rounded-sm font-black tracking-tight">-{Math.round(((parseInt(product.pricelist!)-parseInt(product.offlinePrice))/parseInt(product.pricelist!))*100)}%</span>
                   }
               </div>
               <div className="flex gap-3 flex-wrap">
@@ -262,7 +262,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
               {/* Badges + name */}
               <div>
-                <h1 className="font-display text-[22px] md:text-[30px] font-black text-third leading-snug">
+                <h1 className="font-display text-[22px] md:text-[32px] font-black text-third leading-snug">
                   {product.name}
                 </h1>
               </div>
@@ -271,14 +271,13 @@ export default function ProductDetail({ product }: { product?: any }) {
 
               {/* Price */}
               <div>
-                <p className="text-[16px] text-third/45 mb-1">Harga</p>
                 <p
                   suppressHydrationWarning
-                  className="font-display text-[28px] md:text-[32px] font-bold text-red-500 leading-none transition-all duration-200"
+                  className="font-display text-[28px] md:text-[32px] font-black text-red-500 leading-none transition-all duration-200"
                 >
                   {formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}
                 </p>
-                {product.pricelist && <div className="font-semibold text-[14px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center mt-2">
+                {product.pricelist && <div className="font-semibold text-[16px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center mt-2">
                     <span className={`${((product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim()) 
                       && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && 'line-through'}`}>
                         Pricelist : { formatPrice(parseInt(product.pricelist.includes(" ") ? product.pricelist.split(' ')[0].trim() : product.pricelist.trim()))}
