@@ -425,7 +425,7 @@ export default function ProductsLayout({
 
             {/* Products — dim saat pending */}
             <div className={`transition-opacity duration-200 ${isPending ? "opacity-25 pointer-events-none" : "opacity-100"}`}>
-              <div className={`grid gap-x-2 md:gap-5 ${gridCols === 2 ? "grid-cols-2" : "grid-cols-2 md:grid-cols-3"}`}>
+              <div className={`grid gap-x-2 gap-y-4 md:gap-5 ${gridCols === 2 ? "grid-cols-2" : "grid-cols-2 md:grid-cols-3"}`}>
                 {products.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
