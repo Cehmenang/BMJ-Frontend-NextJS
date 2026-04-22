@@ -202,7 +202,7 @@ export default function ProductDetail({ product }: { product?: any }) {
         />
       )}
 
-      <div className="min-h-screen bg-bg-site font-sans px-48 w-full">
+      <div className="min-h-screen bg-bg-site font-sans md:px-48 w-full">
         {/* Breadcrumb */}
         <div className="px-4 md:px-14 pt-8 pb-2 flex items-center gap-2 text-[12px] text-third/45">
           <Link href="/" className="hover:text-third transition-colors">Beranda</Link>
