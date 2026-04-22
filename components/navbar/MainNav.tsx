@@ -574,7 +574,7 @@ export default function MainNav({ token }: { token: string | null }) {
                           {searchResult.products.map((product) => (
                             <Link
                               key={product.id}
-                              href={`/produk/${product.name}`}
+                              href={`/produk/${product.url}`}
                               onClick={() => setSearchOpen(false)}
                               className="flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-gray-50 transition-colors group"
                             >
