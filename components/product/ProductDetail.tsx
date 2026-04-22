@@ -230,7 +230,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                 />
                 { ((product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim()) 
                       && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && 
-                      <span className="text-[20px] absolute top-0 left-0 bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">-{Math.round(((parseInt(product.pricelist!)-parseInt(product.offlinePrice))/parseInt(product.pricelist!))*100)}%</span>
+                      <span className="text-[18px] absolute top-4 right-4 bg-red-100 border border-red-600 text-third px-2 py-[2px] rounded-sm font-bold">-{Math.round(((parseInt(product.pricelist!)-parseInt(product.offlinePrice))/parseInt(product.pricelist!))*100)}%</span>
                   }
               </div>
               <div className="flex gap-3 flex-wrap">
