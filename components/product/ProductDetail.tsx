@@ -216,7 +216,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
         <div className="px-4 md:px-14 py-8">
           {/* ── Top: Gallery + Info ── */}
-          <div className="flex justify-center items-center bg-white p-4 gap-8 md:gap-14 mb-14">
+          <div className="flex justify-center items-center gap-8 md:gap-14 mb-14">
 
             {/* Gallery */}
             <div className="flex flex-col gap-3">
@@ -267,13 +267,23 @@ export default function ProductDetail({ product }: { product?: any }) {
 
               {/* Price */}
               <div>
-                <p className="text-[11px] text-third/45 mb-1">Harga</p>
+                <p className="text-[16px] text-third/45 mb-1">Harga</p>
                 <p
                   suppressHydrationWarning
                   className="font-display text-[28px] md:text-[32px] font-bold text-red-500 leading-none transition-all duration-200"
                 >
                   {formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}
                 </p>
+                {product.pricelist && <div className="font-semibold text-[10px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center">
+                    { ((product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim()) 
+                      && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && 
+                      <span className="text-[11px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">-{Math.round(((parseInt(product.pricelist!)-parseInt(product.offlinePrice))/parseInt(product.pricelist!))*100)}%</span>
+                    }
+                    <span>
+                        Pricelist : { formatPrice(parseInt(product.pricelist.includes(" ") ? product.pricelist.split(' ')[0].trim() : product.pricelist.trim()))}
+                    </span>
+            
+                </div>}
               </div>
 
               <div className="h-px bg-third/8" />
