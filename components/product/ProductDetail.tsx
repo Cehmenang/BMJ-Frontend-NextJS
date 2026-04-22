@@ -274,10 +274,10 @@ export default function ProductDetail({ product }: { product?: any }) {
                 >
                   {formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}
                 </p>
-                {product.pricelist && <div className="font-semibold text-[10px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center">
+                {product.pricelist && <div className="font-semibold text-[14px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center mt-2">
                     { ((product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim()) 
                       && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && 
-                      <span className="text-[11px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">-{Math.round(((parseInt(product.pricelist!)-parseInt(product.offlinePrice))/parseInt(product.pricelist!))*100)}%</span>
+                      <span className="text-[14px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">-{Math.round(((parseInt(product.pricelist!)-parseInt(product.offlinePrice))/parseInt(product.pricelist!))*100)}%</span>
                     }
                     <span>
                         Pricelist : { formatPrice(parseInt(product.pricelist.includes(" ") ? product.pricelist.split(' ')[0].trim() : product.pricelist.trim()))}
