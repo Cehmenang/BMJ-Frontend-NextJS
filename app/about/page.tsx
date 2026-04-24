@@ -6,11 +6,11 @@ import { FaWhatsapp, FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa";
 
 // ── 5 placeholder landscape images (ganti dengan foto toko asli) ──
 const GALLERY = [
-  { src: "/About1.webp",  caption: "Tampak Depan Toko" },
-  { src: "/About2.webp",  caption: "Area Display Gitar" },
-  { src: "/About3.webp",  caption: "Studio & Recording Corner" },
-  { src: "/About4.webp",  caption: "Area Drum & Perkusi" },
-  { src: "/About4.webp",  caption: "Koleksi Keyboard & Piano" },
+  { src: "/about1.webp",  caption: "Tampak Depan Toko" },
+  { src: "/about2.webp",  caption: "Area Display Gitar" },
+  { src: "/about3.webp",  caption: "Studio & Recording Corner" },
+  { src: "/about4.webp",  caption: "Area Drum & Perkusi" },
+  { src: "/about4.webp",  caption: "Koleksi Keyboard & Piano" },
 ];
 
 const STATS = [
