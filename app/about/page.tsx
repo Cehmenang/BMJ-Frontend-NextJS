@@ -256,21 +256,21 @@ export default function About() {
               Temukan Kami
             </h2>
             <p className="font-poppins text-[13px] text-third/50 mb-6 leading-relaxed">
-              Jl. Melawai Raya No. 12, Blok M, Jakarta Selatan 12160<br />
-              Senin – Sabtu: 09.00 – 20.00 WIB · Minggu: 10.00 – 18.00 WIB
+              Jl. Rajawali Selatan I No.26A, RT.3/RW.2, Kecamatan Sawah Besar, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10720<br />
+              Senin – Sabtu: 10.00 – 20.00 WIB
             </p>
 
             {/* Google Maps embed — ganti koordinat sesuai lokasi asli */}
             <div className="w-full h-72 md:h-80 rounded-2xl overflow-hidden border border-third/10 shadow-[0_4px_24px_rgba(62,63,32,0.08)]">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.1234567890!2d106.7900000!3d-6.2400000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMTQnMjQuMCJTIDEwNsKwNDcnMjQuMCJF!5e0!3m2!1sen!2sid!4v1234567890"
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15867.603949652941!2d106.83023359999999!3d-6.143999999999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f52291955f13%3A0xa50788e55fe5c9e9!2sBandar%20Musik%20Jakarta%20BMJ!5e0!3m2!1sid!2sid!4v1777033545807!5m2!1sid!2sid"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 allowFullScreen
                 loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
+                referrerPolicy="no-referrer-when-downgrade" 
+            />
             </div>
 
             <Link
