@@ -4,6 +4,7 @@ import MainNav from "../components/navbar/MainNav";
 import LayoutNav from "@/components/navbar/LayoutNav";
 import Footer from "@/components/footer/MainFooter";
 import AdminNav from "@/components/navbar/AdminNav";
+import MainContact from "@/components/contact/MainContact";
 
 export const metadata: Metadata = {
   title: "Bandar Musik Jakarta BMJ",
@@ -30,6 +31,7 @@ export default function RootLayout({
         <div className="wrap">
           {children}
         </div>
+        <MainContact/>
         <Footer/>
       </body>
     </html>

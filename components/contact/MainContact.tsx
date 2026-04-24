@@ -17,7 +17,7 @@ const menus = [
     { title: 'Tiktok', icon: <FaTiktok size={30}/>, url: 'https://www.tiktok.com/@bandarmusikjakarta_bmj' },
 ]
 
-export default function WhatsApp(){
+export default function MainContact(){
     const [ screen, setScreen ] = useState<number>(window.innerWidth)
     const [ tabChat, setTabChat ] = useState<boolean>(false)
     const [ tabContact, setTabContact ] = useState<boolean>(false)
