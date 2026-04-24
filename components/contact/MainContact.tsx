@@ -20,12 +20,10 @@ const menus = [
 ]
 
 export default function MainContact(){
-    const [ screen, setScreen ] = useState<number>(window.innerWidth)
+    const [ screen, setScreen ] = useState<number>(0)
     const [ tabChat, setTabChat ] = useState<boolean>(false)
     const [ tabContact, setTabContact ] = useState<boolean>(false)
         
-    console.log(screen)
-
     function TabMenu(){
         return menus.map((menu, index)=>{
             return <a href={menu.url} key={index} className="py-4 px-12 text-[20px] hover:bg-[#dfdfdf] transition flex items-center gap-x-4 w-full font-semibold border-b-2 border-[#dfdfdf] cursor-pointer" target="_blank" onClick={()=>{
