@@ -6,11 +6,11 @@ import { FaWhatsapp, FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa";
 
 // ── 5 placeholder landscape images (ganti dengan foto toko asli) ──
 const GALLERY = [
-  { src: "/DonnerBanner.webp",  caption: "Tampak Depan Toko" },
-  { src: "/DonnerBanner.webp",  caption: "Area Display Gitar" },
-  { src: "/DonnerBanner.webp",  caption: "Studio & Recording Corner" },
-  { src: "/DonnerBanner.webp",  caption: "Area Drum & Perkusi" },
-  { src: "/DonnerBanner.webp",  caption: "Koleksi Keyboard & Piano" },
+  { src: "/About1.webp",  caption: "Tampak Depan Toko" },
+  { src: "/About2.webp",  caption: "Area Display Gitar" },
+  { src: "/About3.webp",  caption: "Studio & Recording Corner" },
+  { src: "/About4.webp",  caption: "Area Drum & Perkusi" },
+  { src: "/About4.webp",  caption: "Koleksi Keyboard & Piano" },
 ];
 
 const STATS = [
@@ -32,16 +32,16 @@ const SOCIALS = [
   {
     icon: FaInstagram,
     label: "Instagram",
-    handle: "@bandarmusikjakarta",
-    href: "https://instagram.com/bandarmusikjakarta",
+    handle: "@bandarmusikjakarta_bmj",
+    href: "https://instagram.com/bandarmusikjakarta_bmj",
     color: "hover:text-pink-400",
     bg: "hover:bg-pink-400/10",
   },
   {
     icon: FaTiktok,
     label: "TikTok",
-    handle: "@bandarmusikjkt",
-    href: "https://tiktok.com/@bandarmusikjkt",
+    handle: "@bandarmusikjakarta_bmj",
+    href: "https://tiktok.com/@bandarmusikjakarta_bmj",
     color: "hover:text-white",
     bg: "hover:bg-white/10",
   },
@@ -112,14 +112,14 @@ export default function About() {
 
         {/* Hero content */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-20 pb-14 md:pb-20 w-full">
-          <p className="font-poppins text-[10px] font-semibold tracking-[0.25em] uppercase text-second mb-4">
+          <p className="font-family-poppins text-[10px] font-semibold tracking-[0.25em] uppercase text-second mb-4">
             Tentang Kami
           </p>
           <h1 className="font-play text-[clamp(36px,6vw,80px)] font-bold text-primary leading-[1.05] mb-6 max-w-3xl">
             Surga Alat Musik<br />
             <em className="text-second not-italic">Jakarta</em> sejak 2009
           </h1>
-          <p className="font-poppins text-[14px] text-primary/55 max-w-lg leading-relaxed">
+          <p className="font-family-poppins text-[14px] text-primary/55 max-w-lg leading-relaxed">
             Lebih dari satu dekade melayani musisi Indonesia dengan koleksi alat musik terlengkap dari brand terbaik dunia.
           </p>
 
@@ -136,7 +136,7 @@ export default function About() {
                 }`}
               />
             ))}
-            <span className="font-poppins text-[11px] text-primary/30 ml-2">
+            <span className="font-family-poppins text-[11px] text-primary/30 ml-2">
               {GALLERY[activeImg].caption}
             </span>
           </div>
@@ -157,7 +157,7 @@ export default function About() {
                 <p className="font-play text-[clamp(28px,3vw,42px)] font-bold text-second leading-none mb-1">
                   {stat.value}
                 </p>
-                <p className="font-poppins text-[11px] text-primary/40 uppercase tracking-[0.1em]">
+                <p className="font-family-poppins text-[11px] text-primary/40 uppercase tracking-[0.1em]">
                   {stat.label}
                 </p>
               </div>
@@ -172,14 +172,14 @@ export default function About() {
 
           {/* Left */}
           <div>
-            <p className="font-poppins text-[10px] font-semibold tracking-[0.2em] uppercase text-second mb-3">
+            <p className="font-family-poppins text-[10px] font-semibold tracking-[0.2em] uppercase text-second mb-3">
               Cerita Kami
             </p>
             <h2 className="font-play text-[clamp(28px,4vw,48px)] font-bold text-third leading-tight mb-6">
               Dari passion menjadi<br />
               <em className="text-second not-italic">destinasi musik</em>
             </h2>
-            <div className="space-y-4 font-poppins text-[13.5px] text-third/60 leading-relaxed">
+            <div className="space-y-4 font-family-poppins text-[13.5px] text-third/60 leading-relaxed">
               <p>
                 Bandar Musik Jakarta lahir dari kecintaan mendalam terhadap musik. Dimulai sebagai toko kecil di sudut Jakarta Selatan pada 2009, kami tumbuh menjadi salah satu pusat alat musik terlengkap di Indonesia.
               </p>
@@ -198,8 +198,8 @@ export default function About() {
                 </svg>
               </div>
               <div>
-                <p className="font-poppins text-[13px] font-semibold text-third">"Musik adalah bahasa universal"</p>
-                <p className="font-poppins text-[11px] text-third/40">— Pendiri Bandar Musik Jakarta</p>
+                <p className="font-family-poppins text-[13px] font-semibold text-third">"Musik adalah bahasa universal"</p>
+                <p className="font-family-poppins text-[11px] text-third/40">— Pendiri Bandar Musik Jakarta</p>
               </div>
             </div>
           </div>
@@ -249,13 +249,13 @@ export default function About() {
 
           {/* Map */}
           <div>
-            <p className="font-poppins text-[10px] font-semibold tracking-[0.2em] uppercase text-second mb-3">
+            <p className="font-family-poppins text-[10px] font-semibold tracking-[0.2em] uppercase text-second mb-3">
               Lokasi Kami
             </p>
-            <h2 className="font-play text-[clamp(24px,3vw,38px)] font-bold text-third leading-tight mb-2">
+            <h2 className="font-family-poppins text-[clamp(24px,3vw,38px)] font-bold text-third leading-tight mb-2">
               Temukan Kami
             </h2>
-            <p className="font-poppins text-[13px] text-third/50 mb-6 leading-relaxed">
+            <p className="font-family-poppins text-[13px] text-third/50 mb-6 leading-relaxed">
               Jl. Rajawali Selatan I No.26A, RT.3/RW.2, Kecamatan Sawah Besar, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10720<br />
               Senin – Sabtu: 10.00 – 20.00 WIB
             </p>
