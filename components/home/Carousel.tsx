@@ -17,37 +17,25 @@ const SLIDES = [
   },
   {
     id: 2,
-    tag: "Koleksi Terbaru 2026",
-    title: "Gitar Elektrik",
-    titleEm: "Solar",
-    sub: "Koleksi Gitar Solar sekarang bisa kamu dapatkan disini!",
+    tag: "Pendatang Baru",
+    title: "Donner",
+    titleEm: "Music",
+    sub: "Koleksi dari Donner Music Sudah Bisa Kalian Dapatkan di Bandar Musik Jakarta",
     cta: "Lihat Koleksi",
-    href: "/brand/solar",
+    href: "/brand/donner",
     bg: "/DonnerBanner.webp",
     glow: "radial-gradient(ellipse 70% 70% at 30% 50%, rgba(249,173,82,0.12) 0%, transparent 70%)",
   },
   {
     id: 3,
-    tag: "Promo Spesial",
-    title: "Keyboard &",
-    titleEm: "Piano Digital",
-    sub: "Diskon hingga 30% untuk keyboard dan piano digital pilihan. Yamaha, Roland, Kawai — semua level musisi.",
-    cta: "Ambil Promo",
-    href: "/promo",
-    bg: "/PocketAmpBanner.webp",
+    tag: "Metal Era",
+    title: "Gitar",
+    titleEm: "Solar",
+    sub: "Selera Metal Ya Pakai Gitar Solar. Dapatkan Segera!",
+    cta: "Lihat Koleksi",
+    href: "/brand/solar",
+    bg: "/SolarBanner.webp",
     glow: "radial-gradient(ellipse 90% 60% at 60% 40%, rgba(249,173,82,0.2) 0%, transparent 65%)",
-  },
-  {
-    id: 4,
-    tag: "Studio & Recording",
-    title: "Drum &",
-    titleEm: "Perkusi",
-    sub: "Lengkapi setup drum kamu dengan pilihan snare, cymbal, hardware, dan kit dari Pearl, Tama, Zildjian.",
-    cta: "Eksplorasi Drum",
-    href: "/kategori/drum",
-    bg: "",
-    bgClass: "from-[#0a0c0e] via-[#1c2026] to-[#252c2e]",
-    glow: "radial-gradient(ellipse 60% 80% at 80% 30%, rgba(249,173,82,0.1) 0%, transparent 70%)",
   },
 ];
 
@@ -172,7 +160,7 @@ export default function Carousel() {
           {/* BG */}
           <div
             data-bg
-            className={`absolute inset-0 bg-gradient-to-br ${slide.bgClass ?? ""}`}
+            className={`absolute inset-0 bg-gradient-to-br`}
             style={{ backgroundImage: slide.glow }}
           >
             {slide.bg && (
