@@ -1,3 +1,5 @@
+"use client"
+
 import { useEffect, useState } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import { FaTiktok } from "react-icons/fa";
