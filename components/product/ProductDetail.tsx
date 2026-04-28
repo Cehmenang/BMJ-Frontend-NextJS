@@ -272,13 +272,13 @@ export default function ProductDetail({ product }: { product?: any }) {
               {/* Price */}
               <div>
                 <div className="price-section flex gap-x-5">
-                    <div suppressHydrationWarning className="font-family-poppins leading-none transition-all duration-200 px-2 py-1 border rounded-md border-third">
-                      <p className="text-[12px]">Harga Offline</p>
-                      <p className="text-[28px] md:text-[32px] font-black">{formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}</p>
+                    <div suppressHydrationWarning className="leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third">
+                      <p className="text-[14px] font-family-poppins">Harga Offline</p>
+                      <p className="text-[28px] md:text-[32px] font-black font-family-poppins">{formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}</p>
                     </div>
-                    <div suppressHydrationWarning className="font-family-poppins leading-none transition-all duration-200 px-2 py-1 border rounded-md border-third">
-                      <p className="text-[12px]">Harga Offline</p>
-                      <p className="text-[28px] md:text-[32px] font-black">{formattedPrice || `Rp ${product.onlinePrice?.toLocaleString()}`}</p>
+                    <div suppressHydrationWarning className="leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third">
+                      <p className="text-[14px] font-family-poppins">Harga Offline</p>
+                      <p className="text-[28px] md:text-[32px] font-black font-family-poppins">{formattedPrice || `Rp ${product.onlinePrice?.toLocaleString()}`}</p>
                     </div>
                 </div>
                 {product.pricelist && <div className="font-semibold text-[16px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center mt-2">
