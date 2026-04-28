@@ -138,25 +138,33 @@ export default function ProductDetail({ product }: { product?: any }) {
   const [waUrl, setWaUrl] = useState<string | null>(null);
   const [selectedOptions, setSelectedOptions] = useState<Record<number, VariantOption>>({});
 
+  // ── activeImgSrc: bisa dari imageList atau dari variant option image ──
+  const [activeImgSrc, setActiveImgSrc] = useState<string | null>(null);
+
   const mainImgRef = useRef<HTMLImageElement>(null);
 
-  const imageList = typeof product.images === "string"
+  const imageList: string[] = typeof product.images === "string"
     ? JSON.parse(product.images)
     : product.images;
 
   const variants: Variant[] = product.variants ?? [];
   const allVariantsSelected = variants.length === 0 ||
-    variants.every((v) => selectedOptions[v.id])
+    variants.every((v) => selectedOptions[v.id]);
 
-  // Harga aktif — ambil dari variant yang dipilih kalau ada
+  // Src yang aktif ditampilkan di ZoomImage
+  const currentSrc = activeImgSrc
+    ? `${process.env.NEXT_PUBLIC_SERVER_API}/storage/${activeImgSrc}`
+    : `${process.env.NEXT_PUBLIC_SERVER_API}/storage/${imageList[activeImg]}`;
+
+  // Harga aktif
   const activePrice = (() => {
-    const selected = Object.values(selectedOptions)
-    if (selected.length === 0) return product?.offlinePrice ?? 0
-    const last = selected.at(-1)
-    if (!last?.harga) return product?.offlinePrice ?? 0
-    const num = Number(last.harga.replace(/\./g, "").replace(/,/g, ""))
-    return isNaN(num) ? product?.offlinePrice ?? 0 : num
-  })()
+    const selected = Object.values(selectedOptions);
+    if (selected.length === 0) return product?.offlinePrice ?? 0;
+    const last = selected.at(-1);
+    if (!last?.harga) return product?.offlinePrice ?? 0;
+    const num = Number(last.harga.replace(/\./g, "").replace(/,/g, ""));
+    return isNaN(num) ? product?.offlinePrice ?? 0 : num;
+  })();
 
   useEffect(() => {
     setFormattedPrice(formatPrice(activePrice));
@@ -175,20 +183,41 @@ export default function ProductDetail({ product }: { product?: any }) {
     if (mainImgRef.current) mainImgRef.current.style.opacity = "0";
     setTimeout(() => {
       setActiveImg(idx);
+      setActiveImgSrc(null); // reset ke product image
       if (mainImgRef.current) mainImgRef.current.style.opacity = "1";
     }, 160);
   };
 
   const toggleOption = (variantId: number, option: VariantOption) => {
     setSelectedOptions(prev => {
+      // Kalau sudah dipilih, deselect
       if (prev[variantId]?.id === option.id) {
-        const next = { ...prev }
-        delete next[variantId]
-        return next
+        const next = { ...prev };
+        delete next[variantId];
+        // Reset ke gambar produk
+        if (mainImgRef.current) mainImgRef.current.style.opacity = "0";
+        setTimeout(() => {
+          setActiveImgSrc(null);
+          if (mainImgRef.current) mainImgRef.current.style.opacity = "1";
+        }, 160);
+        return next;
       }
-      return { ...prev, [variantId]: option }
-    })
-  }
+
+      // Pilih option baru
+      if (mainImgRef.current) mainImgRef.current.style.opacity = "0";
+      setTimeout(() => {
+        // Kalau option punya gambar, tampilkan gambar option
+        if (option.image) {
+          setActiveImgSrc(option.image);
+        } else {
+          setActiveImgSrc(null);
+        }
+        if (mainImgRef.current) mainImgRef.current.style.opacity = "1";
+      }, 160);
+
+      return { ...prev, [variantId]: option };
+    });
+  };
 
   if (!product) return null;
 
@@ -221,25 +250,31 @@ export default function ProductDetail({ product }: { product?: any }) {
             {/* Gallery */}
             <div className="flex flex-col gap-3">
               <div className="w-full object-contain p-8 duration-200 overflow-hidden border border-slate-300 rounded-4xl hover:bg-white transition relative">
+                {/* ← pakai currentSrc yang reaktif */}
                 <ZoomImage
-                  src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${imageList[activeImg]}`}
+                  src={currentSrc}
                   width="200"
                   height="200"
                   alt={product.name}
                   productRef={mainImgRef}
                 />
-                { ((product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim()) 
-                      && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && 
-                      <span className="text-[18px] absolute top-3 right-4 bg-red-600 border border-red-900 text-white px-2 py-[2px] rounded-sm font-black tracking-tight">-{Math.round(((parseInt(product.pricelist!)-parseInt(product.offlinePrice))/parseInt(product.pricelist!))*100)}%</span>
-                  }
+                {((product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim())
+                  && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) &&
+                  <span className="text-[18px] absolute top-3 right-4 bg-red-600 border border-red-900 text-white px-2 py-[2px] rounded-sm font-black tracking-tight">
+                    -{Math.round(((parseInt(product.pricelist!) - parseInt(product.offlinePrice)) / parseInt(product.pricelist!)) * 100)}%
+                  </span>
+                }
               </div>
+
+              {/* Thumbnails — product images */}
               <div className="flex gap-3 flex-wrap">
                 {imageList.map((src: string, i: number) => (
                   <button
                     key={i}
                     onClick={() => switchImg(i)}
                     className={`w-[72px] h-[72px] md:w-[80px] md:h-[80px] rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white transition-all duration-150 ${
-                      i === activeImg
+                      // Active kalau src ini yang aktif dan bukan dari variant
+                      (!activeImgSrc && i === activeImg)
                         ? "border-second"
                         : "border-transparent opacity-50 hover:opacity-80 hover:border-third/15"
                     }`}
@@ -254,13 +289,47 @@ export default function ProductDetail({ product }: { product?: any }) {
                     />
                   </button>
                 ))}
+
+                {/* Variant option thumbnails — tampil di samping product thumbnails */}
+                {variants.flatMap(v => v.options).filter(o => o.image).map((option) => {
+                  const isActiveVariantImg = activeImgSrc === option.image;
+                  return (
+                    <button
+                      key={`opt-${option.id}`}
+                      onClick={() => {
+                        // Cari variant yang punya option ini lalu toggle
+                        const parentVariant = variants.find(v => v.options.some(o => o.id === option.id));
+                        if (parentVariant) toggleOption(parentVariant.id, option);
+                      }}
+                      className={`w-[72px] h-[72px] md:w-[80px] md:h-[80px] rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white transition-all duration-150 relative ${
+                        isActiveVariantImg
+                          ? "border-second"
+                          : "border-transparent opacity-50 hover:opacity-80 hover:border-third/15"
+                      }`}
+                      title={option.name}
+                    >
+                      <Image
+                        width={500} height={500}
+                        loading="lazy"
+                        sizes="80px"
+                        src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${option.image}`}
+                        alt={option.name}
+                        className="w-full h-full object-contain p-2"
+                      />
+                      {/* Label nama option */}
+                      <div className="absolute bottom-0 inset-x-0 bg-third/70 text-primary text-[8px] font-poppins font-semibold text-center py-0.5 truncate px-1">
+                        {option.name}
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
             {/* Info */}
             <div className="flex flex-col gap-5">
 
-              {/* Badges + name */}
+              {/* Name */}
               <div>
                 <h1 className="font-display text-[22px] md:text-[32px] font-black text-third leading-snug">
                   {product.name}
@@ -272,22 +341,23 @@ export default function ProductDetail({ product }: { product?: any }) {
               {/* Price */}
               <div>
                 <div className="price-section flex gap-x-5">
-                    <div suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third">
-                      <p className="text-[14px]">Harga Offline</p>
-                      <p className="text-[28px] md:text-[32px] font-black">{formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}</p>
-                    </div>
-                    <div suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third">
-                      <p className="text-[14px]">Harga Offline</p>
-                      <p className="text-[28px] md:text-[32px] font-black">{formattedPrice || `Rp ${product.onlinePrice?.toLocaleString()}`}</p>
-                    </div>
+                  <div suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third">
+                    <p className="text-[14px]">Harga Offline</p>
+                    <p className="text-[28px] md:text-[32px] font-black">{formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}</p>
+                  </div>
+                  <div suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third">
+                    <p className="text-[14px]">Harga Online</p>
+                    <p className="text-[28px] md:text-[32px] font-black">{formattedPrice || `Rp ${product.onlinePrice?.toLocaleString()}`}</p>
+                  </div>
                 </div>
-                {product.pricelist && <div className="font-semibold text-[16px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center mt-2">
-                    <span className={`${((product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim()) 
+                {product.pricelist && (
+                  <div className="font-semibold text-[16px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center mt-2">
+                    <span className={`${((product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim())
                       && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && 'line-through'}`}>
-                        Pricelist : { formatPrice(parseInt(product.pricelist.includes(" ") ? product.pricelist.split(' ')[0].trim() : product.pricelist.trim()))}
+                      Pricelist: {formatPrice(parseInt(product.pricelist.includes(" ") ? product.pricelist.split(' ')[0].trim() : product.pricelist.trim()))}
                     </span>
-            
-                </div>}
+                  </div>
+                )}
               </div>
 
               <div className="h-px bg-third/8" />
@@ -310,9 +380,9 @@ export default function ProductDetail({ product }: { product?: any }) {
                       </div>
 
                       {/* Options */}
-                      <div className="flex flex-wrap gap-2.5 w-full ">
+                      <div className="flex flex-wrap gap-2.5 w-full">
                         {variant.options.map((option) => {
-                          const isSelected = selectedOptions[variant.id]?.id === option.id
+                          const isSelected = selectedOptions[variant.id]?.id === option.id;
                           return (
                             <button
                               key={option.id}
@@ -339,18 +409,13 @@ export default function ProductDetail({ product }: { product?: any }) {
                                 </div>
                               )}
 
-                              {/* Name + price */}
+                              {/* Name */}
                               <div className="flex flex-col items-start">
                                 <span className={`font-poppins text-[20px] font-bold leading-tight transition-colors ${
                                   isSelected ? "text-third" : "text-third/65"
                                 }`}>
                                   {option.name}
                                 </span>
-                                {/* <span className={`font-poppins text-[11px] leading-tight transition-colors ${
-                                  isSelected ? "text-second font-semibold" : "text-third/40"
-                                }`}>
-                                  Rp {option.harga}
-                                </span> */}
                               </div>
 
                               {/* Checkmark */}
@@ -362,7 +427,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                                 </div>
                               )}
                             </button>
-                          )
+                          );
                         })}
                       </div>
                     </div>
@@ -387,7 +452,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
               {/* Qty + Cart + WA */}
               <div className="flex items-center gap-2.5 flex-wrap">
-                {/* Qty pill */}
+                {/* Qty */}
                 <div className="flex items-center border border-third/20 rounded-full overflow-hidden bg-white flex-shrink-0">
                   <div className="w-9 h-9 rounded-full border border-third/20 bg-white flex items-center justify-center font-semibold text-[14px] text-third -m-px flex-shrink-0">
                     {qty}
