@@ -245,10 +245,10 @@ export default function ProductDetail({ product }: { product?: any }) {
 
         <div className="px-4 md:px-28 py-8">
           {/* ── Top: Gallery + Info ── */}
-          <div className="flex justify-center md:grid md:grid-cols-[2fr_1.5fr] items-center gap-8 md:gap-14 mb-14">
+          <div className="flex justify-center md:grid md:grid-cols-[2fr_1.5fr] items-center gap-8 md:gap-0 mb-14">
 
             {/* Gallery */}
-            <div className="flex flex-col gap-3 border border-red-500">
+            <div className="flex flex-col gap-3">
               <div className="w-[600px] object-contain p-8 duration-200 overflow-hidden border border-slate-300 rounded-4xl hover:bg-white transition relative">
                 {/* ← pakai currentSrc yang reaktif */}
                 <ZoomImage
@@ -395,7 +395,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                               }`}
                             >
                               {/* Option image */}
-                              {option.image && (
+                              {/* {option.image && (
                                 <div className={`overflow-hidden flex-shrink-0 transition-colors ${
                                   isSelected ? "border-second/40" : "border-third/10"
                                 }`}>
@@ -407,7 +407,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                                     className="w-full h-full object-cover"
                                   />
                                 </div>
-                              )}
+                              )} */}
 
                               {/* Name */}
                               <div className="flex flex-col items-start">
