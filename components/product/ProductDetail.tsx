@@ -253,8 +253,8 @@ export default function ProductDetail({ product }: { product?: any }) {
                 {/* ← pakai currentSrc yang reaktif */}
                 <ZoomImage
                   src={currentSrc}
-                  width="200"
-                  height="200"
+                  width="400"
+                  height="400"
                   alt={product.name}
                   productRef={mainImgRef}
                 />
