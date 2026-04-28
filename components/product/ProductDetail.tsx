@@ -248,8 +248,8 @@ export default function ProductDetail({ product }: { product?: any }) {
           <div className="flex justify-center md:grid md:grid-cols-[2fr_1fr] items-center gap-8 md:gap-14 mb-14">
 
             {/* Gallery */}
-            <div className="flex flex-col gap-3">
-              <div className="w-full object-contain p-8 duration-200 overflow-hidden border border-slate-300 rounded-4xl hover:bg-white transition relative">
+            <div className="flex flex-col gap-3 border border-red-500">
+              <div className="w-[400px] object-contain p-8 duration-200 overflow-hidden border border-slate-300 rounded-4xl hover:bg-white transition relative">
                 {/* ← pakai currentSrc yang reaktif */}
                 <ZoomImage
                   src={currentSrc}
