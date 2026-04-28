@@ -272,7 +272,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                   <button
                     key={i}
                     onClick={() => switchImg(i)}
-                    className={`w-[72px] h-[72px] md:w-[80px] md:h-[80px] rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white transition-all duration-150 ${
+                    className={`w-[72px] h-[72px] md:w-[200px] md:h-[200px] rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white transition-all duration-150 ${
                       // Active kalau src ini yang aktif dan bukan dari variant
                       (!activeImgSrc && i === activeImg)
                         ? "border-second"
@@ -343,11 +343,11 @@ export default function ProductDetail({ product }: { product?: any }) {
                 <div className="price-section flex gap-x-5">
                   <div suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third">
                     <p className="text-[16px]">Harga Offline</p>
-                    <p className="text-[20px] md:text-[28px] font-black">{formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}</p>
+                    <p className="text-[20px] md:text-[28px] font-black text-red-500">{formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}</p>
                   </div>
                   <div suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third">
                     <p className="text-[16px]">Harga Online</p>
-                    <p className="text-[20px] md:text-[28px] font-black">{formattedPrice || `Rp ${product.onlinePrice?.toLocaleString()}`}</p>
+                    <p className="text-[20px] md:text-[28px] font-black text-red-500">{formattedPrice || `Rp ${product.onlinePrice?.toLocaleString()}`}</p>
                   </div>
                 </div>
                 {product.pricelist && (
