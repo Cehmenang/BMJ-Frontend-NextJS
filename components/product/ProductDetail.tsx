@@ -243,7 +243,7 @@ export default function ProductDetail({ product }: { product?: any }) {
           <span className="text-third/70 line-clamp-1">{product.name}</span>
         </div>
 
-        <div className="px-4 md:px-20 py-8">
+        <div className="px-4 md:px-28 py-8">
           {/* ── Top: Gallery + Info ── */}
           <div className="flex justify-center md:grid md:grid-cols-[2fr_1fr] items-center gap-8 md:gap-14 mb-14">
 
@@ -331,7 +331,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
               {/* Name */}
               <div>
-                <h1 className="font-display text-[22px] md:text-[32px] font-black text-third leading-snug">
+                <h1 className="font-display text-[22px] md:text-[28px] font-black text-third leading-snug">
                   {product.name}
                 </h1>
               </div>
@@ -342,16 +342,16 @@ export default function ProductDetail({ product }: { product?: any }) {
               <div>
                 <div className="price-section flex gap-x-5">
                   <div suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third">
-                    <p className="text-[14px]">Harga Offline</p>
-                    <p className="text-[28px] md:text-[32px] font-black">{formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}</p>
+                    <p className="text-[16px]">Harga Offline</p>
+                    <p className="text-[20px] md:text-[28px] font-black">{formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}</p>
                   </div>
                   <div suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third">
-                    <p className="text-[14px]">Harga Online</p>
-                    <p className="text-[28px] md:text-[32px] font-black">{formattedPrice || `Rp ${product.onlinePrice?.toLocaleString()}`}</p>
+                    <p className="text-[16px]">Harga Online</p>
+                    <p className="text-[20px] md:text-[28px] font-black">{formattedPrice || `Rp ${product.onlinePrice?.toLocaleString()}`}</p>
                   </div>
                 </div>
                 {product.pricelist && (
-                  <div className="font-semibold text-[16px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center mt-2">
+                  <div className="font-semibold text-[20px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center mt-2">
                     <span className={`${((product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim())
                       && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && 'line-through'}`}>
                       Pricelist: {formatPrice(parseInt(product.pricelist.includes(" ") ? product.pricelist.split(' ')[0].trim() : product.pricelist.trim()))}
