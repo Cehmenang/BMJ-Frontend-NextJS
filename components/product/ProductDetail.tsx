@@ -243,9 +243,9 @@ export default function ProductDetail({ product }: { product?: any }) {
           <span className="text-third/70 line-clamp-1">{product.name}</span>
         </div>
 
-        <div className="px-4 md:px-14 py-8">
+        <div className="px-4 md:px-20 py-8">
           {/* ── Top: Gallery + Info ── */}
-          <div className="flex justify-center md:flex-row flex-col items-center gap-8 md:gap-14 mb-14">
+          <div className="flex justify-center md:grid md:grid-cols-[2fr_1fr] items-center gap-8 md:gap-14 mb-14">
 
             {/* Gallery */}
             <div className="flex flex-col gap-3">
