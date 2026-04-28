@@ -271,12 +271,16 @@ export default function ProductDetail({ product }: { product?: any }) {
 
               {/* Price */}
               <div>
-                <p
-                  suppressHydrationWarning
-                  className="font-display text-[28px] md:text-[32px] font-black text-red-500 leading-none transition-all duration-200"
-                >
-                  {formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}
-                </p>
+                <div className="price-section">
+                    <div suppressHydrationWarning className="font-display text-[28px] md:text-[32px] font-black text-red-500 leading-none transition-all duration-200">
+                      <p>Harga Offline</p>
+                      <p>{formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}</p>
+                    </div>
+                    <div suppressHydrationWarning className="font-display text-[28px] md:text-[32px] font-black text-red-500 leading-none transition-all duration-200">
+                      <p>Harga Online</p>
+                      <p>{formattedPrice || `Rp ${product.onlinePrice?.toLocaleString()}`}</p>
+                    </div>
+                </div>
                 {product.pricelist && <div className="font-semibold text-[16px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center mt-2">
                     <span className={`${((product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim()) 
                       && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && 'line-through'}`}>
