@@ -2,6 +2,7 @@
 import { countDatas } from "@/action/search"
 import { useEffect, useState } from "react"
 import { Package, Tag, Layers } from "lucide-react"
+import Link from "next/link"
 
 type CountData = {
   produk: number
@@ -43,13 +44,15 @@ function StatCard({
   icon: Icon,
   iconBg,
   loading,
+  key
 }: {
   label: string
   sublabel: string
   value: number
   icon: React.ElementType
   iconBg: string
-  loading: boolean
+  loading: boolean,
+  key: string
 }) {
   return (
     <div className="bg-white rounded-2xl border border-third/8 p-5 md:p-6 flex items-center gap-4 hover:border-third/15 hover:shadow-[0_4px_20px_rgba(62,63,32,0.06)] transition-all duration-200">
@@ -73,6 +76,7 @@ function StatCard({
               {value.toLocaleString("id-ID")}
             </p>
             <p className="font-poppins text-[10.5px] text-third/35 mt-0.5">{sublabel}</p>
+            <Link href={"/upload/product"} className="underline px-4 py-1 border border-third rounded-md">{key == "produk" && "Tambah Produk" }</Link>
           </>
         )}
       </div>
