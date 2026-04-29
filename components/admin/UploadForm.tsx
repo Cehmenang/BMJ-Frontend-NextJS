@@ -465,12 +465,10 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
         }
       });
     }
-    console.log(data.namaPromo)
-    console.log(data.promo)
-
-    // const response = await uploadProduct(formData)
-    // setSubmitted(true);
-    // router.refresh()
+    
+    const response = await uploadProduct(formData)
+    setSubmitted(true);
+    router.refresh()
   };
 
   const handleReset = () => {
