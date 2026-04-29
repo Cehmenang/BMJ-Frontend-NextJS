@@ -250,12 +250,12 @@ export default function ProductDetail({ product }: { product?: any }) {
 
             {/* Gallery */}
             <div className="flex flex-col gap-3 border border-red-500">
-              <div className="w-[700px] h-[700px] object-contain p-8 duration-200 overflow-hidden border border-slate-300 rounded-4xl hover:bg-white transition relative">
+              <div className="w-[600px] object-contain p-8 duration-200 overflow-hidden border border-slate-300 rounded-4xl hover:bg-white transition relative">
                 {/* ← pakai currentSrc yang reaktif */}
                 <ZoomImage
                   src={currentSrc}
-                  width="700"
-                  height="700"
+                  width="400"
+                  height="400"
                   alt={product.name}
                   productRef={mainImgRef}
                 />
