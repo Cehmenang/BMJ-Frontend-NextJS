@@ -19,6 +19,8 @@ interface ImageItem {
   file: File;
 }
 
+const promos: string[] = ['Best Deal', 'Ramadhan Sale', 'Flash Sale']
+
 // ─── HELPERS ───────────────────────────────────────────────────────────────────
 const formatRupiah = (val: string): string => {
   if (!val) return "";
@@ -655,10 +657,10 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Field label="Nama Promo">
-                    <input
+                    <SelectField
+                      options={promos.map((prm: string)=>prm)}
+                      placeholder="Pilih Promo"
                       {...register("namaPromo")}
-                      placeholder="Harbolnas, Flash Sale, dll"
-                      className={inputCls(false)}
                     />
                   </Field>
                   <Field label="Harga Promo">
