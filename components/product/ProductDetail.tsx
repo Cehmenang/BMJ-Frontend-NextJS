@@ -338,7 +338,7 @@ export default function ProductDetail({ product }: { product?: any }) {
               {/* Price */}
               <div>
                 <div className="price-section flex gap-x-5">
-                  <div suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third">
+                  <div suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third flex flex-col gap-y-2">
                     <p className="text-[16px]">Harga Offline</p>
                     <p className="text-[16px] md:text-[20px] font-black text-red-500">{formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}</p>
                   </div>
@@ -349,8 +349,8 @@ export default function ProductDetail({ product }: { product?: any }) {
                   
                   } */}
                   <Link href={`https://www.tokopedia.com/bandarmusikjakarta`} suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third flex gap-x-2 items-center">
-                      <ShoppingBag size={20}/>
-                      <div className="text">
+                      <ShoppingBag size={24}/>
+                      <div className="flex flex-col gap-y-2">
                         <p className="text-[16px]">Lihat</p>
                         <p className="text-[16px] md:text-[20px] font-black">Harga Online</p>
                       </div>
