@@ -413,7 +413,7 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
     formData.append("kategori", data.kategoriId)
     formData.append("pricelist", data.pricelist)
     formData.append("offlinePrice", data.offlinePrice)
-    formData.append("onlinePrice", data.onlinePrice)
+    formData.append("onlinePrice", data.onlinePrice.trim() !== "" ? data.onlinePrice : "")
     formData.append("description", data.description)
     formData.append("stock", data.stock)
     formData.append("pasang", String(data.pasang ? 1 : 0))
@@ -572,11 +572,10 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
                     )}
                   />
                 </Field>
-                <Field label="Harga Online" required error={errors.onlinePrice}>
+                <Field label="Harga Online" error={errors.onlinePrice}>
                   <Controller
                     name="onlinePrice"
                     control={control}
-                    rules={{ required: { value: true, message: "Harga online wajib diisi" } }}
                     render={({ field }) => (
                       <PriceInput
                         value={field.value}
