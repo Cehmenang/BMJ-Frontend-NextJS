@@ -342,7 +342,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                     <p className="text-[16px] italic opacity-60">Harga Offline</p>
                     <p className="text-[16px] md:text-[20px] font-black text-red-500">{formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}</p>
                   </div>
-                  {product.onlinePrice.trim() !== "" ?
+                  {(product.onlinePrice && product.onlinePrice.trim() !== "") ?
                   <div suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third flex flex-col gap-y-[2px]">
                     <p className="text-[16px] italic opacity-60">Harga Online</p>
                     <p className="text-[16px] md:text-[20px] font-black text-red-500">{formattedPrice || `Rp ${product.onlinePrice?.toLocaleString()}`}</p>
