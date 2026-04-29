@@ -348,8 +348,8 @@ export default function ProductDetail({ product }: { product?: any }) {
                   </div> : ''
                   
                   } */}
-                  <Link href={`https://www.tokopedia.com/bandarmusikjakarta`} suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third flex gap-x-2">
-                      <ShoppingBag size={20}/>
+                  <Link href={`https://www.tokopedia.com/bandarmusikjakarta`} suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third flex gap-x-2 items-center">
+                      <ShoppingBag size={48}/>
                       <div className="text">
                         <p className="text-[16px]">Lihat</p>
                         <p className="text-[20px] md:text-[28px] font-black">Harga Online</p>
