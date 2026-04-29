@@ -348,7 +348,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                   </div> : ''
                   
                   }
-                  <Link href={`https://www.tokopedia.com/bandarmusikjakarta`} suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third flex gap-x-3 items-center">
+                  <Link href={`https://www.tokopedia.com/bandarmusikjakarta`} target="_blank" suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third flex gap-x-3 items-center">
                       <ShoppingBag size={28}/>
                       <div className="flex flex-col gap-y-[2px]">
                         <p className="text-[16px] italic opacity-60">Lihat</p>
