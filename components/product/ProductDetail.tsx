@@ -249,7 +249,7 @@ export default function ProductDetail({ product }: { product?: any }) {
           <div className="flex justify-center md:grid md:grid-cols-[2fr_1.5fr] items-center gap-8 md:gap-0 mb-14">
 
             {/* Gallery */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 border border-red-500">
               <div className="w-[600px] object-contain p-8 duration-200 overflow-hidden border border-slate-300 rounded-4xl hover:bg-white transition relative">
                 {/* ← pakai currentSrc yang reaktif */}
                 <ZoomImage
@@ -324,7 +324,7 @@ export default function ProductDetail({ product }: { product?: any }) {
             </div>
 
             {/* Info */}
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-5 border border-amber-500">
 
               {/* Name */}
               <div>
