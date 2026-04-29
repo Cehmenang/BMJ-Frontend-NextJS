@@ -603,7 +603,11 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
                 />
               </Field>
 
-              {watch('discount') && watch('discount').trim() !== "" && <p>{countDiscount(parseInt(watch('pricelist')), parseInt(watch('discount')))}HWA</p>}
+              {watch('discount') && watch('discount').trim() !== "" && 
+                  <Field label="Harga Diskon">
+                    <p>{countDiscount(parseInt(watch('pricelist')), parseInt(watch('discount')))}</p>
+                  </Field>
+              }
               </div>
               
 
