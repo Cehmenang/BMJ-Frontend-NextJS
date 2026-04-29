@@ -86,7 +86,8 @@ export interface FormValues {
   pasang: boolean;
   variant: string;
   options: [] | {id: number, name: string, image: string, harga: string}[],
-  discount: string
+  discount: string,
+  tautan: string
 }
 
 export interface IOption {

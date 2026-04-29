@@ -406,7 +406,8 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
       pasang: false,
       variant: "",
       options: [],
-      discount: ""
+      discount: "",
+      tautan: ""
     },
   });
 
@@ -445,6 +446,7 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
     formData.append("panjang", data.panjang)
     formData.append("lebar", data.lebar)
     formData.append("tinggi", data.tinggi)
+    formData.append("tautan", data.tautan ? data.tautan : "")
     
     images.forEach(img=>{
       formData.append("images[]", img.file)
@@ -520,6 +522,14 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
                   />
                 </Field>
               </div>
+
+               <Field label="Tautan Produk" error={errors.name}>
+                <input
+                  {...register("tautan")}
+                  placeholder="Link Tokopedia"
+                  className={inputCls(!!errors.name)}
+                />
+              </Field>
 
               <Field
                 label="Deskripsi Produk"
