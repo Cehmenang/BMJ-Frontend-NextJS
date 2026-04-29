@@ -126,6 +126,21 @@ const PriceInput = ({ value, onChange, placeholder, error }: PriceInputProps) =>
   </div>
 );
 
+const DiscInput = ({ value, onChange, placeholder, error }: PriceInputProps) => (
+  <div className="relative">
+    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-[#f9ad52]/70 select-none">
+      Disc
+    </span>
+    <input
+      type="text"
+      value={value}
+      onChange={(e) => onChange(rawNumber(e.target.value))}
+      placeholder={placeholder}
+      className={`${inputCls(!!error)} pl-10`}
+    />
+  </div>
+);
+
 // ─── UNIT INPUT ────────────────────────────────────────────────────────────────
 interface UnitInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   unit: string;
@@ -390,11 +405,17 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
       kirim: false,
       pasang: false,
       variant: "",
-      options: []
+      options: [],
+      discount: ""
     },
   });
 
   const router = useRouter()
+
+  function countDiscount(pricelist: number, disc: number){
+    const hargaDiskon = Math.round(pricelist - (pricelist * disc / 100)) as number
+    return <h1>{hargaDiskon}</h1>
+  }
 
   const onSubmit = async (data: FormValues) => {
    
@@ -411,7 +432,7 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
     formData.append("url", url)
     formData.append("brand", data.brandId)
     formData.append("kategori", data.kategoriId)
-    formData.append("pricelist", data.pricelist)
+    formData.append("pricelist", data.pricelist.trim() !== "" ? data.pricelist : "")
     formData.append("offlinePrice", data.offlinePrice)
     formData.append("onlinePrice", data.onlinePrice.trim() !== "" ? data.onlinePrice : "")
     formData.append("description", data.description)
@@ -442,9 +463,11 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
       });
     }
 
-    const response = await uploadProduct(formData)
-    setSubmitted(true);
-    router.refresh()
+    console.log(data.discount)
+
+    // const response = await uploadProduct(formData)
+    // setSubmitted(true);
+    // router.refresh()
   };
 
   const handleReset = () => {
@@ -541,16 +564,15 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
           <SectionCard icon={Tag} title="Harga" subtitle="Atur harga pricelist, offline, dan online">
             <div className="flex flex-col gap-4">
 
+              <div className="pricelist-zone grid grid-cols-[3fr_1fr_3fr] gap-x-3">
               <Field
                 label="Harga Pricelist"
-                required
                 hint="Harga resmi / MSRP dari brand"
                 error={errors.pricelist}
               >
                 <Controller
                   name="pricelist"
                   control={control}
-                  rules={{ required: { value: true, message: "Harga pricelist wajib diisi" } }}
                   render={({ field }) => (
                     <PriceInput
                       value={field.value}
@@ -561,6 +583,29 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
                   )}
                 />
               </Field>
+
+              <Field
+                label="Diskon Pricelist"
+                hint="Besar diskon dari harga pricelist"
+                error={errors.pricelist}
+              >
+                <Controller
+                  name="discount"
+                  control={control}
+                  render={({ field }) => (
+                    <DiscInput
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="0"
+                      error={errors.pricelist}
+                    />
+                  )}
+                />
+              </Field>
+
+              {watch('discount') && watch('discount').trim() !== "" && <p>{countDiscount(parseInt(watch('pricelist')), parseInt(watch('discount')))}</p>}
+              </div>
+              
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Field label="Harga Offline">
