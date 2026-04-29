@@ -413,8 +413,7 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
   const router = useRouter()
 
   function countDiscount(pricelist: number, disc: number){
-    const hargaDiskon = Math.round(pricelist - (pricelist * disc / 100)) as number
-    return <h1>{hargaDiskon}</h1>
+    return formatRupiah(Math.round(pricelist - (pricelist * disc / 100)).toLocaleString())
   }
 
   const onSubmit = async (data: FormValues) => {
@@ -604,8 +603,10 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
               </Field>
 
               {watch('discount') && watch('discount').trim() !== "" && 
-                  <Field label="Harga Diskon">
-                    <p>{countDiscount(parseInt(watch('pricelist')), parseInt(watch('discount')))}</p>
+                  <Field 
+                    label="Harga Diskon"
+                    hint="Harga diskon pricelist">
+                    <p className="px-2 py-1 rounded-md border border-third">{countDiscount(parseInt(watch('pricelist')), parseInt(watch('discount')))}</p>
                   </Field>
               }
               </div>
