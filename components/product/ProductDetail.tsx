@@ -272,7 +272,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                   <button
                     key={i}
                     onClick={() => switchImg(i)}
-                    className={`w-[72px] h-[72px] md:w-[240px] md:h-[240px] rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white transition-all duration-150 ${
+                    className={`w-[72px] h-[72px] md:w-[120px] md:h-[120px] rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white transition-all duration-150 ${
                       // Active kalau src ini yang aktif dan bukan dari variant
                       (!activeImgSrc && i === activeImg)
                         ? "border-second"
@@ -301,7 +301,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                         const parentVariant = variants.find(v => v.options.some(o => o.id === option.id));
                         if (parentVariant) toggleOption(parentVariant.id, option);
                       }}
-                      className={`w-[72px] h-[72px] md:w-[80px] md:h-[80px] rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white transition-all duration-150 relative ${
+                      className={`w-[72px] h-[72px] md:w-[120px] md:h-[120px] rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white transition-all duration-150 relative ${
                         isActiveVariantImg
                           ? "border-second"
                           : "border-transparent opacity-50 hover:opacity-80 hover:border-third/15"
