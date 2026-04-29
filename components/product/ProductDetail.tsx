@@ -267,7 +267,7 @@ export default function ProductDetail({ product }: { product?: any }) {
               </div>
 
               {/* Thumbnails — product images */}
-              <div className="flex gap-3 flex-wrap">
+              <div className="flex gap-3">
                 {imageList.map((src: string, i: number) => (
                   <button
                     key={i}
@@ -316,10 +316,6 @@ export default function ProductDetail({ product }: { product?: any }) {
                         alt={option.name}
                         className="w-full h-full object-contain p-2"
                       />
-                      {/* Label nama option */}
-                      <div className="absolute bottom-0 inset-x-0 bg-third/70 text-primary text-[8px] font-poppins font-semibold text-center py-0.5 truncate px-1">
-                        {option.name}
-                      </div>
                     </button>
                   );
                 })}
