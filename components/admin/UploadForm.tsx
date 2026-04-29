@@ -593,7 +593,7 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
                   name="discount"
                   control={control}
                   render={({ field }) => (
-                    <DiscInput
+                    <PriceInput
                       value={field.value}
                       onChange={field.onChange}
                       placeholder="0"
@@ -603,7 +603,7 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
                 />
               </Field>
 
-              {watch('discount') && watch('discount').trim() !== "" && <p>{countDiscount(parseInt(watch('pricelist')), parseInt(watch('discount')))}</p>}
+              {watch('discount') && watch('discount').trim() !== "" && <p>{countDiscount(parseInt(watch('pricelist')), parseInt(watch('discount')))}HWA</p>}
               </div>
               
 
