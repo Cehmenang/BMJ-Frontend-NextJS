@@ -259,7 +259,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                   alt={product.name}
                   productRef={mainImgRef}
                 />
-                {((product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim())
+                {((product.offlinePrice && product.pricelist) && ((product.pricelist!.trim() && product.offlinePrice.trim())
                   && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) &&
                   <span className="text-[18px] absolute top-3 right-4 bg-red-600 border border-red-900 text-white px-2 py-[2px] rounded-sm font-black tracking-tight">
                     -{Math.round(((parseInt(product.pricelist!) - parseInt(product.offlinePrice)) / parseInt(product.pricelist!)) * 100)}%
