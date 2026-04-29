@@ -342,12 +342,12 @@ export default function ProductDetail({ product }: { product?: any }) {
                     <p className="text-[16px]">Harga Offline</p>
                     <p className="text-[20px] md:text-[28px] font-black text-red-500">{formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}</p>
                   </div>
-                  {product.onlinePrice.trim() !== "" ? <div suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third">
+                  {/* {product.onlinePrice.trim() !== "" ? <div suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third">
                     <p className="text-[16px]">Harga Online</p>
                     <p className="text-[20px] md:text-[28px] font-black text-red-500">{formattedPrice || `Rp ${product.onlinePrice?.toLocaleString()}`}</p>
                   </div> : ''
                   
-                  }
+                  } */}
                   <Link href={`https://www.tokopedia.com/bandarmusikjakarta`} suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third flex gap-x-2">
                       <ShoppingBag size={20}/>
                       <div className="text">
