@@ -272,7 +272,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                   <button
                     key={i}
                     onClick={() => switchImg(i)}
-                    className={`w-[72px] h-[72px] md:w-[200px] md:h-[200px] rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white transition-all duration-150 ${
+                    className={`w-[72px] h-[72px] md:w-[240px] md:h-[240px] rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white transition-all duration-150 ${
                       // Active kalau src ini yang aktif dan bukan dari variant
                       (!activeImgSrc && i === activeImg)
                         ? "border-second"
