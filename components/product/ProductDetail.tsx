@@ -526,7 +526,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                     href={waUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 bg-green-700 items-center justify-center transition-colors duration-150 text-white rounded-full"
+                    className="p-3 bg-green-600 items-center justify-center transition-colors duration-150 text-white rounded-full"
                   >
                     <FaWhatsapp size={30} className="text-white" />
                   </Link>
