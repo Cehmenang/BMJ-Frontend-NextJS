@@ -246,7 +246,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
         <div className="px-4 md:px-28 py-8">
           {/* ── Top: Gallery + Info ── */}
-          <div className="flex justify-center md:grid md:grid-cols-[2fr_2fr] items-center gap-8 md:gap-0 mb-14">
+          <div className="flex justify-center md:grid md:grid-cols-[2fr_2fr] gap-8 md:gap-0 mb-14">
 
             {/* Gallery */}
             <div className="flex flex-col gap-3">
@@ -324,11 +324,11 @@ export default function ProductDetail({ product }: { product?: any }) {
             </div>
 
             {/* Info */}
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-5 border border-red-500">
 
               {/* Name */}
               <div>
-                <p className="text-[20px]">{product.kategoriId}</p>
+                <p className="text-[16px]">{product.kategoriId}</p>
                 <h1 className="font-display text-[22px] md:text-[28px] font-black text-third leading-snug">
                   {product.name}
                 </h1>
