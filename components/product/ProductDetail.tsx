@@ -234,7 +234,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
       <div className="min-h-screen bg-bg-site font-sans md:px-48 w-full">
         {/* Breadcrumb */}
-        <div className="px-4 md:px-28 pt-8 flex items-center gap-2 text-third/45 text-[18px]">
+        <div className="px-4 md:px-28 pt-8 flex items-center gap-2 text-third/45">
           <Link href="/" className="hover:text-third transition-colors">Beranda</Link>
           <span>/</span>
           <Link href={`/category/${product.kategoriId}`} className="hover:text-third transition-colors">
@@ -245,7 +245,7 @@ export default function ProductDetail({ product }: { product?: any }) {
             {product.brandId}
           </Link>
           <span>/</span>
-          <span className="line-clamp-1 font-bold text-third">{product.name}</span>
+          <span className="line-clamp-1 text-third">{product.name}</span>
         </div>
 
         <div className="px-4 md:px-28 py-8">
@@ -393,7 +393,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                           Pilih {variant.type} :
                         </p>
                         {selectedOptions[variant.id] && (
-                          <span className="font-poppins text-[14px] text-third/45">
+                          <span className={`font-poppins text-[14px] text-third/45 color-variant-${selectedOptions[variant.id].name.toLowerCase().split(' ').join('-')}`}>
                             <span className="text-third font-bold">{selectedOptions[variant.id].name}</span>
                           </span>
                         )}
