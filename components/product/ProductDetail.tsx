@@ -324,11 +324,11 @@ export default function ProductDetail({ product }: { product?: any }) {
             </div>
 
             {/* Info */}
-            <div className="flex flex-col gap-5 border border-red-500">
+            <div className="flex flex-col gap-5 border border-red-500 mt-12">
 
               {/* Name */}
               <div>
-                <p className="text-[16px]">{product.kategoriId}</p>
+                <p className="text-[16px] text-">{product.kategoriId}</p>
                 <h1 className="font-display text-[22px] md:text-[28px] font-black text-third leading-snug">
                   {product.name}
                 </h1>
