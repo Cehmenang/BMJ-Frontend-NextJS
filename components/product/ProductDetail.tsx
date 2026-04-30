@@ -482,7 +482,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                 </div>
               )}
 
-              <div className="h-px bg-third/8" />
+              {variants.length > 0 && <div className="h-px bg-third/8" />}
 
               {/* Qty + Cart + WA */}
               <div className="flex gap-x-5 items-center">
