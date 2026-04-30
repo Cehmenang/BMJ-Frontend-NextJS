@@ -412,7 +412,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                                 isSelected
                                   ? "border-second bg-second/8 shadow-[0_2px_12px_rgba(249,173,82,0.2)]"
                                   : "border-third/12 hover:border-third/25 hover:bg-third/3"
-                              } bg-select-${option.name.toLowerCase()}`}
+                              } bg-select-red`}
                             >
                               {/* Option image */}
                               {/* {option.image && (
@@ -434,7 +434,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                                 <span className={`font-poppins text-[20px] font-bold leading-tight transition-colors ${
                                   isSelected ? "text-third" : "text-third/65"
                                 }`}>
-                                  {option.name}
+                                  {option.name.toLocaleLowerCase()}
                                 </span>
                               </div>
 
