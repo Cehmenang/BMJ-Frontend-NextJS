@@ -491,15 +491,15 @@ export default function ProductDetail({ product }: { product?: any }) {
                   <div className="flex flex-col">
                     <button
                       onClick={() => setQty((q) => q + 1)}
-                      className="w-6 h-[18px] flex items-center justify-center text-third hover:bg-second/15 transition-colors"
+                      className="p-2 rounded-full bg-white border-2 border-third"
                     >
-                      <ChevronUp className="w-3 h-3" />
+                      <ChevronUp size={20} strokeWidth={3}/>
                     </button>
                     <button
                       onClick={() => setQty((q) => Math.max(1, q - 1))}
-                      className="w-6 h-[18px] flex items-center justify-center text-third hover:bg-second/15 transition-colors"
+                      className="p-2 rounded-full bg-white border-2 border-third"
                     >
-                      <ChevronDown className="w-3 h-3" />
+                      <ChevronDown size={20} strokeWidth={3}/>
                     </button>
                   </div>
                 </div>
