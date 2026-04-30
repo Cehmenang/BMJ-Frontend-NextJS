@@ -41,7 +41,11 @@ const bgVariantColor: Record<string, string> = {
   white: 'bg-select-white',
   red: 'bg-select-red',
   calmblue: 'bg-select-calm-blue',
-  mellowbeige: 'bg-select-mellow-beige'
+  mellowbeige: 'bg-select-mellow-beige',
+  hawaiianblue: 'bg-select-hawaiian-blue',
+  mallardfade: 'bg-select-mallard-fade',
+  spacefly: 'bg-select-space-fly',
+  natural: 'bg-select-natural',
 }
 
 function formatPrice(price: number) {
