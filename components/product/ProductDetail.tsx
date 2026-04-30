@@ -412,7 +412,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                                 isSelected
                                   ? "border-second bg-second/8 shadow-[0_2px_12px_rgba(249,173,82,0.2)]"
                                   : "border-third/12 hover:border-third/25 hover:bg-third/3"
-                              } bg-select-${option.name.toLowerCase().split(' ').join('-')}`}
+                              } bg-select-${option.name.toLowerCase()}`}
                             >
                               {/* Option image */}
                               {/* {option.image && (
