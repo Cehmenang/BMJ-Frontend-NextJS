@@ -510,7 +510,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                 {/* Cart */}
                 <button
                   disabled={!allVariantsSelected}
-                  className="py-2 px-5 bg-second text-white border-2 border-third rounded-md font-bold text-[20px] flex items-center justify-center gap-2 transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none drop-shadow-[2px_4px_0px_rgba(62,63,32,1)]"
+                  className="py-2 px-5 bg-second text-white border-2 border-third rounded-md font-bold text-[20px] flex items-center justify-center gap-2 transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none drop-shadow-[6px_6px_0px_rgba(62,63,32,1)]"
                 >
                   <ShoppingCart className="w-6 h-6" />
                   <span className="mt-[2px]">Keranjang</span>
