@@ -41,6 +41,7 @@ const bgVariantColor: Record<string, string> = {
   white: 'bg-select-white',
   red: 'bg-select-red',
   calmblue: 'bg-select-calm-blue',
+  mellowbeige: 'bg-select-mellow-beige'
 }
 
 function formatPrice(price: number) {
@@ -420,7 +421,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                                 transition-all duration-200 ${
                                 isSelected
                                   ? "border-second bg-second/8 shadow-[0_2px_12px_rgba(249,173,82,0.2)]"
-                                  : "border-third/12 hover:border-third/25 hover:bg-third/3"
+                                  : "border-third/12 hover:border-third/25"
                               } ${bgVariantColor[option.name.toLowerCase().split(' ').join('')]}`}
                             >
                               {/* Option image */}
