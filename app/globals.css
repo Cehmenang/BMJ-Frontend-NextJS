@@ -10,10 +10,10 @@
   --color-third-light: #5a5c2e;
   --color-third-dark:  #2b2c15;
   --color-bg-site:     #f5f4ef;
-  --color-variant-black: #111111;
-  --color-variant-white: #eeeeee;
-  --color-variant-red: #fa003f;
-  --color-variant-calm-blue: #99afd7;
+  --color-select-black: #111111;
+  --color-select-white: #eeeeee;
+  --color-select-red: #fa003f;
+  --color-select-calm-blue: #99afd7;
 
   --font-family-poppins: "Poppins", serif;
   --font-play: "Playfair Display", serif;

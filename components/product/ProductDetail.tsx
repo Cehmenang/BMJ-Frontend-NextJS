@@ -393,7 +393,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                           Pilih {variant.type} :
                         </p>
                         {selectedOptions[variant.id] && (
-                          <span className={`font-poppins text-[14px] text-third/45 color-variant-${selectedOptions[variant.id].name.toLowerCase().split(' ').join('-')}`}>
+                          <span className={`font-poppins text-[14px] text-third/45`}>
                             <span className="text-third font-bold">{selectedOptions[variant.id].name}</span>
                           </span>
                         )}
@@ -412,7 +412,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                                 isSelected
                                   ? "border-second bg-second/8 shadow-[0_2px_12px_rgba(249,173,82,0.2)]"
                                   : "border-third/12 hover:border-third/25 hover:bg-third/3"
-                              }`}
+                              } bg-select-${option.name.toLowerCase().split(' ').join('-')}`}
                             >
                               {/* Option image */}
                               {/* {option.image && (
