@@ -507,7 +507,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                 {/* Cart */}
                 <div className="relative">
 
-                  <div className="w-10 h-10 rounded-full border-2 border-third bg-primary flex items-center justify-center font-semibold text-[18px] text-third -m-px absolute top-[-12px] right-[20px] z-10">
+                  <div className="w-10 h-10 rounded-full border-2 border-third bg-primary flex items-center justify-center font-semibold text-[18px] text-third -m-px absolute top-[-12px] right-[24px] z-10">
                     {qty}
                   </div>
 
