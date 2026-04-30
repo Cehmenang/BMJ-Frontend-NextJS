@@ -324,7 +324,7 @@ export default function ProductDetail({ product }: { product?: any }) {
             </div>
 
             {/* Info */}
-            <div className="flex flex-col gap-5 border border-red-500 mt-12">
+            <div className="flex flex-col gap-5  pt-20">
 
               {/* Name */}
               <div>
