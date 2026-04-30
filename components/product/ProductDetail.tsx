@@ -487,8 +487,7 @@ export default function ProductDetail({ product }: { product?: any }) {
               {/* Qty + Cart + WA */}
               <div className="grid grid-cols-[0.5fr_2fr_2fr] gap-x-3">
                 {/* Qty */}
-                <div className="flex items-center border border-third/20 rounded-full overflow-hidden bg-white flex-shrink-0">
-                  <div className="flex flex-col">
+                  <div className="flex flex-col gap-y-2">
                     <button
                       onClick={() => setQty((q) => q + 1)}
                       className="p-2 rounded-full bg-white border-2 border-third"
@@ -502,7 +501,6 @@ export default function ProductDetail({ product }: { product?: any }) {
                       <ChevronDown size={20} strokeWidth={3}/>
                     </button>
                   </div>
-                </div>
 
                 {/* Cart */}
                 <div className="relative">
