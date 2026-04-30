@@ -36,6 +36,12 @@ type Variant = {
   created_at: string
   updated_at: string
 }
+const bgVariantColor: Record<string, string> = {
+  black: 'bg-select-black',
+  white: 'bg-select-white',
+  red: 'bg-select-red',
+  calmblue: 'bg-select-calm-blue',
+}
 
 function formatPrice(price: number) {
   return new Intl.NumberFormat("id-ID", {
@@ -412,7 +418,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                                 isSelected
                                   ? "border-second bg-second/8 shadow-[0_2px_12px_rgba(249,173,82,0.2)]"
                                   : "border-third/12 hover:border-third/25 hover:bg-third/3"
-                              } bg-select-${option.name.toLocaleLowerCase()}`}
+                              } ${bgVariantColor[option.name.toLowerCase().split(' ').join('')]}`}
                             >
                               {/* Option image */}
                               {/* {option.image && (
