@@ -526,10 +526,9 @@ export default function ProductDetail({ product }: { product?: any }) {
                     href={waUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="py-2 px-5 bg-green-700 items-center justify-center transition-colors duration-150 text-white flex gap-x-2 rounded-sm"
+                    className="p-2 bg-green-700 items-center justify-center transition-colors duration-150 text-white rounded-full"
                   >
                     <FaWhatsapp size={30} className="text-white" />
-                    <span className="text-[20px] font-semibold">Tanya Barang</span>
                   </Link>
                 )}
               </div>
