@@ -234,14 +234,14 @@ export default function ProductDetail({ product }: { product?: any }) {
 
       <div className="min-h-screen bg-bg-site font-sans md:px-48 w-full">
         {/* Breadcrumb */}
-        <div className="px-4 md:px-14 pt-8 pb-2 flex items-center gap-2 text-[12px] text-third/45">
+        <div className="px-4 md:px-28 pt-8 flex items-center gap-2 text-[14px] text-third/45">
           <Link href="/" className="hover:text-third transition-colors">Beranda</Link>
           <span>/</span>
           <Link href={`/category/${product.kategoriId}`} className="hover:text-third transition-colors">
             {product.kategoriId}
           </Link>
           <span>/</span>
-          <span className="text-third/70 line-clamp-1">{product.name}</span>
+          <span className="line-clamp-1 font-bold text-red-600">{product.name}</span>
         </div>
 
         <div className="px-4 md:px-28 py-8">
