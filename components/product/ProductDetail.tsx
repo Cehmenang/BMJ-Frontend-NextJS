@@ -490,13 +490,13 @@ export default function ProductDetail({ product }: { product?: any }) {
                   <div className="flex flex-col gap-y-2">
                     <button
                       onClick={() => setQty((q) => q + 1)}
-                      className="w-[40px] h-[40px] rounded-full bg-white border-2 border-third"
+                      className="w-[30px] h-[30px] rounded-full bg-white border-2 border-third flex justify-center items-center"
                     >
                       <ChevronUp size={20} strokeWidth={3}/>
                     </button>
                     <button
                       onClick={() => setQty((q) => Math.max(1, q - 1))}
-                      className="w-[40px] h-[40px] rounded-full bg-white border-2 border-third"
+                      className="w-[30px] h-[30px] rounded-full bg-white border-2 border-third flex justify-center items-center"
                     >
                       <ChevronDown size={20} strokeWidth={3}/>
                     </button>
