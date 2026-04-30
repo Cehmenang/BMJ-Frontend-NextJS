@@ -485,7 +485,7 @@ export default function ProductDetail({ product }: { product?: any }) {
               <div className="h-px bg-third/8" />
 
               {/* Qty + Cart + WA */}
-              <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-3">
+              <div className="grid grid-cols-[0.5fr_3fr_2fr] gap-x-3">
                 {/* Qty */}
                 <div className="flex items-center border border-third/20 rounded-full overflow-hidden bg-white flex-shrink-0">
                   <div className="w-9 h-9 rounded-full border border-third/20 bg-white flex items-center justify-center font-semibold text-[14px] text-third -m-px flex-shrink-0">
