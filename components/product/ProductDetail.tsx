@@ -414,7 +414,10 @@ export default function ProductDetail({ product }: { product?: any }) {
                               key={option.id}
                               type="button"
                               onClick={() => toggleOption(variant.id, option)}
-                              className={`relative flex items-center gap-2.5 px-3 py-2 rounded-sm border-2 transition-all duration-200 ${
+                              className={`
+                                border-2 relative flex items-center gap-2.5 
+                                ${variant.type == "Warna" ? "w-10 h-10 rounded-full border-third " : "px-3 py-2 rounded-sm"}
+                                transition-all duration-200 ${
                                 isSelected
                                   ? "border-second bg-second/8 shadow-[0_2px_12px_rgba(249,173,82,0.2)]"
                                   : "border-third/12 hover:border-third/25 hover:bg-third/3"
@@ -436,13 +439,13 @@ export default function ProductDetail({ product }: { product?: any }) {
                               )} */}
 
                               {/* Name */}
-                              <div className="flex flex-col items-start">
+                              {variant.type !== "Warna" && <div className="flex flex-col items-start">
                                 <span className={`font-poppins text-[20px] font-bold leading-tight transition-colors ${
                                   isSelected ? "text-third" : "text-third/65"
                                 }`}>
                                   {option.name}
                                 </span>
-                              </div>
+                              </div>}
 
                               {/* Checkmark */}
                               {isSelected && (
