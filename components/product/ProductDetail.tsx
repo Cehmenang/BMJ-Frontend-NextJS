@@ -382,7 +382,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
                 </div>
                 {product.pricelist && (
-                  <div className="font-semibold text-[20px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center mt-2">
+                  <div className="font-semibold text-[16px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center mt-2">
                     <span className={`${((product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim())
                       && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && 'line-through'}`}>
                       Pricelist: {formatPrice(parseInt(product.pricelist.includes(" ") ? product.pricelist.split(' ')[0].trim() : product.pricelist.trim()))}
@@ -510,9 +510,9 @@ export default function ProductDetail({ product }: { product?: any }) {
                 {/* Cart */}
                 <button
                   disabled={!allVariantsSelected}
-                  className="py-2 px-5 bg-second hover:bg-[#e89d42] text-white rounded-sm font-semibold text-[20px] flex items-center justify-center gap-2 transition-all duration-150 shadow-[0_4px_16px_rgba(249,173,82,0.3)] disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
+                  className="py-2 px-5 bg-white border-2 border-third rounded-md font-semibold text-[20px] flex items-center justify-center gap-2 transition-all duration-150 shadow-[0_4px_16px_rgba(249,173,82,0.3)] disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
                 >
-                  <ShoppingCart className="w-8 h-8" />
+                  <ShoppingCart className="w-6 h-6" />
                   Keranjang
                 </button>
 
