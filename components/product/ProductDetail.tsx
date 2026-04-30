@@ -488,9 +488,6 @@ export default function ProductDetail({ product }: { product?: any }) {
               <div className="grid grid-cols-[0.5fr_3fr_2fr] gap-x-3">
                 {/* Qty */}
                 <div className="flex items-center border border-third/20 rounded-full overflow-hidden bg-white flex-shrink-0">
-                  <div className="w-9 h-9 rounded-full border border-third/20 bg-white flex items-center justify-center font-semibold text-[14px] text-third -m-px flex-shrink-0">
-                    {qty}
-                  </div>
                   <div className="flex flex-col">
                     <button
                       onClick={() => setQty((q) => q + 1)}
@@ -508,13 +505,22 @@ export default function ProductDetail({ product }: { product?: any }) {
                 </div>
 
                 {/* Cart */}
+                <div className="relative">
+
+                  <div className="w-9 h-9 rounded-full border border-third/20 bg-white flex items-center justify-center font-semibold text-[14px] text-third -m-px flex-shrink-0 absolute top-0 left-0">
+                    {qty}
+                  </div>
+
                 <button
                   disabled={!allVariantsSelected}
-                  className="py-2 px-5 bg-second text-white border-2 border-third rounded-md font-bold text-[20px] flex items-center justify-center gap-2 transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none drop-shadow-[6px_6px_0px_rgba(62,63,32,1)]"
+                  className="py-2 px-5 bg-second-dark text-third border-2 border-third rounded-md font-bold text-[20px] flex items-center justify-center gap-2 transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none drop-shadow-[6px_6px_0px_rgba(62,63,32,1)]"
                 >
                   <ShoppingCart className="w-6 h-6" />
                   <span className="mt-[2px]">Keranjang</span>
                 </button>
+
+                </div>
+                
 
                 {/* WhatsApp */}
                 {waUrl && (
