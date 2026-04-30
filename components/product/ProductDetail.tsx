@@ -485,7 +485,7 @@ export default function ProductDetail({ product }: { product?: any }) {
               <div className="h-px bg-third/8" />
 
               {/* Qty + Cart + WA */}
-              <div className="flex gap-x-3">
+              <div className="flex gap-x-5 items-center">
                 {/* Qty */}
                   <div className="flex flex-col gap-y-2">
                     <button
@@ -505,7 +505,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                 {/* Cart */}
                 <div className="relative">
 
-                  <div className="w-10 h-10 rounded-full border-2 border-third bg-primary flex items-center justify-center font-semibold text-[18px] text-third -m-px absolute top-[-12px] right-[24px] z-10">
+                  <div className="w-10 h-10 rounded-full border-2 border-third bg-primary flex items-center justify-center font-semibold text-[18px] text-third -m-px absolute top-[-12px] right-[-3px] z-10">
                     {qty}
                   </div>
 
