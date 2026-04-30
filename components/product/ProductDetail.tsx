@@ -328,6 +328,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
               {/* Name */}
               <div>
+                <p className="text-[20px]">{product.kategoriId}</p>
                 <h1 className="font-display text-[22px] md:text-[28px] font-black text-third leading-snug">
                   {product.name}
                 </h1>
