@@ -259,9 +259,9 @@ export default function ProductDetail({ product }: { product?: any }) {
           <span className="line-clamp-1 text-third">{product.name}</span>
         </div>
 
-        <div className="px-16 md:px-28 py-8 box-border">
+        <div className="px-8 flex flex-col md:px-28 py-8 box-border">
           {/* ── Top: Gallery + Info ── */}
-          <div className="grid grid-cols-1 md:grid-cols-[2fr_2fr] gap-8 md:gap-0 mb-14">
+          <div className="flex flex-col md:grid md:grid-cols-[2fr_2fr] gap-y-8 md:gap-0 mb-14">
 
             {/* Gallery */}
             <div className="flex flex-col gap-3">
