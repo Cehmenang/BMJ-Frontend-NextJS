@@ -151,7 +151,7 @@ export default function MainNav({ token }: { token: string | null }) {
               <li key={item.label}>
                 <Link
                   href={item.href}
-                  className={`block text-[11px] font-poppins px-[11px] py-1.5 rounded-md tracking-[0.02em] transition-colors duration-200 whitespace-nowrap ${
+                  className={`block text-[11px] md:text-[18px] font-poppins px-[11px] py-1.5 rounded-md tracking-[0.02em] transition-colors duration-200 whitespace-nowrap ${
                     item.href === "/" ? activeLinkColor : linkColor
                   }`}
                 >
