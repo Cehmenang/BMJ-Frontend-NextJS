@@ -16,11 +16,10 @@ export default async function Products({ searchParams }: {
     const pageValue = Number(page) || 1
     const result = await getProducts(pageValue)
 
-    console.log(q, 'query search')
-    console.log('coyyy')
 
     return (
         <div className="products-display mt-16">
+            {(q && q !== " ") && <h1>HALO GUHYS</h1>}
             {result && <ProductsLayout
                     products={result.data}
                     totalPages={result.last_page}
