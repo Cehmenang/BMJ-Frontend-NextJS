@@ -17,6 +17,7 @@ export default async function Products({ searchParams }: {
     const result = await getProducts(pageValue)
 
     console.log(q, 'query search')
+    console.log('coyyy')
 
     return (
         <div className="products-display mt-16">
