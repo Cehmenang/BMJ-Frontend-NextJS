@@ -16,6 +16,8 @@ export default async function Products({ searchParams }: {
     const pageValue = Number(page) || 1
     const result = await getProducts(pageValue)
 
+    console.log(q, 'query search')
+
     return (
         <div className="products-display mt-16">
             {result && <ProductsLayout
