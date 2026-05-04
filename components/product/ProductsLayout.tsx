@@ -105,6 +105,7 @@ export default function ProductsLayout({
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(searchInput, 'HASIL PENCARIAN')
     updateURL({ q: searchInput, page: "1" });
   };
 
