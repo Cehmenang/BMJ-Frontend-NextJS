@@ -16,7 +16,6 @@ export default async function Products({ searchParams }: {
     const pageValue = Number(page) || 1
     const result = q && q.trim() !== "" ? await getProductsBySearch(pageValue, q) : await getProducts(pageValue)
 
-
     return (
         <div className="products-display mt-16">
             {result && <ProductsLayout

@@ -63,10 +63,6 @@ export default function ProductsLayout({
   const [onlyInStock, setOnlyInStock] = useState(initialStock);
   const sortRef = useRef<HTMLDivElement>(null);
 
-  useEffect(()=>{
-    console.log(products, 'barang')
-  }, [])
-
   useEffect(() => {
     setSort(SORT_OPTIONS.find(o => o.value === (searchParams.get("sort") || "latest")) ?? SORT_OPTIONS[0]);
     setActiveCategory(searchParams.get("kategori") || "Semua");
@@ -107,9 +103,8 @@ export default function ProductsLayout({
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async(e: React.FormEvent) => {
     e.preventDefault();
-    console.log(searchInput, 'HASIL PENCARIAN')
     updateURL({ q: searchInput, page: "1" });
   };
 

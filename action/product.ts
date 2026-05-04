@@ -74,7 +74,7 @@ export async function getProductsBySearch(pagination: number, query: string){
         const response = await fetch(`${process.env.SERVER_API}/api/produk/semua?page=${pagination}&q=${query}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json', "Accept": "application/json" },
-            next: { revalidate: 300 }
+            cache: "no-store"
         })
         const result= await response.json()
         if(response.ok) {
