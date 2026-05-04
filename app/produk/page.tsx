@@ -1,6 +1,6 @@
 "use server"
 
-import { getProducts } from "@/action/product";
+import { getProducts, getProductsBySearch } from "@/action/product";
 import ProductsLayout from "@/components/product/ProductsLayout";
 
 export default async function Products({ searchParams }: { 
@@ -14,12 +14,11 @@ export default async function Products({ searchParams }: {
 }){
     const { page, q, sort, kategori, stock } = await searchParams
     const pageValue = Number(page) || 1
-    const result = await getProducts(pageValue)
+    const result = q && q.trim() !== "" ? await getProductsBySearch(pageValue, q) : await getProducts(pageValue)
 
 
     return (
         <div className="products-display mt-16">
-            {(q && q !== " ") && <h1>HALO GUHYS</h1>}
             {result && <ProductsLayout
                     products={result.data}
                     totalPages={result.last_page}
