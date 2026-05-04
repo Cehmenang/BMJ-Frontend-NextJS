@@ -358,31 +358,31 @@ export default function ProductDetail({ product }: { product?: any }) {
                   {(product.onlinePrice && product.onlinePrice.trim() !== "") ?
                   <div suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third flex flex-col gap-y-[2px]">
                     <p className="text-[16px] italic opacity-60">Harga Online</p>
-                    <p className="text-[16px] md:text-[20px] font-black text-red-500">{formattedPrice || `Rp ${product.onlinePrice?.toLocaleString()}`}</p>
+                    <p className="text-[20px] md:text-[20px] font-black text-red-500">{formattedPrice || `Rp ${product.onlinePrice?.toLocaleString()}`}</p>
                   </div> :
 
                    <Link href={`${product.tautan ? product.tautan : 'https://www.tokopedia.com/bandarmusikjakarta'}`} target="_blank" suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third flex gap-x-3 items-center">
                       <ShoppingBag size={28}/>
                       <div className="flex flex-col gap-y-[2px]">
                         <p className="text-[16px] italic opacity-60">Lihat</p>
-                        <p className="text-[16px] md:text-[20px] font-black">Harga Online</p>
+                        <p className="text-[20px] md:text-[20px] font-black">Harga Online</p>
                       </div>
                     </Link>
                   }
 
                   {waUrl && <Link href={waUrl!} suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third flex flex-col gap-y-[2px]">
                     <p className="text-[16px] italic opacity-60">Harga Offline</p>
-                    <p className="text-[16px] md:text-[20px] font-black text-red-500">{formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}</p>
+                    <p className="text-[20px] md:text-[20px] font-black text-red-500">{formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}</p>
                   </Link>}
 
                   {(product.namaPromo && product.promo) && <div suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third flex flex-col gap-y-[2px]">
                     <p className="text-[16px] italic opacity-60">{product.namaPromo}</p>
-                    <p className="text-[16px] md:text-[20px] font-black text-red-500">{`${formatPrice(product.promo!.toLocaleString())}`}</p>
+                    <p className="text-[20px] md:text-[20px] font-black text-red-500">{`${formatPrice(product.promo!.toLocaleString())}`}</p>
                   </div>}
 
                 </div>
                 {product.pricelist && (
-                  <div className="font-semibold text-[16px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center mt-2">
+                  <div className="font-semibold text-[20px] md:text-[16px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center mt-2">
                     <span className={`${((product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim())
                       && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && 'line-through'}`}>
                       Pricelist: {formatPrice(parseInt(product.pricelist.includes(" ") ? product.pricelist.split(' ')[0].trim() : product.pricelist.trim()))}
