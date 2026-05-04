@@ -243,7 +243,7 @@ export default function ProductDetail({ product }: { product?: any }) {
         />
       )}
 
-      <div className="min-h-screen bg-bg-site font-sans md:px-48 w-full">
+      <div className="min-h-screen bg-bg-site font-sans md:px-48 w-full box-border">
         {/* Breadcrumb */}
         <div className="px-4 md:px-28 pt-8 flex items-center gap-2 text-third/45">
           <Link href="/" className="hover:text-third transition-colors">Beranda</Link>
@@ -259,13 +259,13 @@ export default function ProductDetail({ product }: { product?: any }) {
           <span className="line-clamp-1 text-third">{product.name}</span>
         </div>
 
-        <div className="px-16 md:px-28 py-8">
+        <div className="px-16 md:px-28 py-8 box-border">
           {/* ── Top: Gallery + Info ── */}
           <div className="grid grid-cols-1 md:grid-cols-[2fr_2fr] gap-8 md:gap-0 mb-14">
 
             {/* Gallery */}
             <div className="flex flex-col gap-3">
-              <div className="w-[600px] object-contain p-8 duration-200 overflow-hidden border border-slate-300 rounded-4xl hover:bg-white transition relative">
+              <div className="w-[400px] md:w-[600px] object-contain p-8 duration-200 overflow-hidden border border-slate-300 rounded-4xl hover:bg-white transition relative">
                 {/* ← pakai currentSrc yang reaktif */}
                 <ZoomImage
                   src={currentSrc}
@@ -275,10 +275,10 @@ export default function ProductDetail({ product }: { product?: any }) {
                   productRef={mainImgRef}
                 />
                 {((product.offlinePrice && product.pricelist) && ((product.pricelist!.trim() && product.offlinePrice.trim())
-                  && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && ''
-                  // <span className="text-[18px] absolute top-3 right-4 bg-red-600 border border-red-900 text-white px-2 py-[2px] rounded-sm font-black tracking-tight">
-                  //   -{Math.round(((parseInt(product.pricelist!) - parseInt(product.offlinePrice)) / parseInt(product.pricelist!)) * 100)}%
-                  // </span>
+                  && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && 
+                  <span className="text-[18px] absolute top-3 right-4 bg-red-600 border border-red-900 text-white px-2 py-[2px] rounded-sm font-black tracking-tight">
+                    -{Math.round(((parseInt(product.pricelist!) - parseInt(product.offlinePrice)) / parseInt(product.pricelist!)) * 100)}%
+                  </span>
                 }
               </div>
 
@@ -288,7 +288,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                   <button
                     key={i}
                     onClick={() => switchImg(i)}
-                    className={`w-[150px] h-[150px] md:w-[120px] md:h-[120px] rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white transition-all duration-150 ${
+                    className={`w-[120px] h-[120px] rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white transition-all duration-150 ${
                       // Active kalau src ini yang aktif dan bukan dari variant
                       (!activeImgSrc && i === activeImg)
                         ? "border-second"
@@ -317,7 +317,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                         const parentVariant = variants.find(v => v.options.some(o => o.id === option.id));
                         if (parentVariant) toggleOption(parentVariant.id, option);
                       }}
-                      className={`w-[72px] h-[72px] md:w-[120px] md:h-[120px] rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white transition-all duration-150 relative ${
+                      className={`w-[120px] h-[120px] rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white transition-all duration-150 relative ${
                         isActiveVariantImg
                           ? "border-second"
                           : "border-transparent opacity-50 hover:opacity-80 hover:border-third/15"
@@ -343,8 +343,8 @@ export default function ProductDetail({ product }: { product?: any }) {
 
               {/* Name */}
               <div>
-                <p className="text-[16px] text-">{product.kategoriId}</p>
-                <h1 className="font-display text-[22px] md:text-[28px] font-black text-third leading-snug">
+                <p className="text-[24px] md:text-[16px]">{product.kategoriId}</p>
+                <h1 className="font-display text-[30px] md:text-[28px] font-black text-third leading-snug">
                   {product.name}
                 </h1>
               </div>
@@ -353,7 +353,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
               {/* Price */}
               <div>
-                <div className="price-section flex gap-x-5">
+                <div className="price-section grid grid-cols-3 md:lex gap-x-5">
 
                   {(product.onlinePrice && product.onlinePrice.trim() !== "") ?
                   <div suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third flex flex-col gap-y-[2px]">
