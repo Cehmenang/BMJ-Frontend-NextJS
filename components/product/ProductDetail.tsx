@@ -259,7 +259,7 @@ export default function ProductDetail({ product }: { product?: any }) {
           <span className="line-clamp-1 text-third">{product.name}</span>
         </div>
 
-        <div className="px-4 md:px-28 py-8">
+        <div className="px-16 md:px-28 py-8">
           {/* ── Top: Gallery + Info ── */}
           <div className="grid grid-cols-1 md:grid-cols-[2fr_2fr] gap-8 md:gap-0 mb-14">
 
@@ -275,10 +275,10 @@ export default function ProductDetail({ product }: { product?: any }) {
                   productRef={mainImgRef}
                 />
                 {((product.offlinePrice && product.pricelist) && ((product.pricelist!.trim() && product.offlinePrice.trim())
-                  && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) &&
-                  <span className="text-[18px] absolute top-3 right-4 bg-red-600 border border-red-900 text-white px-2 py-[2px] rounded-sm font-black tracking-tight">
-                    -{Math.round(((parseInt(product.pricelist!) - parseInt(product.offlinePrice)) / parseInt(product.pricelist!)) * 100)}%
-                  </span>
+                  && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && ''
+                  // <span className="text-[18px] absolute top-3 right-4 bg-red-600 border border-red-900 text-white px-2 py-[2px] rounded-sm font-black tracking-tight">
+                  //   -{Math.round(((parseInt(product.pricelist!) - parseInt(product.offlinePrice)) / parseInt(product.pricelist!)) * 100)}%
+                  // </span>
                 }
               </div>
 
@@ -288,7 +288,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                   <button
                     key={i}
                     onClick={() => switchImg(i)}
-                    className={`w-[72px] h-[72px] md:w-[120px] md:h-[120px] rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white transition-all duration-150 ${
+                    className={`w-[150px] h-[150px] md:w-[120px] md:h-[120px] rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white transition-all duration-150 ${
                       // Active kalau src ini yang aktif dan bukan dari variant
                       (!activeImgSrc && i === activeImg)
                         ? "border-second"
