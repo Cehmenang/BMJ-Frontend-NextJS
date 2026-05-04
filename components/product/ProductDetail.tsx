@@ -259,7 +259,7 @@ export default function ProductDetail({ product }: { product?: any }) {
           <span className="line-clamp-1 text-third">{product.name}</span>
         </div>
 
-        <div className="px-8 flex flex-col md:px-28 py-8 box-border">
+        <div className="flex flex-col md:px-28 py-8 box-border items-center justify-center">
           {/* ── Top: Gallery + Info ── */}
           <div className="flex flex-col md:grid md:grid-cols-[2fr_2fr] gap-y-8 md:gap-0 mb-14">
 
