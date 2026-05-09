@@ -200,7 +200,7 @@ export default function Carousel() {
             </div>
             <h1
               data-title
-              className="font-poppins font-bold tracking-tighter text-primary leading-18 text-[60px]"
+              className="font-poppins font-bold tracking-tighter text-primary leading-18 text-[100px]"
               style={{ opacity: 0 }}
             >
               <span>{slide.title}</span>
@@ -217,11 +217,11 @@ export default function Carousel() {
             <a
               data-cta
               href={slide.href}
-              className="inline-flex items-center gap-2.5 text-[13px] font-medium tracking-[0.04em] text-third bg-second px-6 py-3 rounded-lg transition-all duration-200 hover:bg-[#fbbe74] hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(249,173,82,0.45)]"
+              className="inline-flex items-center gap-2.5 text-[20px] font-medium tracking-[0.04em] text-third bg-second px-6 py-3 rounded-lg transition-all duration-200 hover:bg-[#fbbe74] hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(249,173,82,0.45)]"
               style={{ opacity: 0 }}
             >
               {slide.cta}
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-5 h-5" />
             </a>
           </div>
         </div>
