@@ -37,6 +37,16 @@ const SLIDES = [
     bg: "/SolarBanner.webp",
     glow: "radial-gradient(ellipse 90% 60% at 60% 40%, rgba(249,173,82,0.2) 0%, transparent 65%)",
   },
+  {
+    id: 4,
+    tag: "All In One Setup",
+    title: "Lava",
+    titleEm: "Studio",
+    sub: "Setup Cepat Tinggal Plug and Play Pake Lava Studio. Setup Masa Depan Anti Ribet.",
+    cta: "Beli Sekarang",
+    href: "/produk/lava-studio-digital-modelling-guitar-amplifier",
+    bg: "/LavaBanner.webp",
+  },
 ];
 
 const DURATION = 5000;
@@ -179,7 +189,7 @@ export default function Carousel() {
           {/* Content */}
           <div
             ref={(el) => { contentRefs.current[i] = el; }}
-            className="relative z-10 left-[120px] top-[40px] max-w-3xl"
+            className="relative z-10 left-[180px] top-[40px] max-w-3xl"
           >
             <div
               data-tag
