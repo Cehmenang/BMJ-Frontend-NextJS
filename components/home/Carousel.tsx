@@ -189,7 +189,7 @@ export default function Carousel() {
           {/* Content */}
           <div
             ref={(el) => { contentRefs.current[i] = el; }}
-            className="relative z-10 left-[180px] top-[40px] max-w-3xl"
+            className="relative z-10 left-[220px] top-[40px] max-w-3xl"
           >
             <div
               data-tag
@@ -200,7 +200,7 @@ export default function Carousel() {
             </div>
             <h1
               data-title
-              className="font-poppins text-[clamp(44px,6vw,80px)] font-bold tracking-tighter text-primary leading-18"
+              className="font-poppins font-bold tracking-tighter text-primary leading-18 text-[60px]"
               style={{ opacity: 0 }}
             >
               <span>{slide.title}</span>
@@ -209,7 +209,7 @@ export default function Carousel() {
             </h1>
             <p
               data-sub
-              className="text-[15px] font-light text-primary/72 leading-[1.65] max-w-xl mb-8 mt-5"
+              className="text-[20px] font-light text-primary/72 leading-[1.65] max-w-xl mb-8 mt-5"
               style={{ opacity: 0 }}
             >
               {slide.sub}
