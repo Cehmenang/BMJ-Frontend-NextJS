@@ -193,7 +193,7 @@ export default function Carousel() {
           >
             <div
               data-tag
-              className="inline-block text-[10px] font-semibold tracking-[0.18em] uppercase text-second border border-second/40 px-3.5 py-1.5 rounded-full mb-5 bg-second/8"
+              className="inline-block text-[16px] font-semibold tracking-[0.18em] uppercase text-second border border-second/40 px-3.5 py-1.5 rounded-full mb-5 bg-second/8"
               style={{ opacity: 0 }}
             >
               {slide.tag}
@@ -217,7 +217,7 @@ export default function Carousel() {
             <a
               data-cta
               href={slide.href}
-              className="inline-flex items-center gap-2.5 text-[20px] font-medium tracking-[0.04em] text-third bg-second px-6 py-3 rounded-lg transition-all duration-200 hover:bg-[#fbbe74] hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(249,173,82,0.45)]"
+              className="inline-flex items-center gap-2.5 text-[20px] font-bold text-third bg-second px-6 py-2 rounded-lg transition-all duration-200 hover:bg-[#fbbe74] hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(249,173,82,0.45)]"
               style={{ opacity: 0 }}
             >
               {slide.cta}
