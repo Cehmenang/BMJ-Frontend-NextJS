@@ -123,9 +123,9 @@ export default function ProductCard({ product }: { product: IProduct }) {
         <div className="bott-card-product flex justify-between">
 
         <div className="flex flex-col gap-y-2">
-          <span className="font-bold text-[15px] text-red-500 leading-none px-3 py-1 rounded-2 border border-red-500">
+          {/* <span className="font-bold text-[15px] text-red-500 leading-none px-3 py-1 rounded-2 border border-red-500">
             {(product.namaPromo && product.promo) && `${product.namaPromo} ${formatPrice(parseInt(product.promo))}`}
-          </span>
+          </span> */}
           <span className="font-bold text-[15px] text-red-500 leading-none">
             {product.offlinePrice && formatPrice(parseInt(product.offlinePrice.includes(" ") ? product.offlinePrice.split(' ')[0].trim() : product.offlinePrice.trim()))}
           </span>
