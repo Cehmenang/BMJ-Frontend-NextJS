@@ -184,7 +184,7 @@ export default function Carousel() {
           </div>
 
           {/* Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[rgba(10,10,5,0.97)] via-[rgba(10,10,5,0.92)] via-[50%] to-[rgba(10,10,5,0.45)]" />
+          <div className="absolute inset-0" />
 
           {/* Content */}
           <div
