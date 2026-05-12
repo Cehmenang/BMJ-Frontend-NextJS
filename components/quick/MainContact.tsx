@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import { FaTiktok } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
@@ -20,7 +20,6 @@ const menus = [
 ]
 
 export default function MainContact(){
-    const [ screen, setScreen ] = useState<number>(0)
     const [ tabChat, setTabChat ] = useState<boolean>(false)
     const [ tabContact, setTabContact ] = useState<boolean>(false)
         
@@ -64,11 +63,6 @@ export default function MainContact(){
         )
     }
 
-    useEffect(()=>{
-        addEventListener("resize", ()=>{
-            return setScreen(window.innerWidth)
-        })
-    })
     return (
         <>
         <button className="diskusi fixed bottom-6 md:bottom-20 right-4 md:right-7 bg-second p-4 rounded-full z-50" onClick={()=>{

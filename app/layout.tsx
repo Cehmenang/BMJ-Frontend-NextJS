@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import MainNav from "../components/navbar/MainNav";
 import LayoutNav from "@/components/navbar/LayoutNav";
 import Footer from "@/components/footer/MainFooter";
-import AdminNav from "@/components/navbar/AdminNav";
-import MainContact from "@/components/contact/MainContact";
+import QuickAction from "@/components/quick/QuickAction";
 
 export const metadata: Metadata = {
   title: "Bandar Musik Jakarta BMJ",
@@ -31,7 +29,7 @@ export default function RootLayout({
         <div className="wrap">
           {children}
         </div>
-        <MainContact/>
+        <QuickAction/>
         <Footer/>
       </body>
     </html>
