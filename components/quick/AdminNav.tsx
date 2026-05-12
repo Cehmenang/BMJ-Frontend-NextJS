@@ -1,7 +1,28 @@
+"use client"
+
+import { Navigation } from "lucide-react"
+import Link from "next/link"
+import { useState } from "react"
+
+const pages = [
+    { text: 'Dashboard', target: '/dashboard' },
+    { text: 'Upload Produk', target: '/upload/product' },
+    { text: 'Upload Brand', target: '/upload/brand' },
+]
+
 export default function AdminNav(){
+    const [ links, setLinks ] = useState<boolean>(false)
+
     return (
-        <button className="diskusi fixed bottom-6 md:bottom-20 right-4 md:right-7 bg-second p-4 rounded-full z-50">
-            Halo Boy
-        </button>
+        <>
+            <button className="diskusi fixed bottom-6 md:bottom-20 right-4 md:right-7 bg-second p-4 rounded-full z-50" onClick={()=>links ? setLinks(false) : setLinks(true)}>
+                <Navigation size={20} className="white"/>
+            </button>
+            <div className={`bottom-6 md:bottom-20 right-4 md:right-7 ${links ? 'translate-x-0' : 'translate-x-[50px]'} transition-all`}>
+                {pages.map(page=>{
+                    return <Link href={page.target}>{page.text}</Link>
+                })}
+            </div>
+        </>
     )
 }
