@@ -16,7 +16,7 @@ export default function AdminNav(){
     return (
         <>
             <button className="diskusi fixed bottom-6 md:bottom-20 right-4 md:right-7 bg-second p-4 rounded-full z-50" onClick={()=>links ? setLinks(false) : setLinks(true)}>
-                <Navigation size={20} className="white"/>
+                <Navigation size={30} className="white" stroke="5"/>
             </button>
             <div className={`fixed bottom-6 md:bottom-[200px] right-4 md:right-7 z-50 ${links ? 'translate-x-0' : 'translate-x-[200px]'} transition-all flex flex-col bg-second border-4 border-third rounded-md`}>
                 <div className="header-admin py-3 px-6 font-extrabold border-b-4 border-third bg-primary text-[18px]">Halaman</div>
