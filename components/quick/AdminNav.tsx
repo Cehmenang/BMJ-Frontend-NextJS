@@ -19,10 +19,10 @@ export default function AdminNav(){
                 <Navigation size={20} className="white"/>
             </button>
             <div className={`fixed bottom-6 md:bottom-[200px] right-4 md:right-7 z-50 ${links ? 'translate-x-0' : 'translate-x-[200px]'} transition-all flex flex-col bg-second border-4 border-third rounded-md`}>
-                <div className="header-admin py-3 px-6 font-bold border-b-4 border-third bg-primary">Halaman</div>
+                <div className="header-admin py-3 px-6 font-extrabold border-b-4 border-third bg-primary text-[18px]">Halaman</div>
                 <div className="pages-admin flex flex-col">
                 {pages.map(page=>{
-                    return <Link href={page.target} className="hover:brightness-110 py-3 text-[18px] text-third font-bold px-6 transition">{page.text}</Link>
+                    return <Link href={page.target} className="hover:brightness-50 py-3 text-[18px] text-third font-bold px-6 transition">{page.text}</Link>
                 })}
                 </div>
             </div>
