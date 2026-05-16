@@ -202,7 +202,7 @@ export default function MainNav({ token, username }: { token: string | null, use
                     <div className="w-7 h-7 rounded-full bg-second text-third text-[10px] font-bold flex items-center justify-center">
                       { username?.split(' ').map(char=>char.split('')[0].toUpperCase()) }
                     </div>
-                    <span className={`text-[12px] font-medium ${atTop ? "text-third" : "text-primary"}`}>{username!}</span>
+                    <span className={`text-[12px] font-medium capitalize ${atTop ? "text-third" : "text-primary"}`}>{username!.split(' ')[0]}</span>
                   </div>
                   <button
                     onClick={async() =>{ 
