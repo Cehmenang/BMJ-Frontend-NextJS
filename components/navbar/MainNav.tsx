@@ -57,7 +57,7 @@ type SearchResult = {
   categories: { id: number; title: string; }[];
 } | null;
 
-export default function MainNav({ token }: { token: string | null }) {
+export default function MainNav({ token, username }: { token: string | null, username?: string | null }) {
   const [navState, setNavState] = useState<NavState>("at-top");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -279,9 +279,11 @@ export default function MainNav({ token }: { token: string | null }) {
           ) : (
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-full bg-second text-third text-[11px] font-bold flex items-center justify-center">AR</div>
+                <div className="w-8 h-8 rounded-full bg-second text-third text-[11px] font-bold flex items-center justify-center">
+                  { username?.split(' ').map(char=>char.split('')[0].toUpperCase()) }
+                </div>
                 <div>
-                  <p className="text-[13px] font-medium text-third font-poppins">Andi</p>
+                  <p className="text-[13px] font-medium text-third font-poppins">{username!}</p>
                   <p className="text-[11px] text-third/50">Member</p>
                 </div>
               </div>

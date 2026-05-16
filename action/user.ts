@@ -19,6 +19,13 @@ export async function login(data: { username: string, password: string }){
                 { Authorization: `Bearer ${response.data.api_token}`, Accept: "application/json" }
             })
         
+            cookieStore.set('username', response.data.user.username, {
+                httpOnly: true,
+                maxAge: 3600,
+                secure: true,
+                sameSite: 'lax'
+            })
+
             cookieStore.set('role', roleResult.data.role, {
                 httpOnly: true,
                 maxAge: 3600,
