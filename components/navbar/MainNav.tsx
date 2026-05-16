@@ -199,8 +199,10 @@ export default function MainNav({ token, username }: { token: string | null, use
               ) : (
                 <>
                   <div className={`flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-full border cursor-pointer transition-colors duration-200 ${atTop ? "bg-third/7 border-third/15 hover:bg-third/12" : "bg-white/7 border-white/13 hover:bg-white/12"}`}>
-                    <div className="w-7 h-7 rounded-full bg-second text-third text-[10px] font-bold flex items-center justify-center">AR</div>
-                    <span className={`text-[12px] font-medium ${atTop ? "text-third" : "text-primary"}`}>Andi</span>
+                    <div className="w-7 h-7 rounded-full bg-second text-third text-[10px] font-bold flex items-center justify-center">
+                      { username?.split(' ').map(char=>char.split('')[0].toUpperCase()) }
+                    </div>
+                    <span className={`text-[12px] font-medium ${atTop ? "text-third" : "text-primary"}`}>{username!}</span>
                   </div>
                   <button
                     onClick={async() =>{ 
