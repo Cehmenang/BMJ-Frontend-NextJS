@@ -90,7 +90,6 @@ export async function saveProduct(formData: any, url: string){
             method: "POST", 
             body: formData,
             headers: {
-                'Content-Type': 'application/json',
                 Accept: "application/json"
             },
         })
