@@ -5,7 +5,7 @@ import Image from "next/image";
 import { SetStateAction } from "react";
 
 export default function ProductRow({ product, onUpdate } : { product: IProduct, onUpdate: SetStateAction<any> }){
-    return (
+    if(product) return (
         <tr>
             <td>
                 <Image src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0][0]}`} alt={product.name}/>
