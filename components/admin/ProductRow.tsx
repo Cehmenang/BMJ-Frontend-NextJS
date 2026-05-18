@@ -49,6 +49,7 @@ export default function ProductRow({ product, onSave }: { product: IProduct, onS
 
   const handleSave = async () => {
     setLoading(true)
+    console.log(row, 'baris diubah')
     await onSave(row)
     setLoading(false)
     setSaved(true)
@@ -91,7 +92,7 @@ export default function ProductRow({ product, onSave }: { product: IProduct, onS
               className="rounded-lg object-cover flex-shrink-0"
             />
           )}
-          
+
             </div>
           <div>
             <p className="font-poppins text-[10px] text-third/40 uppercase tracking-wider mb-0.5">
