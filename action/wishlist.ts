@@ -8,7 +8,7 @@ export async function createWishlist(id: string, qty: number){
         method: 'POST',
         body: JSON.stringify({ product_id: id, quantity: qty }),
         headers: { 
-            Authorization: `Bearer ${cookieStore.get('access_token')!.value}`, Accept: 'application/json'
+            Authorization: `Bearer ${cookieStore.get('access_token')!.value}`, Accept: 'application/json', 'Content-Type': 'application/json'
          }
     })
     if(response.ok) return await response.json()
