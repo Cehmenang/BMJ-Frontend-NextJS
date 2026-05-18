@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { createPortal } from "react-dom";
+import { IProduct } from "@/interface";
 
 type CartItem = {
   id: string;
@@ -127,7 +128,9 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
             </div>
           ) : (
             <div className="px-6 py-4 space-y-4">
-              {items.map((item) => (
+              {items.map((item) =>{
+                console.log(item, 'barang')
+                return (
                 <div key={item.id} className="flex gap-4">
                   {/* Image */}
                   <div className="w-20 h-20 rounded-xl overflow-hidden bg-third/5 border border-third/8 flex-shrink-0">
@@ -190,7 +193,7 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
                     </div>
                   </div>
                 </div>
-              ))}
+                )})}
             </div>
           )}
         </div>
