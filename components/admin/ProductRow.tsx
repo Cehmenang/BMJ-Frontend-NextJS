@@ -59,7 +59,9 @@ export default function ProductRow({ product, onSave }: { product: IProduct, onS
     formData.append("stock", String(row.stock ?? ""))
     formData.append("namaPromo", String(row.namaPromo ?? ""))
 
+    console.log('SEDANGG')
     await saveProduct(formData, row.id)
+    console.log('BERHASILL')
 
     await onSave(row)
     setLoading(false)
