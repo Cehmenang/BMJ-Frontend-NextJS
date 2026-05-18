@@ -1,13 +1,16 @@
 "use client"
-
-import { SetStateAction, useState } from "react"
+import { SetStateAction, useEffect, useState } from "react"
 import { IProduct } from "@/interface"
 import ProductRow from "./ProductRow"
 
 export default function ProductTable({ products, onSave }: { products: IProduct[], onSave: SetStateAction<any> }) {
-  const [rows, setRows] = useState(products)
+  const [rows, setRows] = useState<IProduct[]>([])
 
-  const update = (id: string, field: string, value: string) =>
+  useEffect(() => {
+    setRows(products)
+  }, [products])
+
+  const update = (id: string, field: string, value: any) =>
     setRows(prev => prev.map(p => p.id === id ? { ...p, [field]: value } : p))
 
   return (
@@ -25,15 +28,15 @@ export default function ProductTable({ products, onSave }: { products: IProduct[
           </tr>
         </thead>
         <tbody>
-            <div className="md:hidden">
-                {rows.map(p => <ProductRow key={p.id} product={p} onUpdate={update} />)}
-            </div>
+          {rows.map(p => (
+            <ProductRow key={p.id} product={p} onUpdate={update} />
+          ))}
         </tbody>
       </table>
 
       <div className="flex justify-end gap-2 p-3 border-t border-third/8">
-        <button onClick={() => setRows(products)} className="...">Reset</button>
-        <button onClick={() => onSave(rows)} className="...">Simpan semua</button>
+        <button onClick={() => setRows(products)}>Reset</button>
+        <button onClick={() => onSave(rows)}>Simpan semua</button>
       </div>
     </div>
   )
