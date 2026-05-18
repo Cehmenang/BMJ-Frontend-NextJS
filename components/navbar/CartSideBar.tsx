@@ -7,11 +7,12 @@ import { IProduct } from "@/interface";
 
 type CartItem = {
   id: string;
-  name: string;
-  price: number;
+  product_id: string;
+  produk: IProduct;
   quantity: number;
-  image: string;
-  brand: string;
+  updated_at: string;
+  created_at: string;
+  user_id: string;
 };
 
 const formatRp = (n: number) =>
@@ -62,7 +63,7 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
     setItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = items.reduce((sum, item) => sum + parseInt(item.produk.offlinePrice) * item.quantity, 0);
 
   if (!mounted) return null;
   return createPortal(
@@ -129,26 +130,25 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
           ) : (
             <div className="px-6 py-4 space-y-4">
               {items.map((item) =>{
-                console.log(item, 'barang')
                 return (
                 <div key={item.id} className="flex gap-4">
                   {/* Image */}
                   <div className="w-20 h-20 rounded-xl overflow-hidden bg-third/5 border border-third/8 flex-shrink-0">
                     <img
-                      src={item.image}
-                      alt={item.name}
+                      src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${item.produk.images[0][0]}`}
+                      alt={item.produk.name}
                       className="w-full h-full object-cover"
                     />
                   </div>
 
                   {/* Info */}
                   <div className="flex-1 min-w-0">
-                    <p className="font-poppins text-[11px] text-third/40 mb-0.5">{item.brand}</p>
+                    <p className="font-poppins text-[11px] text-third/40 mb-0.5">{item.produk.brandId}</p>
                     <p className="font-poppins text-[13px] font-semibold text-third leading-snug truncate">
-                      {item.name}
+                      {item.produk.name}
                     </p>
                     <p className="font-poppins text-[13px] font-bold text-second mt-1">
-                      {formatRp(item.price)}
+                      {formatRp(parseInt(item.produk.offlinePrice))}
                     </p>
 
                     {/* Qty + Remove */}
