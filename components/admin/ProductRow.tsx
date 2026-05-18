@@ -59,7 +59,8 @@ export default function ProductRow({ product, onSave }: { product: IProduct, onS
     formData.append("stock", String(row.stock ?? ""))
     formData.append("namaPromo", String(row.namaPromo ?? ""))
 
-    console.log(row.url, 'dataa')
+    console.log(formData.get('pricelist'), 'harga pricleist')
+
     await saveProduct(formData, row.url)
 
     await onSave(row)
