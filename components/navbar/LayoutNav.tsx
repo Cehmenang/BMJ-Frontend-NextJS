@@ -1,5 +1,3 @@
-"use server"
-
 import { cookies } from 'next/headers';
 import MainNav from './MainNav';
 import { getWishlists } from '@/action/wishlist';
