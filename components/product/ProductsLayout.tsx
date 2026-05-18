@@ -244,7 +244,19 @@ export default function ProductsLayout({
 
   if(role && role?.toLowerCase() == "admin"){
     return (
-      <ProductTable products={products} onSave={onSave}/>
+      <div>
+            <ProductTable products={products} onSave={onSave}/>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              isPending={isPending}
+            />
+
+            <p className="text-center font-poppins text-[11px] text-third/25 mt-3">
+              Halaman {currentPage} dari {totalPages}
+            </p>
+      </div>
     )
   }
 
