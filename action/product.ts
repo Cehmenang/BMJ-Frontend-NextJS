@@ -87,11 +87,9 @@ export async function saveProduct(formData: any, url: string){
         await fetch(`${process.env.SERVER_API}/api/update/quick/produk/${url}`, {
             method: "POST", 
             body: formData,
-            headers: {
-                "Accept": "application/json"
-            },
+            headers: { "Accept": "application/json" }
         })
     }catch(err){
-        console.log(err)
+        return err
     }
 }
