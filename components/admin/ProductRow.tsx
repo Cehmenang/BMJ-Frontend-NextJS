@@ -58,10 +58,11 @@ export default function ProductRow({ product, onSave }: { product: IProduct, onS
     formData.append("promo", String(row.promo ?? ""))
     formData.append("stock", String(row.stock ?? ""))
     formData.append("namaPromo", String(row.namaPromo ?? ""))
-
-    console.log(formData.get('pricelist'), 'harga pricleist')
-
-    await saveProduct(formData, row.url)
+    try{
+        await saveProduct(formData, row.url)
+    }catch(err){
+        console.log(err)
+    }
 
     await onSave(row)
     setLoading(false)

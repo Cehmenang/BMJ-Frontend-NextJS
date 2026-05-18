@@ -1,8 +1,6 @@
 "use server"
 
-import { FormValues } from "@/interface"
 import axios from "axios"
-import { cookies } from "next/headers"
 
 export async function getProductByUrl(url: string){
     try{
@@ -90,7 +88,7 @@ export async function saveProduct(formData: any, url: string){
             method: "POST", 
             body: formData,
             headers: {
-                Accept: "application/json"
+                "Accept": "application/json"
             },
         })
     }catch(err){
