@@ -11,7 +11,7 @@ export async function createWishlist(id: string, qty: number){
             Authorization: `Bearer ${cookieStore.get('access_token')!.value}`, Accept: 'application/json'
          }
     })
-    return response
+    if(response.ok) return await response.json()
 }
 
 export async function getWishlists(token: string){
