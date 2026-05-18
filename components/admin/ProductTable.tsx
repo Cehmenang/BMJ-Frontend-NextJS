@@ -14,7 +14,7 @@ export default function ProductTable({ products, onSave }: { products: IProduct[
     setRows(prev => prev.map(p => p.id === id ? { ...p, [field]: value } : p))
 
   return (
-    <div className="overflow-x-auto px-28">
+    <div className="overflow-x-auto px-[80px]">
       <table className="w-full text-sm border-collapse">
         <thead>
           <tr className="bg-third/5 text-[11px] text-third/50 uppercase tracking-wider">

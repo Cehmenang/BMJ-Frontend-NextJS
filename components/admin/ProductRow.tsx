@@ -72,21 +72,25 @@ export default function ProductRow({ product, onUpdate }: { product: IProduct, o
     <tr className="border-b border-third/8 hover:bg-third/[0.02] align-top">
 
       {/* Produk */}
-      <td className="px-4 py-3">
+      <td className="px-4 py-3 flex gap-x-2 justify-center">
             <Image
-                width={500} height={500}
+                width={200} height={200}
                 loading="lazy"
                 sizes="80px"
                 src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0][0]}`}
                 alt={`${product.name}`}
                 className="w-full h-full object-contain p-2"
             />
+            <div className="text-head">
+                
         <p className="font-poppins text-[10px] text-third/40 uppercase tracking-wider mb-0.5">
           {product.brandId}
         </p>
         <p className="font-poppins text-[12px] font-medium text-third leading-snug">
           {product.name}
         </p>
+
+            </div>
       </td>
 
       {/* Stok */}
