@@ -5,7 +5,6 @@ import { IProduct } from "@/interface"
 import ProductRow from "./ProductRow"
 
 export default function ProductTable({ products, onSave }: { products: IProduct[], onSave: SetStateAction<any> }) {
-    console.log(products, 'set')
   const [rows, setRows] = useState(products)
 
   const update = (id: string, field: string, value: string) =>

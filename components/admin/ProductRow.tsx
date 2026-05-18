@@ -51,6 +51,8 @@ export default function ProductRow({ product , onUpdate }: { product: IProduct, 
       ? { label: "Menipis", cls: "bg-amber-50 text-amber-700" }
       : { label: "Aman", cls: "bg-green-50 text-green-700" }
 
+    console.log(product, 'barangggg')
+
   return (
     <tr className="border-b border-third/8 hover:bg-third/[0.02] align-top">
 
