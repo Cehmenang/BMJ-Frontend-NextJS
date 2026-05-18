@@ -1,6 +1,7 @@
 "use client"
 
 import { IProduct } from "@/interface"
+import Image from "next/image"
 import { SetStateAction, useEffect, useState } from "react"
 
 function PriceInput({ value, onChange }: { value: any, onChange: (raw: string) => void }) {
@@ -72,6 +73,14 @@ export default function ProductRow({ product, onUpdate }: { product: IProduct, o
 
       {/* Produk */}
       <td className="px-4 py-3">
+            <Image
+                width={500} height={500}
+                loading="lazy"
+                sizes="80px"
+                src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0][0]}`}
+                alt={`${product.name}`}
+                className="w-full h-full object-contain p-2"
+            />
         <p className="font-poppins text-[10px] text-third/40 uppercase tracking-wider mb-0.5">
           {product.brandId}
         </p>
