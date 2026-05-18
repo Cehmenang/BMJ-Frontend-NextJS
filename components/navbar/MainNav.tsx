@@ -73,7 +73,7 @@ export default function MainNav({ token, username, wishlist }: { token: string |
   const router = useRouter()
 
   useEffect(()=>{
-    console.log(wishlist)
+    console.log(wishlist, 'wishlistt')
   }, [])
 
   useEffect(() => {
