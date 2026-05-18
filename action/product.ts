@@ -2,6 +2,7 @@
 
 import { FormValues } from "@/interface"
 import axios from "axios"
+import { cookies } from "next/headers"
 
 export async function getProductByUrl(url: string){
     try{
@@ -81,4 +82,18 @@ export async function getProductsBySearch(pagination: number, query: string){
             return await result.produk
         }
     }catch(err){ console.log(err) }
+}
+
+export async function saveProduct(formData: any, id: string){
+    const cookieStore = await cookies()
+    const token = cookieStore.get('access_token')?.value || null
+    await fetch(`${process.env.SERVER_API}/api/update/quick/produk/${id}`, {
+        method: "POST", 
+        body: formData,
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'Accept': "application/json"
+        },
+    })
 }

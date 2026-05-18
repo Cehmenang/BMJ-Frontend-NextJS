@@ -1,4 +1,5 @@
 "use client"
+import { saveProduct } from "@/action/product"
 import { IProduct } from "@/interface"
 import Image from "next/image"
 import { useEffect, useState } from "react"
@@ -49,7 +50,17 @@ export default function ProductRow({ product, onSave }: { product: IProduct, onS
 
   const handleSave = async () => {
     setLoading(true)
-    console.log(row, 'baris diubah')
+
+    const formData = new FormData()
+    formData.append("pricelist", String(row.pricelist ?? ""))
+    formData.append("offlinePrice", String(row.offlinePrice ?? ""))
+    formData.append("onlinePrice", String(row.onlinePrice ?? ""))
+    formData.append("promo", String(row.promo ?? ""))
+    formData.append("stock", String(row.stock ?? ""))
+    formData.append("namaPromo", String(row.namaPromo ?? ""))
+
+    await saveProduct(formData, row.id)
+
     await onSave(row)
     setLoading(false)
     setSaved(true)
