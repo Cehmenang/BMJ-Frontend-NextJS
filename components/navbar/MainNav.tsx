@@ -57,7 +57,7 @@ type SearchResult = {
   categories: { id: number; title: string; }[];
 } | null;
 
-export default function MainNav({ token, username, wishlist }: { token: string | null, username?: string | null, wishlist: any[] | null }) {
+export default function MainNav({ token, username, wishlist }: { token: string | null, username?: string | null, wishlist: any | null }) {
   const [navState, setNavState] = useState<NavState>("at-top");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");

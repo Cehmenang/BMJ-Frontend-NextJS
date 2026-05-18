@@ -11,5 +11,5 @@ export default async function LayoutNav() {
 
   const response = await getWishlists(token!)
 
-  return <MainNav token={token} username={username} wishlist={response.data.wishlist && response.data.wishlist}/>
+  return <MainNav token={token} username={username} wishlist={response}/>
 }

@@ -20,4 +20,5 @@ export async function getWishlists(token: string){
             headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' }
     })
     if(response.ok) return await response.json()
+    else return null
 }
