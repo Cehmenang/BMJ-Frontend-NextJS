@@ -15,6 +15,7 @@ import {
 import ZoomImage from "./ZoomImage";
 import Image from "next/image";
 import { FaWhatsapp } from "react-icons/fa";
+import { createWishlist } from "@/action/wishlist";
 
 type Tab = "description" | "features" | "specifications";
 
@@ -512,6 +513,10 @@ export default function ProductDetail({ product }: { product?: any }) {
                 <button
                   disabled={!allVariantsSelected}
                   className="py-2 px-10 bg-second text-third border-2 border-third rounded-md font-bold text-[20px] flex items-center justify-center gap-2 transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none drop-shadow-[6px_6px_0px_rgba(62,63,32,1)]"
+                  onClick={async()=>{
+                    const response = await createWishlist(product.id, qty)
+                    console.log(response)
+                  }}
                 >
                   <ShoppingCart strokeWidth={3} className="w-6 h-6"/>
                   <span className="mt-[2px]">Keranjang</span>
