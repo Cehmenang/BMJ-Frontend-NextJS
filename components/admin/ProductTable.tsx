@@ -4,7 +4,7 @@ import ProductRow from "./ProductRow"
 
 export default function ProductTable({ products, onSave }: { products: IProduct[], onSave: (product: IProduct) => void }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto px-[200px]">
       <table className="w-full text-sm border-collapse">
         <thead>
           <tr className="bg-third/5 text-[11px] text-third/50 uppercase tracking-wider">
