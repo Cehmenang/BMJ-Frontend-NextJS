@@ -72,11 +72,10 @@ export default function ProductRow({ product, onUpdate }: { product: IProduct, o
     <tr className="border-b border-third/8 hover:bg-third/[0.02] align-top">
 
       {/* Produk */}
-      <td className="px-4 py-3 flex gap-x-2 justify-center">
+      <td className="px-4 py-3 flex gap-x-2 justify-center items-center">
             <Image
-                width={50} height={50}
+                width={30} height={30}
                 loading="lazy"
-                sizes="80px"
                 src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0][0]}`}
                 alt={`${product.name}`}
                 className="w-full h-full object-contain"
