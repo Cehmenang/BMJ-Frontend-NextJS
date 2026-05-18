@@ -85,15 +85,17 @@ export async function getProductsBySearch(pagination: number, query: string){
 }
 
 export async function saveProduct(formData: any, id: string){
-    const cookieStore = await cookies()
-    const token = cookieStore.get('access_token')?.value || null
-    await fetch(`${process.env.SERVER_API}/api/update/quick/produk/${id}`, {
-        method: "POST", 
-        body: formData,
-        headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-            'Accept': "application/json"
-        },
-    })
+    try{
+        await fetch(`${process.env.SERVER_API}/api/update/quick/produk/${id}`, {
+            method: "POST", 
+            body: formData,
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': "application/json"
+            },
+        })
+        console.log('BERHASILLL')
+    }catch(err){
+        console.log(err)
+    }
 }
