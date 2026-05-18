@@ -80,6 +80,8 @@ export default function ProductRow({ product, onSave }: { product: IProduct, onS
       {/* Produk */}
       <td className="px-4 py-3">
         <div className="flex items-center gap-2.5">
+            <div className="image-parent-table">
+
           {product.images?.[0]?.[0] && (
             <Image
               src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0][0]}`}
@@ -89,6 +91,8 @@ export default function ProductRow({ product, onSave }: { product: IProduct, onS
               className="rounded-lg object-cover flex-shrink-0"
             />
           )}
+          
+            </div>
           <div>
             <p className="font-poppins text-[10px] text-third/40 uppercase tracking-wider mb-0.5">
               {product.brandId}
