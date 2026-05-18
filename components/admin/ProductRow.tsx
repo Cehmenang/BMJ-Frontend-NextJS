@@ -1,3 +1,5 @@
+"use client"
+
 import { IProduct } from "@/interface"
 import { SetStateAction, useEffect, useState } from "react"
 
