@@ -72,10 +72,6 @@ export default function MainNav({ token, username, wishlist }: { token: string |
   const [cartOpen, setCartOpen] = useState(false)
   const router = useRouter()
 
-  useEffect(()=>{
-    console.log(wishlist, 'wishlistt')
-  }, [])
-
   useEffect(() => {
     if (searchQuery.trim() === "") {
       setSearchResult(null);
@@ -185,9 +181,9 @@ export default function MainNav({ token, username, wishlist }: { token: string |
                   <path d="M16 10a4 4 0 01-8 0" />
                 </svg>
               </button>
-              {cartCount > 0 && (
+              {(wishlist && wishlist.length > 0) && (
                 <span className="absolute -top-1.5 -right-1.5 w-[17px] h-[17px] bg-second text-third text-[9px] font-bold rounded-full flex items-center justify-center pointer-events-none">
-                  {cartCount > 9 ? "9+" : cartCount}
+                  {wishlist.length > 9 ? "9+" : wishlist.length}
                 </span>
               )}
             </div>
@@ -240,8 +236,9 @@ export default function MainNav({ token, username, wishlist }: { token: string |
             </button>
           </div>
         </div>
-        <CartSidebar open={cartOpen} onClose={() => setCartOpen(false)} />
+        {wishlist && <CartSidebar open={cartOpen} onClose={() => setCartOpen(false)} wishlist={wishlist}/>}
       </nav>
+
 
       {/* Mobile backdrop */}
       <div

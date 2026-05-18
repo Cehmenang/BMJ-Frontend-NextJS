@@ -13,27 +13,17 @@ type CartItem = {
   brand: string;
 };
 
-const DUMMY_CART: CartItem[] = [
-  {
-    id: "1",
-    name: "Fender Player Stratocaster",
-    price: 8500000,
-    quantity: 1,
-    image: "/Banner.png",
-    brand: "Fender",
-  },
-];
-
 const formatRp = (n: number) =>
   new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(n);
 
 type CartSidebarProps = {
   open: boolean;
   onClose: () => void;
+  wishlist: any[]
 };
 
-export default function CartSidebar({ open, onClose }: CartSidebarProps) {
-  const [items, setItems] = useState<CartItem[]>(DUMMY_CART);
+export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProps) {
+  const [items, setItems] = useState<CartItem[]>(wishlist);
   const [isLoading, setIsLoading] = useState(false);
   const backdropRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
