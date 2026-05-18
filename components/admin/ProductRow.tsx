@@ -1,10 +1,14 @@
 import { IProduct } from "@/interface"
-import { SetStateAction, useState } from "react"
+import { SetStateAction, useEffect, useState } from "react"
 
-function PriceInput({ value, onChange}: { value: any, onChange: SetStateAction<any>  }) {
+function PriceInput({ value, onChange }: { value: any, onChange: (raw: string) => void }) {
   const [display, setDisplay] = useState(
     value ? Number(value).toLocaleString("id-ID") : ""
   )
+
+  useEffect(() => {
+    setDisplay(value ? Number(value).toLocaleString("id-ID") : "")
+  }, [value])
 
   const handleChange = (e: any) => {
     const raw = e.target.value.replace(/\D/g, "")
@@ -26,8 +30,13 @@ function PriceInput({ value, onChange}: { value: any, onChange: SetStateAction<a
   )
 }
 
-export default function ProductRow({ product , onUpdate }: { product: IProduct, onUpdate: SetStateAction<any> }) {
+export default function ProductRow({ product, onUpdate }: { product: IProduct, onUpdate: SetStateAction<any> }) {
   const [promoOn, setPromoOn] = useState(false)
+  const [currentStock, setCurrentStock] = useState(product.stock ?? 0)
+
+  useEffect(() => {
+    setCurrentStock(product.stock ?? 0)
+  }, [product.stock])
 
   const handlePrice = (field: string, raw: string) => {
     const num = parseInt(raw.replace(/\D/g, "")) || 0
@@ -39,19 +48,22 @@ export default function ProductRow({ product , onUpdate }: { product: IProduct, 
     onUpdate(product.id, "promoOn", val)
   }
 
-  const fmtInput = (val: string) =>
-    val ? Number(val).toLocaleString("id-ID") : ""
+  const handleStockChange = (val: number) => {
+    setCurrentStock(val)
+    onUpdate(product.id, "stok", val)
+  }
 
-  const promoDisc = parseInt(product.pricelist!) > 0 ? Math.round((1 - parseInt(product.promo!) / parseInt(product.pricelist!)) * 100) : 0
+  const promoDisc =
+    parseInt(product.pricelist!) > 0
+      ? Math.round((1 - parseInt(product.promo!) / parseInt(product.pricelist!)) * 100)
+      : 0
 
   const stokBadge =
-    product.stock === 0
+    currentStock === 0
       ? { label: "Habis", cls: "bg-red-50 text-red-700" }
-      : product.stock < 10
+      : currentStock < 10
       ? { label: "Menipis", cls: "bg-amber-50 text-amber-700" }
       : { label: "Aman", cls: "bg-green-50 text-green-700" }
-
-    console.log(product, 'barangggg')
 
   return (
     <tr className="border-b border-third/8 hover:bg-third/[0.02] align-top">
@@ -71,8 +83,8 @@ export default function ProductRow({ product , onUpdate }: { product: IProduct, 
         <input
           type="number"
           min={0}
-          defaultValue={product.stock}
-          onChange={(e) => onUpdate(product.id, "stok", parseInt(e.target.value) || 0)}
+          value={currentStock}
+          onChange={(e) => handleStockChange(parseInt(e.target.value) || 0)}
           className="font-poppins text-[12px] w-14 text-center border border-third/10 rounded-lg px-2 py-1.5 bg-third/4 text-third outline-none focus:border-second transition-colors"
         />
         <span className={`mt-1.5 block text-[10px] px-2 py-0.5 rounded-full text-center font-medium ${stokBadge.cls}`}>
@@ -84,7 +96,7 @@ export default function ProductRow({ product , onUpdate }: { product: IProduct, 
       <td className="px-3 py-3 bg-purple-50/30">
         <PriceInput
           value={product.pricelist}
-          onChange={(raw: string) => handlePrice("pricelist", raw)}
+          onChange={(raw) => handlePrice("pricelist", raw)}
         />
       </td>
 
@@ -92,7 +104,7 @@ export default function ProductRow({ product , onUpdate }: { product: IProduct, 
       <td className="px-3 py-3 bg-teal-50/30">
         <PriceInput
           value={product.offlinePrice}
-          onChange={(raw: string) => handlePrice("offline", raw)}
+          onChange={(raw) => handlePrice("offline", raw)}
         />
       </td>
 
@@ -100,7 +112,7 @@ export default function ProductRow({ product , onUpdate }: { product: IProduct, 
       <td className="px-3 py-3 bg-blue-50/30">
         <PriceInput
           value={product.onlinePrice}
-          onChange={(raw: string) => handlePrice("online", raw)}
+          onChange={(raw) => handlePrice("online", raw)}
         />
       </td>
 
@@ -108,7 +120,7 @@ export default function ProductRow({ product , onUpdate }: { product: IProduct, 
       <td className="px-3 py-3 bg-amber-50/30">
         <PriceInput
           value={product.promo}
-          onChange={(raw: string) => handlePrice("promo", raw)}
+          onChange={(raw) => handlePrice("promo", raw)}
         />
         {promoOn && promoDisc > 0 && (
           <span className="mt-1.5 block text-[10px] px-2 py-0.5 rounded-full text-center font-medium bg-amber-50 text-amber-700 w-fit">
