@@ -65,7 +65,7 @@ export default function ProductsLayout({
   const [availabilityOpen, setAvailabilityOpen] = useState(false);
   const [onlyInStock, setOnlyInStock] = useState(initialStock);
   const sortRef = useRef<HTMLDivElement>(null);
-  const [save, onSave] = useState<IProduct[] | []>([])
+  const [save, onSave] = useState<IProduct | null>(null)
 
   useEffect(() => {
     setSort(SORT_OPTIONS.find(o => o.value === (searchParams.get("sort") || "latest")) ?? SORT_OPTIONS[0]);
