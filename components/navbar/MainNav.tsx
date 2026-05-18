@@ -57,7 +57,7 @@ type SearchResult = {
   categories: { id: number; title: string; }[];
 } | null;
 
-export default function MainNav({ token, username }: { token: string | null, username?: string | null }) {
+export default function MainNav({ token, username, wishlist }: { token: string | null, username?: string | null, wishlist: any }) {
   const [navState, setNavState] = useState<NavState>("at-top");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -71,6 +71,10 @@ export default function MainNav({ token, username }: { token: string | null, use
   const overlayRef = useRef<HTMLDivElement>(null);
   const [cartOpen, setCartOpen] = useState(false)
   const router = useRouter()
+
+  useEffect(()=>{
+    console.log(wishlist)
+  }, [])
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
