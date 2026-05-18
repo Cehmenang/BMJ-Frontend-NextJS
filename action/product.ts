@@ -86,6 +86,7 @@ export async function getProductsBySearch(pagination: number, query: string){
 
 export async function saveProduct(formData: any, id: string){
     try{
+        console.log('DIMULAIII')
         await fetch(`${process.env.SERVER_API}/api/update/quick/produk/${id}`, {
             method: "POST", 
             body: formData,
