@@ -13,3 +13,11 @@ export async function createWishlist(id: string, qty: number){
     })
     return response
 }
+
+export async function getWishlists(token: string){
+    const response = await fetch(`${process.env.SERVER_API}/api/wishlist`, { 
+            method: 'GET',
+            headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' }
+    })
+    if(response.ok) return await response
+}
