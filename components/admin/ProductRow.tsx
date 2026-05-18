@@ -1,13 +1,10 @@
 "use client"
-
 import { IProduct } from "@/interface"
 import Image from "next/image"
-import { SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
 function PriceInput({ value, onChange }: { value: any, onChange: (raw: string) => void }) {
-  const [display, setDisplay] = useState(
-    value ? Number(value).toLocaleString("id-ID") : ""
-  )
+  const [display, setDisplay] = useState("")
 
   useEffect(() => {
     setDisplay(value ? Number(value).toLocaleString("id-ID") : "")
@@ -33,63 +30,74 @@ function PriceInput({ value, onChange }: { value: any, onChange: (raw: string) =
   )
 }
 
-export default function ProductRow({ product, onUpdate }: { product: IProduct, onUpdate: SetStateAction<any> }) {
+export default function ProductRow({ product, onSave }: { product: IProduct, onSave: (product: IProduct) => void }) {
+  const [row, setRow] = useState<IProduct>(product)
   const [promoOn, setPromoOn] = useState(false)
-  const [currentStock, setCurrentStock] = useState(product.stock ?? 0)
+  const [loading, setLoading] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const [isDirty, setIsDirty] = useState(false)
 
   useEffect(() => {
-    setCurrentStock(product.stock ?? 0)
-  }, [product.stock])
+    setRow(product)
+  }, [product])
 
-  const handlePrice = (field: string, raw: string) => {
-    const num = parseInt(raw.replace(/\D/g, "")) || 0
-    onUpdate(product.id, field, num)
+  const update = (field: string, value: any) => {
+    setRow(prev => ({ ...prev, [field]: value }))
+    setIsDirty(true)
+    setSaved(false)
   }
 
-  const handleTogglePromo = (val: boolean) => {
-    setPromoOn(val)
-    onUpdate(product.id, "promoOn", val)
+  const handleSave = async () => {
+    setLoading(true)
+    await onSave(row)
+    setLoading(false)
+    setSaved(true)
+    setIsDirty(false)
   }
 
-  const handleStockChange = (val: number) => {
-    setCurrentStock(val)
-    onUpdate(product.id, "stok", val)
+  const handleReset = () => {
+    setRow(product)
+    setPromoOn(false)
+    setIsDirty(false)
+    setSaved(false)
   }
 
   const promoDisc =
-    parseInt(product.pricelist!) > 0
-      ? Math.round((1 - parseInt(product.promo!) / parseInt(product.pricelist!)) * 100)
+    parseInt(row.pricelist!) > 0
+      ? Math.round((1 - parseInt(row.promo!) / parseInt(row.pricelist!)) * 100)
       : 0
 
   const stokBadge =
-    currentStock === 0
+    (row.stock ?? 0) === 0
       ? { label: "Habis", cls: "bg-red-50 text-red-700" }
-      : currentStock < 10
+      : (row.stock ?? 0) < 10
       ? { label: "Menipis", cls: "bg-amber-50 text-amber-700" }
       : { label: "Aman", cls: "bg-green-50 text-green-700" }
 
   return (
-    <tr className="border-b border-third/8 hover:bg-third/[0.02] align-top">
+    <tr className={`border-b border-third/8 align-top transition-colors ${isDirty ? "bg-second/5" : "hover:bg-third/[0.02]"}`}>
 
       {/* Produk */}
-      <td className="px-4 py-3 flex gap-x-2 justify-center items-center">
+      <td className="px-4 py-3">
+        <div className="flex items-center gap-2.5">
+          {product.images?.[0]?.[0] && (
             <Image
-                width={30} height={30}
-                loading="lazy"
-                src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0][0]}`}
-                alt={`${product.name}`}
-                className="w-full h-full object-contain"
+              src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0][0]}`}
+              alt={product.name}
+              width={36}
+              height={36}
+              className="rounded-lg object-cover flex-shrink-0"
             />
-            <div className="text-head">
-                
-        <p className="font-poppins text-[10px] text-third/40 uppercase tracking-wider mb-0.5">
-          {product.brandId}
-        </p>
-        <p className="font-poppins text-[12px] font-medium text-third leading-snug">
-          {product.name}
-        </p>
-
-            </div>
+          )}
+          <div>
+            <p className="font-poppins text-[10px] text-third/40 uppercase tracking-wider mb-0.5">
+              {product.brandId}
+            </p>
+            <p className="font-poppins text-[12px] font-medium text-third leading-snug">
+              {product.name}
+            </p>
+          </div>
+        </div>
       </td>
 
       {/* Stok */}
@@ -97,8 +105,8 @@ export default function ProductRow({ product, onUpdate }: { product: IProduct, o
         <input
           type="number"
           min={0}
-          value={currentStock}
-          onChange={(e) => handleStockChange(parseInt(e.target.value) || 0)}
+          value={row.stock ?? 0}
+          onChange={(e) => update("stock", parseInt(e.target.value) || 0)}
           className="font-poppins text-[12px] w-14 text-center border border-third/10 rounded-lg px-2 py-1.5 bg-third/4 text-third outline-none focus:border-second transition-colors"
         />
         <span className={`mt-1.5 block text-[10px] px-2 py-0.5 rounded-full text-center font-medium ${stokBadge.cls}`}>
@@ -108,34 +116,22 @@ export default function ProductRow({ product, onUpdate }: { product: IProduct, o
 
       {/* Harga pricelist */}
       <td className="px-3 py-3 bg-purple-50/30">
-        <PriceInput
-          value={product.pricelist}
-          onChange={(raw) => handlePrice("pricelist", raw)}
-        />
+        <PriceInput value={row.pricelist} onChange={(raw) => update("pricelist", raw)} />
       </td>
 
       {/* Harga offline */}
       <td className="px-3 py-3 bg-teal-50/30">
-        <PriceInput
-          value={product.offlinePrice}
-          onChange={(raw) => handlePrice("offline", raw)}
-        />
+        <PriceInput value={row.offlinePrice} onChange={(raw) => update("offlinePrice", raw)} />
       </td>
 
       {/* Harga online */}
       <td className="px-3 py-3 bg-blue-50/30">
-        <PriceInput
-          value={product.onlinePrice}
-          onChange={(raw) => handlePrice("online", raw)}
-        />
+        <PriceInput value={row.onlinePrice} onChange={(raw) => update("onlinePrice", raw)} />
       </td>
 
       {/* Harga promo */}
       <td className="px-3 py-3 bg-amber-50/30">
-        <PriceInput
-          value={product.promo}
-          onChange={(raw) => handlePrice("promo", raw)}
-        />
+        <PriceInput value={row.promo} onChange={(raw) => update("promo", raw)} />
         {promoOn && promoDisc > 0 && (
           <span className="mt-1.5 block text-[10px] px-2 py-0.5 rounded-full text-center font-medium bg-amber-50 text-amber-700 w-fit">
             -{promoDisc}%
@@ -146,14 +142,15 @@ export default function ProductRow({ product, onUpdate }: { product: IProduct, o
       {/* Set promo */}
       <td className="px-3 py-3">
         <div className="flex flex-col gap-2.5">
-
-          {/* Toggle */}
           <label className="flex items-center gap-2 cursor-pointer w-fit">
             <div className="relative">
               <input
                 type="checkbox"
                 checked={promoOn}
-                onChange={(e) => handleTogglePromo(e.target.checked)}
+                onChange={(e) => {
+                  setPromoOn(e.target.checked)
+                  update("promoOn", e.target.checked)
+                }}
                 className="sr-only"
               />
               <div className={`w-8 h-4 rounded-full transition-colors ${promoOn ? "bg-green-500" : "bg-third/15"}`} />
@@ -164,11 +161,10 @@ export default function ProductRow({ product, onUpdate }: { product: IProduct, o
             </span>
           </label>
 
-          {/* Tipe promo — hanya muncul kalau aktif */}
           {promoOn && (
             <select
-              defaultValue={product.namaPromo ?? ""}
-              onChange={(e) => onUpdate(product.id, "promoType", e.target.value)}
+              value={row.namaPromo ?? ""}
+              onChange={(e) => update("namaPromo", e.target.value)}
               className="font-poppins text-[11px] border border-third/10 rounded-lg px-2 py-1.5 bg-white text-third outline-none focus:border-second transition-colors w-full"
             >
               <option value="" disabled>Pilih tipe promo</option>
@@ -180,7 +176,34 @@ export default function ProductRow({ product, onUpdate }: { product: IProduct, o
               <option>Voucher</option>
             </select>
           )}
+        </div>
+      </td>
 
+      {/* Aksi */}
+      <td className="px-3 py-3">
+        <div className="flex flex-col gap-1.5">
+          <button
+            onClick={handleSave}
+            disabled={!isDirty || loading}
+            className={`font-poppins text-[11px] px-3 py-1.5 rounded-lg transition-colors w-full font-medium
+              ${isDirty && !loading
+                ? "bg-green-500 text-white hover:bg-green-600"
+                : saved
+                ? "bg-green-50 text-green-700"
+                : "bg-third/5 text-third/25 cursor-not-allowed"
+              }`}
+          >
+            {loading ? "Menyimpan..." : saved ? "✓ Tersimpan" : "Simpan"}
+          </button>
+
+          {isDirty && (
+            <button
+              onClick={handleReset}
+              className="font-poppins text-[11px] px-3 py-1.5 rounded-lg border border-third/10 text-third/40 hover:text-third/70 transition-colors w-full"
+            >
+              Reset
+            </button>
+          )}
         </div>
       </td>
 
