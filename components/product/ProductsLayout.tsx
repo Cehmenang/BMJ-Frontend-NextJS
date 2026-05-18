@@ -9,6 +9,7 @@ import {
 import { IProduct } from "@/interface";
 import ProductCard from "./ProductCard";
 import Pagination from "./ProductsPagination";
+import ProductTable from "../admin/ProductTable";
 
 const SORT_OPTIONS = [
   { label: "Terbaru", value: "latest" },
@@ -31,6 +32,7 @@ type Props = {
   initialQuery: string;
   initialStock: boolean;
   hideBrandFilter?: boolean;
+  role?: string
 };
 
 export default function ProductsLayout({
@@ -44,6 +46,7 @@ export default function ProductsLayout({
   initialQuery,
   initialStock,
   hideBrandFilter = false,
+  role
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
@@ -62,6 +65,7 @@ export default function ProductsLayout({
   const [availabilityOpen, setAvailabilityOpen] = useState(false);
   const [onlyInStock, setOnlyInStock] = useState(initialStock);
   const sortRef = useRef<HTMLDivElement>(null);
+  const [save, onSave] = useState<IProduct[] | []>([])
 
   useEffect(() => {
     setSort(SORT_OPTIONS.find(o => o.value === (searchParams.get("sort") || "latest")) ?? SORT_OPTIONS[0]);
@@ -238,7 +242,13 @@ export default function ProductsLayout({
     </div>
   );
 
-  return (
+  if(role && role?.toLowerCase() == "admin"){
+    return (
+      <ProductTable products={products} onSave={onSave}/>
+    )
+  }
+
+  else return (
     <div className="min-h-screen bg-bg-site pt-[60px] md:pt-[66px]">
 
       {/* Top bar */}
