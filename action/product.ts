@@ -84,18 +84,16 @@ export async function getProductsBySearch(pagination: number, query: string){
     }catch(err){ console.log(err) }
 }
 
-export async function saveProduct(formData: any, id: string){
+export async function saveProduct(formData: any, url: string){
     try{
-        console.log('DIMULAIII')
-        await fetch(`${process.env.SERVER_API}/api/update/quick/produk/${id}`, {
+        await fetch(`${process.env.SERVER_API}/api/update/quick/produk/${url}`, {
             method: "POST", 
             body: formData,
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': "application/json"
+                Accept: "application/json"
             },
         })
-        console.log('BERHASILLL')
     }catch(err){
         console.log(err)
     }
