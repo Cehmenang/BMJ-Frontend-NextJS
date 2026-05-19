@@ -550,7 +550,7 @@ export default function ProductDetail({ product }: { product?: any }) {
               <div className="added-badge flex gap-x-4 mt-16">
 
                 <div className="deliv flex gap-x-2 border-r border-third pr-2">
-                  <Truck size={36} strokeWidth="3"/>
+                  <Truck size={36} strokeWidth="1"/>
                   <div className="deliv-text">
                     <p className="font-bold">Pengiriman Cepat</p>
                     <p className="text-[12px] font-light">Pengiriman barang cepat dan aman</p>
@@ -558,7 +558,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                 </div>
 
                 <div className="guard flex gap-x-2">
-                  <ShieldCheck size={36} strokeWidth="3"/>
+                  <ShieldCheck size={36} strokeWidth="1"/>
                   <div className="guard-text">
                     <p className="font-bold">Garansi 1 Tahun</p>
                     <p className="text-[12px] font-light">Perlindungan sejak tanggal pembelian</p>
@@ -566,7 +566,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                 </div>
 
                 <div className="money flex gap-x-2 border-l border-third pl-2">
-                  <PiggyBank size={36} strokeWidth="3"/>
+                  <PiggyBank size={36} strokeWidth="1"/>
                   <div className="money-text">
                     <p className="font-bold">Best Price</p>
                     <p className="text-[12px] font-light">Kualitas dengan harga terbaik</p>
