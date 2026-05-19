@@ -59,13 +59,15 @@ export default function ProductRow({ product, onSave }: { product: IProduct, onS
     formData.append("stock", String(row.stock ?? ""))
     formData.append("namaPromo", String(row.namaPromo ?? ""))
     try{
-        const response = await fetch(`${process.env.SERVER_API}/api/update/quick/produk/${row.url}`, {
+        const response = await fetch(`${process.env.SERVER_API}/api/update/harga/produk/${row.url}`, {
             method: "POST", 
             body: formData,
             headers: { "Accept": "application/json" }
         })
-        console.log(response, 'respon')
-        console.log('berhasil')
+        const data = await response.json()
+        if(!response.ok){
+            console.log(data, 'error')
+        }
     }catch(err){
         console.log(err)
     }
