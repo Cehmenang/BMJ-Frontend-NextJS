@@ -20,6 +20,7 @@ import ZoomImage from "./ZoomImage";
 import Image from "next/image";
 import { FaWhatsapp } from "react-icons/fa";
 import { createWishlist } from "@/action/wishlist";
+import ProductFaq from "./ProductFaq";
 
 type Tab = "description" | "features" | "specifications";
 
@@ -344,7 +345,7 @@ export default function ProductDetail({ product }: { product?: any }) {
             </div>
 
             {/* Info */}
-            <div className="flex flex-col gap-5  pt-20">
+            <div className="flex flex-col gap-5 pt-8">
 
               {/* Name */}
               <div>
@@ -690,6 +691,8 @@ export default function ProductDetail({ product }: { product?: any }) {
               </div>
             )}
           </div>
+
+          <ProductFaq/>
         </div>
       </div>
     </>
