@@ -123,6 +123,58 @@ export default function RootLayout({
 
 
       <body className={"font-poppins antialiased"}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "MusicStore",
+              name: "Bandar Musik Jakarta",
+              alternateName: "BMJ",
+              url: "https://www.bandarmusikjakarta.com",
+              logo: "https://www.bandarmusikjakarta.com/meta/BMJOGSquare.webp",
+              image: "https://www.bandarmusikjakarta.com/meta/BMJOG.webp",
+              description: "Toko alat musik terlengkap di Jakarta Pusat. Produk 100% Original, harga kompetitif, bisa nego.",
+              telephone: "+62081929290560",
+              address: {
+                "@type": "PostalAddress",
+                streetAddress: "Jl. Rajawali Selatan I No.26A, RT.3/RW.2",
+                addressLocality: "Jakarta Pusat",
+                addressRegion: "DKI Jakarta",
+                postalCode: "10720",
+                addressCountry: "ID",
+              },
+              geo: {
+                "@type": "GeoCoordinates",
+                latitude: -6.1467131,
+                longitude: 106.837832,
+              },
+              openingHoursSpecification: [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                  opens: "10:00",
+                  closes: "19:30",
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  dayOfWeek: ["Saturday"],
+                  opens: "10:00",
+                  closes: "18:00",
+                },
+              ],
+              sameAs: [
+                "https://www.tokopedia.com/bandarmusikjakarta",
+                "https://www.instagram.com/bandarmusikjakarta_bmj",
+                "https://www.youtube.com/@bandarmusikjakarta_bmj",
+                "https://www.tiktok.com/@bandarmusikjakarta_bmj",
+              ],
+              priceRange: "$$",
+              paymentAccepted: "Cash, Credit Card, Debit Card, Transfer",
+              currenciesAccepted: "IDR",
+            }),
+          }}
+        />
         <LayoutNav/>
         {/* <AdminNav/> */}
         <div className="wrap">
