@@ -487,7 +487,7 @@ export default function ProductDetail({ product }: { product?: any }) {
               {variants.length > 0 && <div className="h-px bg-third/8" />}
 
               {/* Qty + Cart + WA */}
-              <div className="flex items-center">
+              <div className="flex items-center relative">
                 {/* Qty */}
                   <div className="flex flex-col gap-y-2 mr-2">
                     <button
