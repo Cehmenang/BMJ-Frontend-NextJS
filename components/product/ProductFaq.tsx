@@ -5,20 +5,20 @@ import gsap from "gsap";
 
 const faqs = [
   {
-    question: "Apakah produk ini original?",
+    question: "Apakah semua produk di sini original?",
     answer: "Ya, semua produk di Bandar Musik Jakarta 100% original dan bergaransi resmi 1 tahun.",
   },
   {
-    question: "Bagaimana cara pembelian?",
-    answer: "Pembelian bisa dilakukan langsung di toko atau via Whatsapp di 081929290560. Kami juga tersedia di Tokopedia.",
+    question: "Bagaimana cara melakukan pembelian?",
+    answer: "Pembelian bisa dilakukan langsung di toko, via Whatsapp di 081929290560, atau melalui Tokopedia.",
   },
   {
     question: "Apakah harga bisa nego?",
-    answer: "Bisa, terutama untuk pembelian langsung di toko. Hubungi kami via Whatsapp untuk info harga terbaik.",
+    answer: "Bisa, terutama untuk pembelian langsung melalui toko. Hubungi kami via Whatsapp untuk info harga terbaik.",
   },
   {
-    question: "Berapa lama pengiriman?",
-    answer: "Pengiriman same day untuk area Jakarta, 2-3 hari untuk luar Jakarta tergantung ekspedisi.",
+    question: "Berapa lama waktu pengiriman barang?",
+    answer: "Pengiriman Same Day untuk area Jakarta dan Sekitarnya, di luar Jakarta tergantung dari ekspedisi.",
   },
 ];
 
@@ -60,7 +60,7 @@ function FaqItem({
     <div className="py-3">
       <button
         onClick={() => toggle(index)}
-        className="w-full flex justify-between items-center text-left gap-4"
+        className="w-full flex justify-between items-center text-left gap-4 px-8 bg-white rounded-xl"
       >
         <span className="font-medium text-sm">{faq.question}</span>
         <span
@@ -71,7 +71,7 @@ function FaqItem({
         </span>
       </button>
       <div ref={answerRef} style={{ height: 0, overflow: "hidden", opacity: 0 }}>
-        <p className="mt-2 text-sm text-gray-500">{faq.answer}</p>
+        <p className="mt-2 text-sm text-gray-500 px-8 bg-white rounded-xl">{faq.answer}</p>
       </div>
     </div>
   );
