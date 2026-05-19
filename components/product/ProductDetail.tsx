@@ -528,19 +528,19 @@ export default function ProductDetail({ product }: { product?: any }) {
                     href={waUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-3 flex gap-x-4 items-center justify-center duration-150 rounded-xl border-2 border-third"
+                    className="py-2 px-8 flex gap-x-4 items-center justify-center duration-150 rounded-xl border-2 border-third"
                   >
-                    <FaWhatsapp size={30} className="text-white" />
-                    <div>
+                    <FaWhatsapp size={30} className="text-third" />
+                    <div className="flex flex-col gap-y-1">
                       <p className="text-[14px]">Pembelian Melalui</p>
-                      <p className="text-[24px] font-bold tracking-tight">Whatsapp</p>
+                      <p className="text-[24px] font-extrabold tracking-tight">Whatsapp</p>
                     </div>
                   </Link>
                 )}
               </div>
 
-                <div className="att flex gap-x-3 items-center font-light text-third/50 italic">
-                    <Megaphone size={30}/>
+                <div className="att flex gap-x-3 items-center font-light text-third/70 italic">
+                    <Megaphone size={20} className="text-third"/>
                     <p>Harap Tanya Ketersediaan Barang melalui Whatsapp Sebelum Melakukan Pemesanan.</p>
                 </div>
 
