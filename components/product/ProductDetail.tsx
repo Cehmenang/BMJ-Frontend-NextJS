@@ -538,7 +538,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                   </Link>
                 )}
 
-                <div className="att absolute bottom-4 left-12 flex gap-x-3 items-center font-light italic">
+                <div className="att absolute -bottom-3 left-12 flex gap-x-3 items-center font-light italic">
                     <Megaphone size={20} className="rounded-full"/>
                     <p className="text-[14px]">Harap Tanya Ketersediaan Barang melalui Whatsapp Sebelum Melakukan Pemesanan.</p>
                 </div>
