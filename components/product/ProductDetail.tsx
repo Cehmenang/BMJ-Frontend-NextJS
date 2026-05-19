@@ -487,18 +487,18 @@ export default function ProductDetail({ product }: { product?: any }) {
               {variants.length > 0 && <div className="h-px bg-third/8" />}
 
               {/* Qty + Cart + WA */}
-              <div className="flex gap-x-5 items-center">
+              <div className="flex items-center">
                 {/* Qty */}
-                  <div className="flex flex-col gap-y-2">
+                  <div className="flex flex-col gap-y-2 mr-2">
                     <button
                       onClick={() => setQty((q) => q + 1)}
-                      className="w-[30px] h-[30px] rounded-full bg-white border-2 border-third flex justify-center items-center"
+                      className="w-[36px] h-[36px] rounded-full bg-white border-2 border-third flex justify-center items-center"
                     >
                       <ChevronUp size={20} strokeWidth={3}/>
                     </button>
                     <button
                       onClick={() => setQty((q) => Math.max(1, q - 1))}
-                      className="w-[30px] h-[30px] rounded-full bg-white border-2 border-third flex justify-center items-center"
+                      className="w-[36px] h-[36px] rounded-full bg-white border-2 border-third flex justify-center items-center"
                     >
                       <ChevronDown size={20} strokeWidth={3}/>
                     </button>
@@ -528,7 +528,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                     href={waUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="py-2 px-8 flex gap-x-4 items-center justify-center duration-150 rounded-xl border-2 border-third"
+                    className="ml-10 py-2 px-8 flex gap-x-4 items-center justify-center duration-150 rounded-xl border-2 border-third"
                   >
                     <FaWhatsapp size={30} className="text-third" />
                     <div>
@@ -539,8 +539,8 @@ export default function ProductDetail({ product }: { product?: any }) {
                 )}
               </div>
 
-                <div className="att flex gap-x-3 items-center font-light text-third/70 italic">
-                    <Megaphone size={18} className="p-2 border border-third/70 rounded-full text-third/70"/>
+                <div className="att mt-3 flex gap-x-3 items-center font-light text-third/70 italic">
+                    <Megaphone size={20} className="p-1 border border-third/70 rounded-full text-third/70"/>
                     <p>Harap Tanya Ketersediaan Barang melalui Whatsapp Sebelum Melakukan Pemesanan.</p>
                 </div>
 
