@@ -486,8 +486,8 @@ export default function ProductDetail({ product }: { product?: any }) {
 
               {variants.length > 0 && <div className="h-px bg-third/8" />}
 
-              <div className="att mt-3 mb-1 flex gap-x-3 items-center font-light italic">
-                    <Megaphone size={24} className="rounded-full"/>
+              <div className="att mt-2 mb-1 flex gap-x-3 items-center font-light italic">
+                    <Megaphone size={20} className="rounded-full"/>
                     <p className="text-[14px]">Harap Tanya Ketersediaan Barang melalui Whatsapp Sebelum Melakukan Pemesanan.</p>
               </div>
 
