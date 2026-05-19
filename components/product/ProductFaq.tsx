@@ -62,7 +62,7 @@ function FaqItem({
         onClick={() => toggle(index)}
         className="w-full flex justify-between items-center text-left gap-4 px-20"
       >
-        <span className="font-bold text-[18px]">{faq.question}</span>
+        <span className="text-[18px]">{faq.question}</span>
         <span
           className="text-gray-400 text-[18px] shrink-0 transition-transform duration-300"
           style={{ transform: isOpen ? "rotate(45deg)" : "rotate(0deg)" }}
