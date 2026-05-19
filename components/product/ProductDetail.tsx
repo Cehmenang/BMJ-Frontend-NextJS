@@ -528,7 +528,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                     href={waUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="ml-10 py-2 px-8 flex gap-x-4 items-center justify-center duration-150 rounded-xl border-2 border-third"
+                    className="ml-10 py-3 px-8 flex gap-x-2 items-center justify-center duration-150 rounded-xl border-2 border-third"
                   >
                     <FaWhatsapp size={30} className="text-third" />
                     <div>
@@ -539,9 +539,9 @@ export default function ProductDetail({ product }: { product?: any }) {
                 )}
               </div>
 
-                <div className="att mt-3 flex gap-x-3 items-center font-light text-third/70 italic">
-                    <Megaphone size={20} className="p-1 border border-third/70 rounded-full text-third/70"/>
-                    <p>Harap Tanya Ketersediaan Barang melalui Whatsapp Sebelum Melakukan Pemesanan.</p>
+                <div className="att mt-3 flex gap-x-3 items-center font-light italic">
+                    <Megaphone size={28} className="p-1 border border-third rounded-full"/>
+                    <p className="text-[14px]">Harap Tanya Ketersediaan Barang melalui Whatsapp Sebelum Melakukan Pemesanan.</p>
                 </div>
 
             </div>
