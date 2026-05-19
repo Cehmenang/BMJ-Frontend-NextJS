@@ -59,7 +59,7 @@ export default function ProductRow({ product, onSave }: { product: IProduct, onS
     // formData.append("stock", String(row.stock ?? ""))
     // formData.append("namaPromo", String(row.namaPromo ?? ""))
     try{
-        const response = await fetch(`${process.env.SERVER_API}/api/update/harga/${row.url}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_API}/api/update/harga/${row.url}`, {
             method: "POST", 
             body: JSON.stringify({
                 pricelist: String(row.pricelist ?? ""),
