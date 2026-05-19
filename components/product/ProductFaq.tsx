@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import gsap from "gsap";
 
 const faqs = [
   {
@@ -21,6 +22,61 @@ const faqs = [
   },
 ];
 
+function FaqItem({
+  faq,
+  index,
+  openIndex,
+  toggle,
+}: {
+  faq: { question: string; answer: string };
+  index: number;
+  openIndex: number | null;
+  toggle: (i: number) => void;
+}) {
+  const answerRef = useRef<HTMLDivElement>(null);
+  const isOpen = openIndex === index;
+
+  useEffect(() => {
+    const el = answerRef.current;
+    if (!el) return;
+
+    if (isOpen) {
+      gsap.fromTo(
+        el,
+        { height: 0, opacity: 0 },
+        { height: "auto", opacity: 1, duration: 0.35, ease: "power2.out" }
+      );
+    } else {
+      gsap.to(el, {
+        height: 0,
+        opacity: 0,
+        duration: 0.25,
+        ease: "power2.in",
+      });
+    }
+  }, [isOpen]);
+
+  return (
+    <div className="py-3">
+      <button
+        onClick={() => toggle(index)}
+        className="w-full flex justify-between items-center text-left gap-4"
+      >
+        <span className="font-medium text-sm">{faq.question}</span>
+        <span
+          className="text-gray-400 text-lg shrink-0 transition-transform duration-300"
+          style={{ transform: isOpen ? "rotate(45deg)" : "rotate(0deg)" }}
+        >
+          +
+        </span>
+      </button>
+      <div ref={answerRef} style={{ height: 0, overflow: "hidden", opacity: 0 }}>
+        <p className="mt-2 text-sm text-gray-500">{faq.answer}</p>
+      </div>
+    </div>
+  );
+}
+
 export default function ProductFaq() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
@@ -29,24 +85,17 @@ export default function ProductFaq() {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
+    <div className="w-full">
       <h2 className="text-xl font-bold mb-4">Pertanyaan Umum</h2>
       <div className="divide-y divide-gray-200">
         {faqs.map((faq, index) => (
-          <div key={index} className="py-3">
-            <button
-              onClick={() => toggle(index)}
-              className="w-full flex justify-between items-center text-left gap-4"
-            >
-              <span className="font-medium text-sm">{faq.question}</span>
-              <span className="text-gray-400 text-lg shrink-0">
-                {openIndex === index ? "−" : "+"}
-              </span>
-            </button>
-            {openIndex === index && (
-              <p className="mt-2 text-sm text-gray-500">{faq.answer}</p>
-            )}
-          </div>
+          <FaqItem
+            key={index}
+            faq={faq}
+            index={index}
+            openIndex={openIndex}
+            toggle={toggle}
+          />
         ))}
       </div>
     </div>
