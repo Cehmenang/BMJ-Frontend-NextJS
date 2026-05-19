@@ -68,7 +68,7 @@ export default function ProductRow({ product, onSave }: { product: IProduct, onS
             }),
             headers: { "Accept": "application/json", "Content-Type": 'application/json' }
         })
-        const data = await response.text()
+        const data = await response.json()
         if(!response.ok){
             console.log(data, 'error')
         }
