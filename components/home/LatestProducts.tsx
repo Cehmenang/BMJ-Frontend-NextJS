@@ -68,7 +68,7 @@ export default function LatestProducts() {
           </h2>
         </div>
         <Link
-          href="/terbaru"
+          href="/produk"
           className="flex items-center gap-2 text-[13px] font-medium text-third/60 hover:text-third transition-colors duration-200 mb-1"
         >
           Lihat semua
