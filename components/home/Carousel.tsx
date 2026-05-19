@@ -47,6 +47,16 @@ const SLIDES = [
     href: "/produk/lava-studio-digital-modelling-guitar-amplifier",
     bg: "/LavaBanner.webp",
   },
+  {
+    id: 5,
+    tag: "Kolaborasi Hebat",
+    title: "SIRE",
+    titleEm: "Marcus Miller",
+    sub: "Dapatkan Bass Sire dengan kolaborasi Legenda Bassist Marcus Miller",
+    cta: "Beli Sekarang",
+    href: "/brand/sire",
+    bg: "/SireBanner.webp",
+  },
 ];
 
 const DURATION = 5000;
