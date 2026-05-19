@@ -66,7 +66,7 @@ export default function ProductRow({ product, onSave }: { product: IProduct, onS
                 offlinePrice: String(row.onlinePrice ?? ""),
                 onlinePrice: String(row.onlinePrice ?? ""),
             }),
-            headers: { "Accept": "application/json" }
+            headers: { "Accept": "application/json", "Content-Type": 'application/json' }
         })
         const data = await response.text()
         if(!response.ok){
