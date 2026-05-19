@@ -55,13 +55,17 @@ export default function ProductRow({ product, onSave }: { product: IProduct, onS
     formData.append("pricelist", String(row.pricelist ?? ""))
     formData.append("offlinePrice", String(row.offlinePrice ?? ""))
     formData.append("onlinePrice", String(row.onlinePrice ?? ""))
-    formData.append("promo", String(row.promo ?? ""))
-    formData.append("stock", String(row.stock ?? ""))
-    formData.append("namaPromo", String(row.namaPromo ?? ""))
+    // formData.append("promo", String(row.promo ?? ""))
+    // formData.append("stock", String(row.stock ?? ""))
+    // formData.append("namaPromo", String(row.namaPromo ?? ""))
     try{
         const response = await fetch(`${process.env.SERVER_API}/api/update/harga/${row.url}`, {
             method: "POST", 
-            body: formData,
+            body: JSON.stringify({
+                pricelist: String(row.pricelist ?? ""),
+                offlinePrice: String(row.onlinePrice ?? ""),
+                onlinePrice: String(row.onlinePrice ?? ""),
+            }),
             headers: { "Accept": "application/json" }
         })
         const data = await response.text()
