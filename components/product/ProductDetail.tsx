@@ -11,6 +11,7 @@ import {
   X,
   Play,
   ShoppingBag,
+  Megaphone,
 } from "lucide-react";
 import ZoomImage from "./ZoomImage";
 import Image from "next/image";
@@ -527,12 +528,22 @@ export default function ProductDetail({ product }: { product?: any }) {
                     href={waUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-3 bg-green-600 items-center justify-center transition-colors duration-150 text-white rounded-full"
+                    className="p-3 flex gap-x-4 items-center justify-center duration-150 rounded-xl border-2 border-third"
                   >
                     <FaWhatsapp size={30} className="text-white" />
+                    <div>
+                      <p className="text-[14px]">Pembelian Melalui</p>
+                      <p className="text-[24px] font-bold tracking-tight">Whatsapp</p>
+                    </div>
                   </Link>
                 )}
               </div>
+
+                <div className="att flex gap-x-3 items-center font-light text-third/50 italic">
+                    <Megaphone size={30}/>
+                    <p>Harap Tanya Ketersediaan Barang melalui Whatsapp Sebelum Melakukan Pemesanan.</p>
+                </div>
+
             </div>
           </div>
 
