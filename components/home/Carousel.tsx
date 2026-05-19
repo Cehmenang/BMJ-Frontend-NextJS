@@ -50,7 +50,7 @@ const SLIDES = [
   {
     id: 5,
     tag: "Kolaborasi Hebat",
-    title: "SIRE",
+    title: "Sire",
     titleEm: "Marcus Miller",
     sub: "Dapatkan Bass Sire dengan kolaborasi Legenda Bassist Marcus Miller",
     cta: "Beli Sekarang",
