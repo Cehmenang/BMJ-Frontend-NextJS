@@ -12,6 +12,9 @@ import {
   Play,
   ShoppingBag,
   Megaphone,
+  Truck,
+  ShieldCheck,
+  PiggyBank,
 } from "lucide-react";
 import ZoomImage from "./ZoomImage";
 import Image from "next/image";
@@ -542,6 +545,34 @@ export default function ProductDetail({ product }: { product?: any }) {
                     <Megaphone size={20} className="rounded-full"/>
                     <p className="text-[14px]">Harap Tanya Ketersediaan Barang melalui Whatsapp Sebelum Melakukan Pemesanan.</p>
                 </div>
+              </div>
+
+              <div className="added-badge flex gap-x-4">
+
+                <div className="deliv flex gap-x-2">
+                  <Truck size={24}/>
+                  <div className="deliv-text">
+                    <p className="font-bold">Pengiriman Cepat</p>
+                    <p>Pengiriman barang cepat dan aman</p>
+                  </div>
+                </div>
+
+                <div className="guard flex gap-x-2">
+                  <ShieldCheck size={24}/>
+                  <div className="guard-text">
+                    <p className="font-bold">Garansi 1 Tahun</p>
+                    <p>Perlindungan sejak tanggal pembelian</p>
+                  </div>
+                </div>
+
+                <div className="money flex gap-x-2">
+                  <PiggyBank size={24}/>
+                  <div className="money-text">
+                    <p className="font-bold">Best Price</p>
+                    <p>Kualitas dengan harga terbaik</p>
+                  </div>
+                </div>
+
               </div>
 
             </div>
