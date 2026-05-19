@@ -85,8 +85,8 @@ export default function ProductFaq() {
   };
 
   return (
-    <div className="w-full">
-      <h2 className="text-xl font-bold mb-4">Pertanyaan Umum</h2>
+    <div className="w-full mt-10">
+      <h2 className="text-xl font-bold mb-4 text-center">Ingin Bertanya Mengenai ...</h2>
       <div className="divide-y divide-gray-200">
         {faqs.map((faq, index) => (
           <FaqItem
