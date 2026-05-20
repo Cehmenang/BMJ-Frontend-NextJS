@@ -23,36 +23,35 @@ import { createWishlist } from "@/action/wishlist";
 import ProductFaq from "./ProductFaq";
 
 type Tab = "description" | "features" | "specifications";
-
 type VariantOption = {
-  id: number
-  variant_id: number
-  name: string
-  image: string
-  harga: string
-  created_at: string
-  updated_at: string
-}
-
+  id: number;
+  variant_id: number;
+  name: string;
+  image: string;
+  harga: string;
+  created_at: string;
+  updated_at: string;
+};
 type Variant = {
-  id: number
-  produk_id: string
-  type: string
-  options: VariantOption[]
-  created_at: string
-  updated_at: string
-}
+  id: number;
+  produk_id: string;
+  type: string;
+  options: VariantOption[];
+  created_at: string;
+  updated_at: string;
+};
+
 const bgVariantColor: Record<string, string> = {
-  black: 'bg-select-black',
-  white: 'bg-select-white',
-  red: 'bg-select-red',
-  calmblue: 'bg-select-calm-blue',
-  mellowbeige: 'bg-select-mellow-beige',
-  hawaiianblue: 'bg-select-hawaiian-blue',
-  mallardfade: 'bg-select-mallard-fade',
-  spacefly: 'bg-select-space-fly',
-  natural: 'bg-select-natural',
-}
+  black: "bg-select-black",
+  white: "bg-select-white",
+  red: "bg-select-red",
+  calmblue: "bg-select-calm-blue",
+  mellowbeige: "bg-select-mellow-beige",
+  hawaiianblue: "bg-select-hawaiian-blue",
+  mallardfade: "bg-select-mallard-fade",
+  spacefly: "bg-select-space-fly",
+  natural: "bg-select-natural",
+};
 
 function formatPrice(price: number) {
   return new Intl.NumberFormat("id-ID", {
@@ -104,27 +103,36 @@ function FullscreenViewer({
         <ChevronLeft className="w-5 h-5" />
       </button>
       <Image
-        width={500} height={500}
+        width={500}
+        height={500}
         loading="lazy"
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        sizes="(max-width: 768px) 90vw, 60vw"
         src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${images[idx]}`}
         alt={`${images[idx]}`}
-        className="max-w-[70vw] max-h-[70vh] object-contain rounded-lg"
+        className="max-w-[88vw] max-h-[65vh] object-contain rounded-lg"
         onClick={(e) => e.stopPropagation()}
       />
-      <div className="flex gap-2.5" onClick={(e) => e.stopPropagation()}>
+      {/* Thumbnails — scrollable on mobile */}
+      <div
+        className="flex gap-2.5 overflow-x-auto max-w-[90vw] pb-1"
+        onClick={(e) => e.stopPropagation()}
+        style={{ scrollbarWidth: "none" }}
+      >
         {images.map((src, i) => (
           <div
             key={i}
             onClick={() => setIdx(i)}
-            className={`w-14 h-14 rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${
-              i === idx ? "border-second opacity-100" : "border-transparent opacity-50 hover:opacity-80"
+            className={`flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${
+              i === idx
+                ? "border-second opacity-100"
+                : "border-transparent opacity-50 hover:opacity-80"
             }`}
           >
             <Image
-              width={500} height={500}
+              width={500}
+              height={500}
               loading="lazy"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              sizes="56px"
               alt={`${src}`}
               src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${src}`}
               className="w-full h-full object-contain bg-white/5 p-1"
@@ -147,34 +155,30 @@ function FullscreenViewer({
 
 // ── Main Component ──
 export default function ProductDetail({ product }: { product?: any }) {
-  const [activeImg, setActiveImg] = useState(0);
-  const [qty, setQty] = useState(1);
-  const [tab, setTab] = useState<Tab>("description");
-  const [fsOpen, setFsOpen] = useState(false);
-  const [videoOpen, setVideoOpen] = useState(false);
+  const [activeImg, setActiveImg]       = useState(0);
+  const [qty, setQty]                   = useState(1);
+  const [tab, setTab]                   = useState<Tab>("description");
+  const [fsOpen, setFsOpen]             = useState(false);
+  const [videoOpen, setVideoOpen]       = useState(false);
   const [formattedPrice, setFormattedPrice] = useState("");
-  const [waUrl, setWaUrl] = useState<string | null>(null);
+  const [waUrl, setWaUrl]               = useState<string | null>(null);
   const [selectedOptions, setSelectedOptions] = useState<Record<number, VariantOption>>({});
-
-  // ── activeImgSrc: bisa dari imageList atau dari variant option image ──
   const [activeImgSrc, setActiveImgSrc] = useState<string | null>(null);
-
   const mainImgRef = useRef<HTMLImageElement>(null);
 
-  const imageList: string[] = typeof product.images === "string"
-    ? JSON.parse(product.images)
-    : product.images;
+  const imageList: string[] =
+    typeof product.images === "string"
+      ? JSON.parse(product.images)
+      : product.images;
 
   const variants: Variant[] = product.variants ?? [];
-  const allVariantsSelected = variants.length === 0 ||
-    variants.every((v) => selectedOptions[v.id]);
+  const allVariantsSelected =
+    variants.length === 0 || variants.every((v) => selectedOptions[v.id]);
 
-  // Src yang aktif ditampilkan di ZoomImage
   const currentSrc = activeImgSrc
     ? `${process.env.NEXT_PUBLIC_SERVER_API}/storage/${activeImgSrc}`
     : `${process.env.NEXT_PUBLIC_SERVER_API}/storage/${imageList[activeImg]}`;
 
-  // Harga aktif
   const activePrice = (() => {
     const selected = Object.values(selectedOptions);
     if (selected.length === 0) return product?.offlinePrice ?? 0;
@@ -201,18 +205,16 @@ export default function ProductDetail({ product }: { product?: any }) {
     if (mainImgRef.current) mainImgRef.current.style.opacity = "0";
     setTimeout(() => {
       setActiveImg(idx);
-      setActiveImgSrc(null); // reset ke product image
+      setActiveImgSrc(null);
       if (mainImgRef.current) mainImgRef.current.style.opacity = "1";
     }, 160);
   };
 
   const toggleOption = (variantId: number, option: VariantOption) => {
-    setSelectedOptions(prev => {
-      // Kalau sudah dipilih, deselect
+    setSelectedOptions((prev) => {
       if (prev[variantId]?.id === option.id) {
         const next = { ...prev };
         delete next[variantId];
-        // Reset ke gambar produk
         if (mainImgRef.current) mainImgRef.current.style.opacity = "0";
         setTimeout(() => {
           setActiveImgSrc(null);
@@ -220,19 +222,11 @@ export default function ProductDetail({ product }: { product?: any }) {
         }, 160);
         return next;
       }
-
-      // Pilih option baru
       if (mainImgRef.current) mainImgRef.current.style.opacity = "0";
       setTimeout(() => {
-        // Kalau option punya gambar, tampilkan gambar option
-        if (option.image) {
-          setActiveImgSrc(option.image);
-        } else {
-          setActiveImgSrc(null);
-        }
+        setActiveImgSrc(option.image ? option.image : null);
         if (mainImgRef.current) mainImgRef.current.style.opacity = "1";
       }, 160);
-
       return { ...prev, [variantId]: option };
     });
   };
@@ -249,81 +243,88 @@ export default function ProductDetail({ product }: { product?: any }) {
         />
       )}
 
-      <div className="min-h-screen bg-bg-site font-sans md:px-48 w-full box-border">
+      <div className="min-h-screen bg-bg-site font-sans">
+
         {/* Breadcrumb */}
-        <div className="px-4 md:px-28 pt-8 flex items-center gap-2 text-third/45">
-          <Link href="/" className="hover:text-third transition-colors">Beranda</Link>
+        <div className="px-4 md:px-28 lg:px-48 pt-5 md:pt-8 flex items-center gap-1.5 text-[11px] md:text-[13px] text-third/45 overflow-x-auto whitespace-nowrap pb-1" style={{ scrollbarWidth: "none" }}>
+          <Link href="/" className="hover:text-third transition-colors flex-shrink-0">Beranda</Link>
           <span>/</span>
-          <Link href={`/category/${product.kategoriId}`} className="hover:text-third transition-colors">
-            {product.kategoriId}
-          </Link>
+          <Link href={`/category/${product.kategoriId}`} className="hover:text-third transition-colors flex-shrink-0">{product.kategoriId}</Link>
           <span>/</span>
-          <Link href={`/brand/${product.brandId}`} className="hover:text-third transition-colors">
-            {product.brandId}
-          </Link>
+          <Link href={`/brand/${product.brandId}`} className="hover:text-third transition-colors flex-shrink-0">{product.brandId}</Link>
           <span>/</span>
-          <span className="line-clamp-1 text-third">{product.name}</span>
+          <span className="text-third truncate">{product.name}</span>
         </div>
 
-        <div className="flex flex-col md:px-28 py-8 box-border items-center justify-center">
-          {/* ── Top: Gallery + Info ── */}
-          <div className="flex flex-col md:grid md:grid-cols-[2fr_2fr] gap-y-8 md:gap-0 mb-14">
+        <div className="px-0 md:px-28 lg:px-48 py-4 md:py-8">
 
-            {/* Gallery */}
+          {/* ── Top: Gallery + Info ── */}
+          <div className="flex flex-col md:grid md:grid-cols-2 gap-0 md:gap-8 mb-8 md:mb-14">
+
+            {/* ── GALLERY ── */}
             <div className="flex flex-col gap-3">
-              <div className="w-[400px] md:w-[600px] object-contain p-8 duration-200 overflow-hidden border border-slate-300 rounded-4xl hover:bg-white transition relative">
-                {/* ← pakai currentSrc yang reaktif */}
-                <ZoomImage
-                  src={currentSrc}
-                  width="400"
-                  height="400"
-                  alt={product.name}
-                  productRef={mainImgRef}
-                />
-                {((product.offlinePrice && product.pricelist) && ((product.pricelist!.trim() && product.offlinePrice.trim())
-                  && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && 
-                  <span className="text-[18px] absolute top-3 right-4 bg-red-600 border border-red-900 text-white px-2 py-[2px] rounded-sm font-black tracking-tight">
-                    -{Math.round(((parseInt(product.pricelist!) - parseInt(product.offlinePrice)) / parseInt(product.pricelist!)) * 100)}%
+
+              {/* Main image */}
+              <div
+                className="relative mx-4 md:mx-0 rounded-2xl md:rounded-4xl border border-slate-300 overflow-hidden bg-white cursor-zoom-in"
+                onClick={() => setFsOpen(true)}
+              >
+                {/* Discount badge */}
+                {product.offlinePrice && product.pricelist &&
+                  product.pricelist.trim() && product.offlinePrice.trim() &&
+                  parseInt(product.pricelist) > parseInt(product.offlinePrice) && (
+                  <span className="text-[13px] md:text-[18px] absolute top-3 right-3 z-10 bg-red-600 border border-red-900 text-white px-2 py-[2px] rounded-sm font-black tracking-tight">
+                    -{Math.round(((parseInt(product.pricelist) - parseInt(product.offlinePrice)) / parseInt(product.pricelist)) * 100)}%
                   </span>
-                }
+                )}
+                <div className="w-full aspect-square md:aspect-auto md:h-[480px] p-4 md:p-8 transition-opacity duration-200">
+                  <ZoomImage
+                    src={currentSrc}
+                    width="400"
+                    height="400"
+                    alt={product.name}
+                    productRef={mainImgRef}
+                  />
+                </div>
               </div>
 
-              {/* Thumbnails — product images */}
-              <div className="flex gap-3">
+              {/* Thumbnails — horizontal scroll */}
+              <div
+                className="flex gap-2.5 md:gap-3 overflow-x-auto px-4 md:px-0 pb-1"
+                style={{ scrollbarWidth: "none" }}
+              >
                 {imageList.map((src: string, i: number) => (
                   <button
                     key={i}
                     onClick={() => switchImg(i)}
-                    className={`w-[120px] h-[120px] rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white transition-all duration-150 ${
-                      // Active kalau src ini yang aktif dan bukan dari variant
-                      (!activeImgSrc && i === activeImg)
+                    className={`flex-shrink-0 w-[68px] h-[68px] md:w-[100px] md:h-[100px] rounded-xl overflow-hidden border-2 bg-white transition-all duration-150 ${
+                      !activeImgSrc && i === activeImg
                         ? "border-second"
                         : "border-transparent opacity-50 hover:opacity-80 hover:border-third/15"
                     }`}
                   >
                     <Image
-                      width={500} height={500}
+                      width={200} height={200}
                       loading="lazy"
-                      sizes="80px"
+                      sizes="100px"
                       src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${src}`}
                       alt={`${src}`}
-                      className="w-full h-full object-contain p-2"
+                      className="w-full h-full object-contain p-1.5 md:p-2"
                     />
                   </button>
                 ))}
-
-                {/* Variant option thumbnails — tampil di samping product thumbnails */}
-                {variants.flatMap(v => v.options).filter(o => o.image).map((option) => {
+                {variants.flatMap((v) => v.options).filter((o) => o.image).map((option) => {
                   const isActiveVariantImg = activeImgSrc === option.image;
                   return (
                     <button
                       key={`opt-${option.id}`}
                       onClick={() => {
-                        // Cari variant yang punya option ini lalu toggle
-                        const parentVariant = variants.find(v => v.options.some(o => o.id === option.id));
+                        const parentVariant = variants.find((v) =>
+                          v.options.some((o) => o.id === option.id)
+                        );
                         if (parentVariant) toggleOption(parentVariant.id, option);
                       }}
-                      className={`w-[120px] h-[120px] rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white transition-all duration-150 relative ${
+                      className={`flex-shrink-0 w-[68px] h-[68px] md:w-[100px] md:h-[100px] rounded-xl overflow-hidden border-2 bg-white transition-all duration-150 ${
                         isActiveVariantImg
                           ? "border-second"
                           : "border-transparent opacity-50 hover:opacity-80 hover:border-third/15"
@@ -331,12 +332,12 @@ export default function ProductDetail({ product }: { product?: any }) {
                       title={option.name}
                     >
                       <Image
-                        width={500} height={500}
+                        width={200} height={200}
                         loading="lazy"
-                        sizes="80px"
+                        sizes="100px"
                         src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${option.image}`}
                         alt={option.name}
-                        className="w-full h-full object-contain p-2"
+                        className="w-full h-full object-contain p-1.5 md:p-2"
                       />
                     </button>
                   );
@@ -344,13 +345,15 @@ export default function ProductDetail({ product }: { product?: any }) {
               </div>
             </div>
 
-            {/* Info */}
-            <div className="flex flex-col gap-5 pt-8">
+            {/* ── INFO ── */}
+            <div className="flex flex-col gap-4 md:gap-5 px-4 md:px-0 pt-2 md:pt-6">
 
               {/* Name */}
               <div>
-                <p className="text-[24px] md:text-[16px]">{product.kategoriId}</p>
-                <h1 className="font-display text-[30px] md:text-[28px] font-black text-third leading-snug">
+                <p className="text-[11px] md:text-[13px] text-third/50 tracking-wide uppercase font-medium mb-1">
+                  {product.kategoriId}
+                </p>
+                <h1 className="font-display text-[22px] md:text-[28px] font-black text-third leading-snug">
                   {product.name}
                 </h1>
               </div>
@@ -359,39 +362,66 @@ export default function ProductDetail({ product }: { product?: any }) {
 
               {/* Price */}
               <div>
-                <div className="price-section grid grid-cols-3 md:lex gap-x-5">
-
-                  {(product.onlinePrice && product.onlinePrice.trim() !== "") ?
-                  <div suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third flex flex-col gap-y-[2px]">
-                    <p className="text-[16px] italic opacity-60">Harga Online</p>
-                    <p className="text-[20px] md:text-[20px] font-black text-red-500">{formattedPrice || `Rp ${product.onlinePrice?.toLocaleString()}`}</p>
-                  </div> :
-
-                   <Link href={`${product.tautan ? product.tautan : 'https://www.tokopedia.com/bandarmusikjakarta'}`} target="_blank" suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third flex gap-x-3 items-center">
-                      <ShoppingBag size={28}/>
-                      <div className="flex flex-col gap-y-[2px]">
-                        <p className="text-[16px] italic opacity-60">Lihat</p>
-                        <p className="text-[20px] md:text-[20px] font-black">Harga Online</p>
+                <div className="grid grid-cols-2 md:flex gap-2.5 md:gap-5">
+                  {product.onlinePrice && product.onlinePrice.trim() !== "" ? (
+                    <div
+                      suppressHydrationWarning
+                      className="font-display leading-none px-3 py-2.5 md:px-5 md:py-2 border rounded-md border-third flex flex-col gap-y-1"
+                    >
+                      <p className="text-[12px] md:text-[14px] italic opacity-60">Harga Online</p>
+                      <p className="text-[17px] md:text-[20px] font-black text-red-500">
+                        {formattedPrice || `Rp ${product.onlinePrice?.toLocaleString()}`}
+                      </p>
+                    </div>
+                  ) : (
+                    <Link
+                      href={`${product.tautan || "https://www.tokopedia.com/bandarmusikjakarta"}`}
+                      target="_blank"
+                      suppressHydrationWarning
+                      className="font-display leading-none px-3 py-2.5 md:px-5 md:py-2 border rounded-md border-third flex gap-x-2 md:gap-x-3 items-center"
+                    >
+                      <ShoppingBag size={22} className="md:w-7 md:h-7 flex-shrink-0" />
+                      <div className="flex flex-col gap-y-1">
+                        <p className="text-[12px] md:text-[14px] italic opacity-60">Lihat</p>
+                        <p className="text-[17px] md:text-[20px] font-black">Harga Online</p>
                       </div>
                     </Link>
-                  }
+                  )}
 
-                  {waUrl && <Link href={waUrl!} suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third flex flex-col gap-y-[2px]">
-                    <p className="text-[16px] italic opacity-60">Harga Offline</p>
-                    <p className="text-[20px] md:text-[20px] font-black text-red-500">{formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}</p>
-                  </Link>}
-
-                  {/* {(product.namaPromo && product.promo) && <div suppressHydrationWarning className="font-display leading-none transition-all duration-200 px-5 py-2 border rounded-md border-third flex flex-col gap-y-[2px]">
-                    <p className="text-[16px] italic opacity-60">{product.namaPromo}</p>
-                    <p className="text-[20px] md:text-[20px] font-black text-red-500">{`${formatPrice(product.promo!.toLocaleString())}`}</p>
-                  </div>} */}
-
+                  {waUrl && (
+                    <Link
+                      href={waUrl}
+                      suppressHydrationWarning
+                      className="font-display leading-none px-3 py-2.5 md:px-5 md:py-2 border rounded-md border-third flex flex-col gap-y-1"
+                    >
+                      <p className="text-[12px] md:text-[14px] italic opacity-60">Harga Offline</p>
+                      <p className="text-[17px] md:text-[20px] font-black text-red-500">
+                        {formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}
+                      </p>
+                    </Link>
+                  )}
                 </div>
+
                 {product.pricelist && (
-                  <div className="font-semibold text-[20px] md:text-[16px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center mt-2">
-                    <span className={`${((product.offlinePrice) && ((product.pricelist!.trim() && product.offlinePrice.trim())
-                      && (parseInt(product.pricelist!) > parseInt(product.offlinePrice)))) && 'line-through'}`}>
-                      Pricelist: {formatPrice(parseInt(product.pricelist.includes(" ") ? product.pricelist.split(' ')[0].trim() : product.pricelist.trim()))}
+                  <div className="font-semibold text-[13px] md:text-[15px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center mt-2">
+                    <span
+                      className={`${
+                        product.offlinePrice &&
+                        product.pricelist.trim() &&
+                        product.offlinePrice.trim() &&
+                        parseInt(product.pricelist) > parseInt(product.offlinePrice)
+                          ? "line-through"
+                          : ""
+                      }`}
+                    >
+                      Pricelist:{" "}
+                      {formatPrice(
+                        parseInt(
+                          product.pricelist.includes(" ")
+                            ? product.pricelist.split(" ")[0].trim()
+                            : product.pricelist.trim()
+                        )
+                      )}
                     </span>
                   </div>
                 )}
@@ -399,25 +429,24 @@ export default function ProductDetail({ product }: { product?: any }) {
 
               <div className="h-px bg-third/8" />
 
-              {/* ── Variants ── */}
+              {/* Variants */}
               {variants.length > 0 && (
-                <div className="flex flex-col gap-5">
+                <div className="flex flex-col gap-4 md:gap-5">
                   {variants.map((variant) => (
                     <div key={variant.id}>
-                      {/* Type label */}
-                      <div className="flex items-center gap-2 mb-3">
-                        <p className="font-poppins text-[14px] font-semibold text-third/60 uppercase tracking-[0.1em]">
+                      <div className="flex items-center gap-2 mb-2.5 md:mb-3">
+                        <p className="font-poppins text-[12px] md:text-[13px] font-semibold text-third/60 uppercase tracking-[0.1em]">
                           Pilih {variant.type} :
                         </p>
                         {selectedOptions[variant.id] && (
-                          <span className={`font-poppins text-[14px] text-third/45`}>
-                            <span className="text-third font-bold">{selectedOptions[variant.id].name}</span>
+                          <span className="font-poppins text-[12px] md:text-[13px] text-third/45">
+                            <span className="text-third font-bold">
+                              {selectedOptions[variant.id].name}
+                            </span>
                           </span>
                         )}
                       </div>
-
-                      {/* Options */}
-                      <div className="flex flex-wrap gap-2.5 w-full">
+                      <div className="flex flex-wrap gap-2 md:gap-2.5 w-full">
                         {variant.options.map((option) => {
                           const isSelected = selectedOptions[variant.id]?.id === option.id;
                           return (
@@ -425,43 +454,28 @@ export default function ProductDetail({ product }: { product?: any }) {
                               key={option.id}
                               type="button"
                               onClick={() => toggleOption(variant.id, option)}
-                              className={`
-                                border-2 relative flex items-center gap-2.5 
-                                ${variant.type == "Warna" ? "w-10 h-10 rounded-full border-third " : "px-3 py-2 rounded-sm"}
-                                transition-all duration-200 ${
+                              className={`border-2 relative flex items-center gap-2 ${
+                                variant.type === "Warna"
+                                  ? "w-9 h-9 md:w-10 md:h-10 rounded-full border-third"
+                                  : "px-2.5 py-1.5 md:px-3 md:py-2 rounded-sm"
+                              } transition-all duration-200 ${
                                 isSelected
                                   ? "border-second bg-second/8 shadow-[0_2px_12px_rgba(249,173,82,0.2)]"
                                   : "border-third/12 hover:border-third/25"
-                              } ${bgVariantColor[option.name.toLowerCase().split(' ').join('')]}`}
+                              } ${bgVariantColor[option.name.toLowerCase().split(" ").join("")]}`}
                             >
-                              {/* Option image */}
-                              {/* {option.image && (
-                                <div className={`overflow-hidden flex-shrink-0 transition-colors ${
-                                  isSelected ? "border-second/40" : "border-third/10"
-                                }`}>
-                                  <Image
-                                    width={50}
-                                    height={50}
-                                    src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${option.image}`}
-                                    alt={option.name}
-                                    className="w-full h-full object-cover"
-                                  />
-                                </div>
-                              )} */}
-
-                              {/* Name */}
-                              {variant.type !== "Warna" && <div className="flex flex-col items-start">
-                                <span className={`font-poppins text-[20px] font-bold leading-tight transition-colors ${
-                                  isSelected ? "text-third" : "text-third/65"
-                                }`}>
+                              {variant.type !== "Warna" && (
+                                <span
+                                  className={`font-poppins text-[15px] md:text-[17px] font-bold leading-tight transition-colors ${
+                                    isSelected ? "text-third" : "text-third/65"
+                                  }`}
+                                >
                                   {option.name}
                                 </span>
-                              </div>}
-
-                              {/* Checkmark */}
+                              )}
                               {isSelected && (
-                                <div className="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-second flex items-center justify-center shadow-sm">
-                                  <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                <div className="absolute -top-1.5 -right-1.5 w-5 h-5 md:w-6 md:h-6 rounded-full bg-second flex items-center justify-center shadow-sm">
+                                  <svg className="w-3 h-3 md:w-4 md:h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                     <polyline points="20 6 9 17 4 12" />
                                   </svg>
                                 </div>
@@ -472,17 +486,19 @@ export default function ProductDetail({ product }: { product?: any }) {
                       </div>
                     </div>
                   ))}
-
-                  {/* Peringatan belum pilih */}
                   {!allVariantsSelected && (
                     <p className="font-poppins text-[11px] text-third/40 flex items-center gap-1.5">
                       <svg className="w-3.5 h-3.5 text-second flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
                       </svg>
-                      Pilih {variants
+                      Pilih{" "}
+                      {variants
                         .filter((v) => !selectedOptions[v.id])
                         .map((v) => v.type)
-                        .join(", ")} terlebih dahulu
+                        .join(", ")}{" "}
+                      terlebih dahulu
                     </p>
                   )}
                 </div>
@@ -491,105 +507,96 @@ export default function ProductDetail({ product }: { product?: any }) {
               {variants.length > 0 && <div className="h-px bg-third/8" />}
 
               {/* Qty + Cart + WA */}
-              <div className="flex items-center relative">
-                {/* Qty */}
-                  <div className="flex flex-col gap-y-2 mr-2">
-                    <button
-                      onClick={() => setQty((q) => q + 1)}
-                      className="w-[36px] h-[36px] rounded-full bg-white border-2 border-third flex justify-center items-center"
-                    >
-                      <ChevronUp size={20} strokeWidth={3}/>
-                    </button>
+              <div className="flex flex-col gap-3">
+                {/* Row 1: Qty + Cart */}
+                <div className="flex items-center gap-3">
+                  {/* Qty controls */}
+                  <div className="flex items-center gap-1.5 border-2 border-third rounded-md overflow-hidden">
                     <button
                       onClick={() => setQty((q) => Math.max(1, q - 1))}
-                      className="w-[36px] h-[36px] rounded-full bg-white border-2 border-third flex justify-center items-center"
+                      className="w-9 h-10 flex items-center justify-center text-third hover:bg-third/8 transition-colors"
                     >
-                      <ChevronDown size={20} strokeWidth={3}/>
+                      <ChevronDown size={18} strokeWidth={3} />
                     </button>
-                  </div>    
-
-                {/* Cart */}
-                <div className="relative">
-
-                  <div className="w-10 h-10 rounded-full border-2 border-third bg-primary flex items-center justify-center font-semibold text-[18px] text-third -m-px absolute top-[-12px] right-[-12px] z-10">
-                    {qty}
+                    <span className="w-8 text-center font-semibold text-[16px] text-third">
+                      {qty}
+                    </span>
+                    <button
+                      onClick={() => setQty((q) => q + 1)}
+                      className="w-9 h-10 flex items-center justify-center text-third hover:bg-third/8 transition-colors"
+                    >
+                      <ChevronUp size={18} strokeWidth={3} />
+                    </button>
                   </div>
 
-                <button
-                  disabled={!allVariantsSelected}
-                  className="py-2 px-10 bg-second text-third border-2 border-third rounded-md font-bold text-[20px] flex items-center justify-center gap-2 transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none drop-shadow-[6px_6px_0px_rgba(62,63,32,1)]"
-                  onClick={async()=>await createWishlist(product.id, qty)}>
-                  <ShoppingCart strokeWidth={3} className="w-6 h-6"/>
-                  <span className="mt-[2px]">Keranjang</span>
-                </button>
-
+                  {/* Cart button */}
+                  <button
+                    disabled={!allVariantsSelected}
+                    className="flex-1 py-2.5 px-4 bg-second text-third border-2 border-third rounded-md font-bold text-[16px] md:text-[18px] flex items-center justify-center gap-2 transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed drop-shadow-[4px_4px_0px_rgba(62,63,32,1)] md:drop-shadow-[6px_6px_0px_rgba(62,63,32,1)]"
+                    onClick={async () => await createWishlist(product.id, qty)}
+                  >
+                    <ShoppingCart strokeWidth={3} className="w-5 h-5 md:w-6 md:h-6" />
+                    <span>Keranjang</span>
+                  </button>
                 </div>
-                
 
-                {/* WhatsApp */}
+                {/* Row 2: WhatsApp — full width on mobile */}
                 {waUrl && (
                   <Link
                     href={waUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="ml-10 py-3 px-8 flex gap-x-2 items-center justify-center duration-150 rounded-xl border-2 border-third"
+                    className="w-full py-2.5 px-5 flex gap-x-2.5 items-center justify-center rounded-xl border-2 border-third transition-colors duration-150 hover:bg-third/5"
                   >
-                    <FaWhatsapp size={30} className="text-third" />
+                    <FaWhatsapp size={26} className="text-third flex-shrink-0" />
                     <div>
-                      <p className="text-[12px] leading-none">Pembelian Melalui</p>
-                      <p className="text-[24px] font-extrabold tracking-tight leading-none">Whatsapp</p>
+                      <p className="text-[11px] leading-none text-third/60">Pembelian Melalui</p>
+                      <p className="text-[18px] md:text-[20px] font-extrabold tracking-tight leading-none">
+                        Whatsapp
+                      </p>
                     </div>
                   </Link>
                 )}
 
-                <div className="att absolute -bottom-5 left-11 flex gap-x-3 items-center font-light italic">
-                    <Megaphone size={20} className="rounded-full"/>
-                    <p className="text-[14px]">Harap Tanya Ketersediaan Barang melalui Whatsapp Sebelum Melakukan Pemesanan.</p>
+                {/* Notice */}
+                <div className="flex gap-x-2 items-start text-third/50 mt-1">
+                  <Megaphone size={16} className="flex-shrink-0 mt-0.5" />
+                  <p className="text-[11px] md:text-[12px] font-light italic leading-snug">
+                    Harap Tanya Ketersediaan Barang melalui Whatsapp Sebelum Melakukan Pemesanan.
+                  </p>
                 </div>
               </div>
 
-              <div className="added-badge flex gap-x-4 mt-16">
-
-                <div className="deliv flex gap-x-2 border-r border-third/50 pr-2">
-                  <Truck size={36} strokeWidth="2"/>
-                  <div className="deliv-text">
-                    <p className="font-bold">Pengiriman Cepat</p>
-                    <p className="text-[12px] font-light">Pengiriman barang cepat dan aman</p>
+              {/* Trust badges */}
+              <div className="grid grid-cols-3 gap-2 md:flex md:gap-4 mt-2 md:mt-4 border-t border-third/8 pt-4">
+                {[
+                  { Icon: Truck, title: "Pengiriman Cepat", sub: "Pengiriman barang cepat dan aman" },
+                  { Icon: ShieldCheck, title: "Garansi 1 Tahun", sub: "Perlindungan sejak tanggal pembelian" },
+                  { Icon: PiggyBank, title: "Best Price", sub: "Kualitas dengan harga terbaik" },
+                ].map(({ Icon, title, sub }) => (
+                  <div key={title} className="flex flex-col md:flex-row items-center md:items-start gap-1 md:gap-2 text-center md:text-left md:border-r last:border-r-0 border-third/50 md:pr-4 last:pr-0">
+                    <Icon size={24} strokeWidth={2} className="flex-shrink-0 text-third/70" />
+                    <div>
+                      <p className="font-bold text-[11px] md:text-[13px] leading-tight">{title}</p>
+                      <p className="text-[10px] md:text-[12px] font-light text-third/60 leading-snug">{sub}</p>
+                    </div>
                   </div>
-                </div>
-
-                <div className="guard flex gap-x-2">
-                  <ShieldCheck size={36} strokeWidth="2"/>
-                  <div className="guard-text">
-                    <p className="font-bold">Garansi 1 Tahun</p>
-                    <p className="text-[12px] font-light">Perlindungan sejak tanggal pembelian</p>
-                  </div>
-                </div>
-
-                <div className="money flex gap-x-2 border-l border-third/50 pl-2">
-                  <PiggyBank size={36} strokeWidth="2"/>
-                  <div className="money-text">
-                    <p className="font-bold">Best Price</p>
-                    <p className="text-[12px] font-light">Kualitas dengan harga terbaik</p>
-                  </div>
-                </div>
-
+                ))}
               </div>
-
             </div>
           </div>
 
-          {/* ── Bottom: Full width ── */}
-          <div className="border-t border-third/8 pt-10 flex flex-col gap-10">
+          {/* ── Bottom: Tabs + Meta + Video ── */}
+          <div className="border-t border-third/8 pt-8 md:pt-10 flex flex-col gap-8 md:gap-10 px-4 md:px-0">
 
             {/* Tabs */}
             <div>
-              <div className="flex border-b border-third/8 mb-6 overflow-x-auto">
+              <div className="flex border-b border-third/8 mb-5 md:mb-6 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
                 {(["description", "features", "specifications"] as Tab[]).map((t) => (
                   <button
                     key={t}
                     onClick={() => setTab(t)}
-                    className={`text-[13px] font-medium px-5 py-2.5 border-b-2 -mb-px transition-all duration-150 whitespace-nowrap flex-shrink-0 ${
+                    className={`text-[12px] md:text-[13px] font-medium px-4 md:px-5 py-2.5 border-b-2 -mb-px transition-all duration-150 whitespace-nowrap flex-shrink-0 ${
                       tab === t
                         ? "border-second text-third"
                         : "border-transparent text-third/45 hover:text-third/70"
@@ -599,11 +606,10 @@ export default function ProductDetail({ product }: { product?: any }) {
                   </button>
                 ))}
               </div>
-
-              <div className="text-[14px] leading-relaxed text-third/70 text-justify">
+              <div className="text-[13px] md:text-[14px] leading-relaxed text-third/70 text-justify">
                 {tab === "description" && <p>{product.description}</p>}
                 {tab === "features" && (
-                  <ul className="flex flex-col gap-2.5 list-none">
+                  <ul className="flex flex-col gap-2 md:gap-2.5 list-none">
                     {product.features?.map((f: string, i: number) => (
                       <li key={i} className="flex items-start gap-3">
                         <span className="w-1.5 h-1.5 rounded-full bg-second mt-2 flex-shrink-0" />
@@ -613,13 +619,15 @@ export default function ProductDetail({ product }: { product?: any }) {
                   </ul>
                 )}
                 {tab === "specifications" && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-0 max-w-xl">
-                    {product.specifications?.map((s: { label: string; value: string }, i: number) => (
-                      <div key={i} className="flex justify-between py-2.5 border-b border-third/6">
-                        <span className="text-third/45 text-[13px]">{s.label}</span>
-                        <span className="text-third font-medium text-[13px]">{s.value}</span>
-                      </div>
-                    ))}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-0">
+                    {product.specifications?.map(
+                      (s: { label: string; value: string }, i: number) => (
+                        <div key={i} className="flex justify-between py-2 md:py-2.5 border-b border-third/6">
+                          <span className="text-third/45 text-[12px] md:text-[13px]">{s.label}</span>
+                          <span className="text-third font-medium text-[12px] md:text-[13px]">{s.value}</span>
+                        </div>
+                      )
+                    )}
                   </div>
                 )}
               </div>
@@ -627,10 +635,10 @@ export default function ProductDetail({ product }: { product?: any }) {
 
             {/* Meta info */}
             <div>
-              <p className="text-[10px] font-semibold tracking-[0.15em] uppercase text-third/40 mb-4">
+              <p className="text-[10px] font-semibold tracking-[0.15em] uppercase text-third/40 mb-3 md:mb-4">
                 Informasi Produk
               </p>
-              <div className="flex gap-6 md:gap-10 flex-wrap">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:flex md:gap-10">
                 {[
                   { label: "Berat", value: product.weight },
                   { label: "SKU", value: product.sku },
@@ -641,7 +649,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                     <span className="text-[10px] font-semibold tracking-[0.12em] uppercase text-third/35">
                       {m.label}
                     </span>
-                    <span className="text-[14px] font-medium text-third">{m.value}</span>
+                    <span className="text-[13px] md:text-[14px] font-medium text-third">{m.value}</span>
                   </div>
                 ))}
               </div>
@@ -650,12 +658,12 @@ export default function ProductDetail({ product }: { product?: any }) {
             {/* Video */}
             {product.videoUrl && (
               <div>
-                <p className="text-[10px] font-semibold tracking-[0.15em] uppercase text-third/40 mb-4">
+                <p className="text-[10px] font-semibold tracking-[0.15em] uppercase text-third/40 mb-3 md:mb-4">
                   Video Produk
                 </p>
                 {!videoOpen ? (
                   <div
-                    className="relative w-full max-w-2xl aspect-video bg-third/8 rounded-2xl overflow-hidden cursor-pointer group"
+                    className="relative w-full max-w-2xl aspect-video bg-third/8 rounded-xl md:rounded-2xl overflow-hidden cursor-pointer group"
                     onClick={() => setVideoOpen(true)}
                   >
                     <img
@@ -664,8 +672,8 @@ export default function ProductDetail({ product }: { product?: any }) {
                       className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-200"
                     />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-14 h-14 rounded-full bg-third/80 group-hover:bg-third flex items-center justify-center transition-colors duration-200 shadow-xl">
-                        <Play className="w-6 h-6 text-second ml-1" fill="#f9ad52" />
+                      <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-third/80 group-hover:bg-third flex items-center justify-center transition-colors duration-200 shadow-xl">
+                        <Play className="w-5 h-5 md:w-6 md:h-6 text-second ml-1" fill="#f9ad52" />
                       </div>
                     </div>
                     <div className="absolute bottom-3 left-4 text-[11px] text-white/60">
@@ -673,7 +681,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                     </div>
                   </div>
                 ) : (
-                  <div className="relative w-full max-w-2xl aspect-video rounded-2xl overflow-hidden bg-black">
+                  <div className="relative w-full max-w-2xl aspect-video rounded-xl md:rounded-2xl overflow-hidden bg-black">
                     <iframe
                       src={product.videoUrl + "?autoplay=1"}
                       className="w-full h-full"
@@ -692,7 +700,9 @@ export default function ProductDetail({ product }: { product?: any }) {
             )}
           </div>
 
-          <ProductFaq/>
+          <div className="px-4 md:px-0 mt-10">
+            <ProductFaq />
+          </div>
         </div>
       </div>
     </>
