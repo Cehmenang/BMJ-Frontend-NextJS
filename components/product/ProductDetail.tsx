@@ -21,6 +21,9 @@ import Image from "next/image";
 import { FaWhatsapp } from "react-icons/fa";
 import { createWishlist } from "@/action/wishlist";
 import ProductFaq from "./ProductFaq";
+import { getRelated } from "@/action/product";
+import { IProduct } from "@/interface";
+import RelatedProducts from "./RelatedProducts";
 
 type Tab = "description" | "features" | "specifications";
 type VariantOption = {
@@ -164,6 +167,7 @@ export default function ProductDetail({ product }: { product?: any }) {
   const [waUrl, setWaUrl]               = useState<string | null>(null);
   const [selectedOptions, setSelectedOptions] = useState<Record<number, VariantOption>>({});
   const [activeImgSrc, setActiveImgSrc] = useState<string | null>(null);
+  const [related, setRelated] = useState<IProduct[] | []>([])
   const mainImgRef  = useRef<HTMLImageElement>(null);
   const imgWrapRef  = useRef<HTMLDivElement>(null);
 
@@ -192,6 +196,12 @@ export default function ProductDetail({ product }: { product?: any }) {
   useEffect(() => {
     setFormattedPrice(formatPrice(activePrice));
   }, [activePrice]);
+
+  useEffect(()=>{
+    if(product){
+      (async()=>setRelated(await getRelated(product.kategoriId)))()
+    }
+  }, [product])
 
   useEffect(() => {
     if (product) {
@@ -707,6 +717,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
           <div className="px-4 md:px-0 mt-10">
             <ProductFaq />
+            {(related && related.length > 0) && <RelatedProducts related={related}/>}
           </div>
         </div>
       </div>

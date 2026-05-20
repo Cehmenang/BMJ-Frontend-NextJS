@@ -2,6 +2,7 @@
 
 import { getProductByUrl } from "@/action/product";
 import ProductDetail from "@/components/product/ProductDetail";
+import { IProduct } from "@/interface";
 import { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: { url: string } }): Promise<Metadata | any>{
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: { params: { url: string } }):
 export default async function ProductPage({ params }: { params: { url: string } }) {
     const { url } = await params
     const response = await getProductByUrl(url)
-    const product = response.produk
+    const product = response.produk as IProduct
 
     if(!product) return <h1>loading</h1>
 

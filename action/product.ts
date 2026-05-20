@@ -68,6 +68,19 @@ export async function getProducts(pagination: number){
     }catch(err){ console.log(err) }
 }
 
+export async function getRelated(kategori? : string){
+    try{
+        const response = await fetch(`${process.env.SERVER_API}/api/produk/related?kategori=${kategori}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json', "Accept": "application/json" },
+        })
+        const result= await response.json()
+        if(response.ok) {
+            return await result.produk
+        }
+    }catch(err){ console.log(err) }
+}
+
 export async function getProductsBySearch(pagination: number, query: string){
     try{
         const response = await fetch(`${process.env.SERVER_API}/api/produk/semua?page=${pagination}&q=${query}`, {
