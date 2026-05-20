@@ -6,6 +6,10 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/**/*.{js,ts,jsx,tsx,mdx}", // Tambahin ini kalau kamu pakai folder src
   ],
+  safelist: [
+    "animate-marquee-left",
+    "animate-marquee-right",
+  ],
   theme: {
     extend: {
       keyframes: {
