@@ -47,8 +47,8 @@ export default function RelatedProducts({ related }: { related: IProduct[] }) {
   const handleMouseLeave = () => animRef.current?.play();
 
   return (
-    <div className="w-full mt-8">
-      <h2 className="text-xl font-bold mb-4">Produk Terkait</h2>
+    <div className="w-full mt-28">
+      <h2 className="text-[28px] uppercase text-center font-bold mb-4">Produk Terkait</h2>
 
       {/* Wrapper dengan fade kiri kanan */}
       <div
@@ -68,7 +68,7 @@ export default function RelatedProducts({ related }: { related: IProduct[] }) {
             <Link
               key={`${product.id}-${index}`}
               href={`/produk/${product.url}`}
-              className="group flex flex-col rounded-xl border border-gray-100 hover:border-gray-300 hover:shadow-md transition-all duration-300 overflow-hidden w-[180px] md:w-[220px] shrink-0"
+              className="group flex flex-col rounded-xl border border-gray-100 hover:border-gray-300 hover:shadow-md transition-all duration-300 overflow-hidden w-[200px] md:w-[400px] shrink-0"
             >
               {/* Image */}
               <div className="relative aspect-square w-full overflow-hidden bg-gray-50">
@@ -95,7 +95,7 @@ export default function RelatedProducts({ related }: { related: IProduct[] }) {
 
               {/* Info */}
               <div className="flex flex-col gap-1 p-3">
-                <p className="text-sm font-semibold leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+                <p className="text-sm font-semibold leading-tight line-clamp-2 group-hover:text-[#111] transition-colors">
                   {product.name}
                 </p>
 
