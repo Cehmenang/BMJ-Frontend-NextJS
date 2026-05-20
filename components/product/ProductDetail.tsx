@@ -199,7 +199,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
   useEffect(()=>{
     if(product){
-      (async()=>setRelated(await getRelated(product.kategoriId)))()
+      (async()=>setRelated(await getRelated(product.kategoriId, product.url)))()
     }
   }, [product])
 

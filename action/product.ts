@@ -68,9 +68,9 @@ export async function getProducts(pagination: number){
     }catch(err){ console.log(err) }
 }
 
-export async function getRelated(kategori? : string){
+export async function getRelated(kategori? : string, url?: string){
     try{
-        const response = await fetch(`${process.env.SERVER_API}/api/produk/related?kategori=${kategori}`, {
+        const response = await fetch(`${process.env.SERVER_API}/api/produk/related?kategori=${kategori}&url=${url}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json', "Accept": "application/json" },
         })
