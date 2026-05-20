@@ -72,9 +72,9 @@ export default function RelatedProducts({ related }: { related: IProduct[] }) {
             >
               {/* Image */}
               <div className="relative aspect-square w-full overflow-hidden bg-gray-50">
-                {product.images[0][0] ? (
+                {product.images ? (
                   <Image
-                    src={product.images[0][0]}
+                    src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0][0]}`}
                     alt={product.name}
                     fill
                     className="object-contain p-3 group-hover:scale-105 transition-transform duration-300"
