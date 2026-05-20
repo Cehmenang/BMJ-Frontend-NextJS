@@ -245,6 +245,35 @@ export default function ProductsLayout({
   if(role && role?.toLowerCase() == "admin"){
     return (
       <div>
+          <div className="top-filter-admin">
+            <form onSubmit={handleSearch} className="hidden md:flex items-center gap-2 flex-shrink-0">
+            <div className="relative">
+              <input
+                type="text"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder="Cari produk…"
+                className="font-poppins text-[11.5px] text-third placeholder:text-third/25 bg-white border border-third/10 rounded-lg px-3 py-1.5 pr-7 outline-none focus:border-third/25 transition-colors w-40"
+              />
+              {searchInput && (
+                <button
+                  type="button"
+                  onClick={() => { setSearchInput(""); updateURL({ q: "", page: "1" }); }}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-third/25 hover:text-third/50"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              )}
+            </div>
+            <button
+              type="submit"
+              className="h-[28px] px-3 rounded-lg bg-third text-primary font-poppins text-[11px] font-medium flex items-center gap-1 hover:bg-third-dark transition-colors flex-shrink-0"
+            >
+              <Search className="w-3 h-3" />
+              Cari
+            </button>
+          </form>
+          </div>
             <ProductTable products={products} onSave={onSave}/>
             <Pagination
               currentPage={currentPage}
