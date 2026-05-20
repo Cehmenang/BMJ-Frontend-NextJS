@@ -164,7 +164,8 @@ export default function ProductDetail({ product }: { product?: any }) {
   const [waUrl, setWaUrl]               = useState<string | null>(null);
   const [selectedOptions, setSelectedOptions] = useState<Record<number, VariantOption>>({});
   const [activeImgSrc, setActiveImgSrc] = useState<string | null>(null);
-  const mainImgRef = useRef<HTMLImageElement>(null);
+  const mainImgRef  = useRef<HTMLImageElement>(null);
+  const imgWrapRef  = useRef<HTMLDivElement>(null);
 
   const imageList: string[] =
     typeof product.images === "string"
@@ -201,13 +202,25 @@ export default function ProductDetail({ product }: { product?: any }) {
     }
   }, [product]);
 
+  const popImage = (callback: () => void) => {
+    import("gsap").then((mod) => {
+      const gsap = mod.gsap ?? mod.default;
+      const target = imgWrapRef.current;
+      if (!target) { callback(); return; }
+      gsap.killTweensOf(target);
+      gsap.fromTo(
+        target,
+        { scale: 0.7, opacity: 0.5 },
+        { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(1.6)" }
+      );
+      callback();
+    });
+  };
+
   const switchImg = (idx: number) => {
-    if (mainImgRef.current) mainImgRef.current.style.opacity = "0";
-    setTimeout(() => {
-      setActiveImg(idx);
-      setActiveImgSrc(null);
-      if (mainImgRef.current) mainImgRef.current.style.opacity = "1";
-    }, 160);
+    setActiveImg(idx);
+    setActiveImgSrc(null);
+    popImage(() => {});
   };
 
   const toggleOption = (variantId: number, option: VariantOption) => {
@@ -215,18 +228,10 @@ export default function ProductDetail({ product }: { product?: any }) {
       if (prev[variantId]?.id === option.id) {
         const next = { ...prev };
         delete next[variantId];
-        if (mainImgRef.current) mainImgRef.current.style.opacity = "0";
-        setTimeout(() => {
-          setActiveImgSrc(null);
-          if (mainImgRef.current) mainImgRef.current.style.opacity = "1";
-        }, 160);
+        popImage(() => setActiveImgSrc(null));
         return next;
       }
-      if (mainImgRef.current) mainImgRef.current.style.opacity = "0";
-      setTimeout(() => {
-        setActiveImgSrc(option.image ? option.image : null);
-        if (mainImgRef.current) mainImgRef.current.style.opacity = "1";
-      }, 160);
+      popImage(() => setActiveImgSrc(option.image || null));
       return { ...prev, [variantId]: option };
     });
   };
@@ -277,7 +282,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                     -{Math.round(((parseInt(product.pricelist) - parseInt(product.offlinePrice)) / parseInt(product.pricelist)) * 100)}%
                   </span>
                 )}
-                <div className="w-full aspect-square md:aspect-auto md:h-[480px] p-4 md:p-8 transition-opacity duration-200">
+                <div ref={imgWrapRef} className="w-full aspect-square md:aspect-auto md:h-[480px] p-4 md:p-8">
                   <ZoomImage
                     src={currentSrc}
                     width="400"
