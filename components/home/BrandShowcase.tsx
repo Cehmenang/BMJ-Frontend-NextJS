@@ -181,10 +181,15 @@ export default function BrandShowcase() {
       </div>
 
       {/* ── MOBILE: Marquee 2 baris ── */}
-      <div className="flex sm:hidden flex-col gap-3 px-0">
+      <div
+        className="flex sm:hidden flex-col gap-3"
+        style={{
+          maskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+        }}
+      >
         {brands.length === 0 ? (
-          // Skeleton mobile
-          <div className="flex gap-3 px-4">
+          <div className="flex gap-3">
             {[...Array(5)].map((_, i) => (
               <div key={i} className="flex-shrink-0 w-[72px] h-[56px] rounded-xl bg-third/8 animate-pulse" />
             ))}
