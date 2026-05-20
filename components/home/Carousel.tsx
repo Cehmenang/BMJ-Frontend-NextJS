@@ -174,7 +174,7 @@ export default function Carousel() {
           key={slide.id}
           data-slide
           ref={(el) => { slideRefs.current[i] = el; }}
-          className="absolute inset-0 flex items-center"
+          className="absolute inset-0 flex items-center justify-center"
           style={{ opacity: i === 0 ? 1 : 0, zIndex: i === 0 ? 10 : 0 }}
         >
           {/* BG */}
@@ -194,15 +194,16 @@ export default function Carousel() {
           </div>
 
           {/* Overlay */}
-          <div className="absolute inset-0" />
+          <div className="absolute inset-0 bg-black/70" />
 
           {/* Content */}
           <div
             ref={(el) => { contentRefs.current[i] = el; }}
             className="
-              relative z-10 w-full max-w-3xl
-              px-5 sm:px-10 md:px-16 lg:px-[220px]
+              relative z-10 w-full max-w-3xl mx-auto
+              px-5 sm:px-10
               pt-6 sm:pt-8
+              flex flex-col items-center text-center
             "
           >
             {/* Tag */}
