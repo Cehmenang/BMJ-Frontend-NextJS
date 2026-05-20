@@ -8,20 +8,20 @@ module.exports = {
   ],
   theme: {
     extend: {
-       keyframes: {
-      "marquee-left": {
-        "0%":   { transform: "translateX(0)" },
-        "100%": { transform: "translateX(-33.333%)" },
+      keyframes: {
+        "marquee-left": {
+          "0%":   { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-33.333%)" },
+        },
+        "marquee-right": {
+          "0%":   { transform: "translateX(-33.333%)" },
+          "100%": { transform: "translateX(0)" },
+        },
       },
-      "marquee-right": {
-        "0%":   { transform: "translateX(-33.333%)" },
-        "100%": { transform: "translateX(0)" },
+      animation: {
+        "marquee-left":  "marquee-left var(--marquee-duration, 30s) linear infinite",
+        "marquee-right": "marquee-right var(--marquee-duration, 30s) linear infinite",
       },
-    },
-    animation: {
-      "marquee-left":  "marquee-left var(--marquee-duration, 30s) linear infinite",
-      "marquee-right": "marquee-right var(--marquee-duration, 30s) linear infinite",
-    },
     },
   },
   plugins: [],
