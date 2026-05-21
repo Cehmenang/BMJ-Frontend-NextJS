@@ -12,8 +12,9 @@ export default function cekOngkir(){
                 <input type="text" name="destination" placeholder="Kota/Kecamatan Tujuan" onChange={(e)=>setDestInput(e.target.value)}/>
                 <button onClick={async()=>{ 
                     if(destInput && destInput.trim() !== ""){
-                        const data = await getDestinationOption(destInput!)
-                        console.log(data, 'DATAAA')
+                        const response = await fetch(`/api/ongkir?location=${destInput!}`, { method: 'GET' })
+                        const data = await response.json()
+                        console.log(data)
                     }
                 }}>Cari Lokasi</button>
             </div>
