@@ -98,7 +98,7 @@ export async function getProductsBySearch(pagination: number, query: string){
 export async function getDestinationOption(location: string) {
   try {
     const res = await fetch(`https://rajaongkir.komerce.id/api/v1/destination/domestic-destination?search=${location}&limit=10&offset=0`,
-      { headers: { key: process.env.SHIPPING! } }
+      { method: 'GET', headers: { 'key': process.env.SHIPPING! } }
     )
     if(res.ok){ return await res.json() }
   } catch (err) { return err }
