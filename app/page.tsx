@@ -2,6 +2,7 @@ import LatestProducts from "@/components/home/LatestProducts";
 import Carousel from "../components/home/Carousel";
 import TrustBadges from "../components/home/TrustBadges";
 import BrandShowcase from "@/components/home/BrandShowcase";
+import TiktokShowcase from "@/components/home/TiktokShowcase";
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
           <TrustBadges/>
           <LatestProducts/>
           <BrandShowcase/>
+          <TiktokShowcase/>
       </div>
     </div>
   );
