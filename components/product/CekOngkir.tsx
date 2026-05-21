@@ -13,8 +13,9 @@ export default function cekOngkir(){
                 <button onClick={async()=>{
                     if(destInput && destInput?.trim()){
                        try{
-                            const response = await fetch(`/api/ongkir?location=${destInput}`, { method: 'GET' })
+                            const response = await fetch('/api/ongkir?location=sawah+besar', { method: 'GET' })
                             const data = await response.json()
+                            console.log(data)
                             console.log('KITAAA COBAINNNN')
                             console.log(data, 'DATANYEEEE')
                             if(response.ok){ console.log('BERHASILLL') }
