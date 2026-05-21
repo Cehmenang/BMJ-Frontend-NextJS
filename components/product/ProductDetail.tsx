@@ -24,6 +24,7 @@ import ProductFaq from "./ProductFaq";
 import { getRelated } from "@/action/product";
 import { IProduct } from "@/interface";
 import RelatedProducts from "./RelatedProducts";
+import CekOngkir from "./CekOngkir";
 
 type Tab = "description" | "features" | "specifications";
 type VariantOption = {
@@ -168,6 +169,7 @@ export default function ProductDetail({ product }: { product?: any }) {
   const [selectedOptions, setSelectedOptions] = useState<Record<number, VariantOption>>({});
   const [activeImgSrc, setActiveImgSrc] = useState<string | null>(null);
   const [related, setRelated] = useState<IProduct[] | []>([])
+  const [cekOngkir, setCekOngkir] = useState<boolean>(false)
   const mainImgRef  = useRef<HTMLImageElement>(null);
   const imgWrapRef  = useRef<HTMLDivElement>(null);
 
@@ -561,7 +563,13 @@ export default function ProductDetail({ product }: { product?: any }) {
                     <ShoppingCart strokeWidth={3} className="w-5 h-5 md:w-6 md:h-6" />
                     <span>Keranjang</span>
                   </button>
+
+                  <button onClick={()=>setCekOngkir(cekOngkir ? false : true)}>Cek Ongkir</button>
+
                 </div>
+
+                { cekOngkir && <CekOngkir weight={1300} subtotal={350000} onSelect={(s) => console.log("dipilih:", s)}
+/> }
 
                 {/* Row 2: WhatsApp — full width on mobile */}
                 {waUrl && (
