@@ -173,7 +173,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
   useEffect(()=>{
     (async()=>{
-      const data = await fetch('/api/ongkir?location=Jakarta')
+      const data = await fetch('/api/ongkir?location=sawah+besar')
       console.log(data)
     })()
   }, [])
