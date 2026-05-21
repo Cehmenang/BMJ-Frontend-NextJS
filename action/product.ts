@@ -99,5 +99,5 @@ export async function getDestinationOption(location: string){
     try{
         const response = await fetch(`/api/ongkir?location=${location}`, { method: 'GET' })
         if(response.ok){ return await response.json()}
-    }catch(err){ return err }
+    }catch(err){ return JSON.stringify(err) }
 }

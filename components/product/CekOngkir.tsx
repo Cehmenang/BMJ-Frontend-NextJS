@@ -11,7 +11,7 @@ export default function cekOngkir(){
         console.log(location, 'TEMPAATTT')
         if (location?.trim()) {
             const data = await getDestinationOption(location)
-            console.log(data)
+            console.log(data.json())
         }
     }
 
