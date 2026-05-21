@@ -101,5 +101,5 @@ export async function getDestinationOption(location: string){
         const data = await response.json()
         if(response.ok){ return data }
         return data
-    }catch(err){ console.log(err) }
+    }catch(err){ return err }
 }

@@ -1,7 +1,6 @@
 "use client"
 
 import { getDestinationOption } from "@/action/product";
-import { useState } from "react";
 
 export default function cekOngkir(){
 
@@ -9,6 +8,7 @@ export default function cekOngkir(){
         e.preventDefault()
         const form = new FormData(e.currentTarget)
         const location = form.get('destination') as string
+        console.log(location, 'TEMPAATTT')
         const data = await getDestinationOption(location)
         console.log(data)
     }
