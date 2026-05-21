@@ -1,14 +1,11 @@
 "use client"
 
-import { getDestinationOption } from "@/action/product";
-
 export default function cekOngkir(){
 
     async function handleDestinationOption(e: any){
         e.preventDefault()
         const form = new FormData(e.currentTarget)
         const location = form.get('destination') as string
-        console.log(location, 'TEMPAATTT')
         if (location?.trim()) {
             const response = await fetch(`/api/ongkir?location=${location}`, { method: 'GET' })
             const data = await response.json()
