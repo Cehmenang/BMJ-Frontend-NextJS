@@ -24,7 +24,6 @@ import ProductFaq from "./ProductFaq";
 import { getRelated } from "@/action/product";
 import { IProduct } from "@/interface";
 import RelatedProducts from "./RelatedProducts";
-import { cekOngkir } from "@/action/search";
 
 type Tab = "description" | "features" | "specifications";
 type VariantOption = {
@@ -174,15 +173,8 @@ export default function ProductDetail({ product }: { product?: any }) {
 
   useEffect(()=>{
     (async()=>{
-      try{
-        console.log(process.env.NEXT_PUBLIC_SHIPPING!, 'kocaaaaag')
-        const response = await fetch(`https://rajaongkir.komerce.id/api/v1/destination/domestic-destination?search=pejaringan&limit=10`, {
-            method: 'GET',
-            headers: { 'key': process.env.NEXT_PUBLIC_SHIPPING! }
-        }) as any
-        const data = await response.json()
-        if(response.ok){ console.log(data) }
-    }catch(err){ console.log(err) }
+      const data = await fetch('/api/ongkir?location=sawah+besar', { method: 'GET' })
+      console.log(data)
     })()
   }, [])
 
