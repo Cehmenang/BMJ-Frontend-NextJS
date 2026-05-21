@@ -93,3 +93,24 @@ export interface FormValues {
 export interface IOption {
   id: number, name: string, image: string | null, imagePreview: string | null, harga: string
 }
+
+export interface TikTokOEmbedResponse {
+  version: string;
+  type: "video" | "rich";
+  title: string;
+  author_url: string;
+  author_name: string;
+  width: string;
+  height: string;
+  html: string;
+  thumbnail_url?: string;
+  thumbnail_width?: number;
+  thumbnail_height?: number;
+  provider_url: string;
+  provider_name: string;
+}
+ 
+export interface TikTokConfig {
+  profileUrl: string;
+  videoUrls: string[];
+}

@@ -173,13 +173,13 @@ export default function ProductDetail({ product }: { product?: any }) {
   const mainImgRef  = useRef<HTMLImageElement>(null);
   const imgWrapRef  = useRef<HTMLDivElement>(null);
 
-  useEffect(()=>{
-    (async()=>{
-      const response = await fetch('/api/ongkir?location=sawah+besar', { method: 'GET' })
-      const data = await response.json()
-      console.log(data)
-    })()
-  }, [])
+  // useEffect(()=>{
+  //   (async()=>{
+  //     const response = await fetch('/api/ongkir?location=sawah+besar', { method: 'GET' })
+  //     const data = await response.json()
+  //     console.log(data)
+  //   })()
+  // }, [])
 
   const imageList: string[] =
     typeof product.images === "string"
@@ -564,11 +564,11 @@ export default function ProductDetail({ product }: { product?: any }) {
                     <span>Keranjang</span>
                   </button>
 
-                  <button onClick={()=>setCekOngkir(cekOngkir ? false : true)}>Cek Ongkir</button>
+                  {/* <button onClick={()=>setCekOngkir(cekOngkir ? false : true)}>Cek Ongkir</button> */}
 
                 </div>
 
-                { cekOngkir && <CekOngkir/>}
+                {/* { cekOngkir && <CekOngkir/>} */}
 
                 {/* Row 2: WhatsApp — full width on mobile */}
                 {waUrl && (

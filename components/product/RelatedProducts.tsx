@@ -48,7 +48,7 @@ export default function RelatedProducts({ related }: { related: IProduct[] }) {
 
   return (
     <div className="w-full mt-28">
-      <h2 className="text-[28px] uppercase text-center font-bold mb-4">Produk Terkait</h2>
+      <h2 className="text-[28px] uppercase text-center font-bold mb-4">Lihat Produk Lain</h2>
 
       {/* Wrapper dengan fade kiri kanan */}
       <div
