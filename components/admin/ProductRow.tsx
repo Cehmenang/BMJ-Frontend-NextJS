@@ -1,5 +1,4 @@
 "use client"
-import { saveProduct } from "@/action/product"
 import { IProduct } from "@/interface"
 import Image from "next/image"
 import { useEffect, useState } from "react"
