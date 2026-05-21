@@ -8,8 +8,7 @@ export async function GET(request: NextRequest){
             method: 'GET',
             headers: { 'key': process.env.SHIPPING! }
         }) as any
-        if(response.ok){ return NextResponse.json({
-            data: await response.json()
-        }) }
+        const data = await response.json()
+        if(response.ok){ return NextResponse.json({ data }) }
     }catch(err){ console.log(err) }
 }
