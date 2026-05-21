@@ -181,7 +181,7 @@ export default function ProductDetail({ product }: { product?: any }) {
             headers: { 'key': process.env.NEXT_PUBLIC_SHIPPING! }
         }) as any
         const data = await response.json()
-        if(response.ok){ return data }
+        if(response.ok){ console.log(data) }
     }catch(err){ console.log(err) }
     })()
   }, [])
