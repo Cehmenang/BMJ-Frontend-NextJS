@@ -15,6 +15,7 @@ export default function cekOngkir(){
                        try{
                             const response = await fetch(`/api/ongkir?location=${destInput}`, { method: 'GET' })
                             const data = await response.json()
+                            console.log('KITAAA COBAINNNN')
                             console.log(data, 'DATANYEEEE')
                             if(response.ok){ console.log('BERHASILLL') }
                         }catch(err){ console.log(err) }
