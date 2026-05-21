@@ -9,6 +9,6 @@ export async function GET(request: NextRequest){
             headers: { 'key': process.env.SHIPPING! }
         }) as any
         const data = await response.json()
-        if(response.ok){ return NextResponse.json({ data ,ship: process.env.SHIPPING!, loc: location}) }
+        if(response.ok){ return NextResponse.json(data) }
     }catch(err){ console.log(err) }
 }
