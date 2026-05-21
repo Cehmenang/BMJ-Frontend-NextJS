@@ -10,8 +10,9 @@ export default function cekOngkir(){
         const location = form.get('destination') as string
         console.log(location, 'TEMPAATTT')
         if (location?.trim()) {
-            const data = await getDestinationOption(location)
-            console.log(JSON.parse(data))
+            const response = await fetch(`/api/ongkir?location=${location}`, { method: 'GET' })
+            const data = await response.json()
+            console.log(data, 'DATANYAAA')
         }
     }
 
