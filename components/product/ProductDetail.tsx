@@ -175,6 +175,7 @@ export default function ProductDetail({ product }: { product?: any }) {
   useEffect(()=>{
     (async()=>{
       const data = await cekOngkir('sawah besar')
+      console.log(data)
     })()
   }, [])
 
