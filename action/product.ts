@@ -95,10 +95,11 @@ export async function getProductsBySearch(pagination: number, query: string){
     }catch(err){ console.log(err) }
 }
 
-export async function getDestinationOption(location: string){
-    try{
-        const response = await fetch(`/api/ongkir?location=${location}`, { method: 'GET' })
-        const data = await response.json()
-        if(response.ok){ return await data }
-    }catch(err){ return err }
+export async function getDestinationOption(location: string) {
+  try {
+    const res = await fetch(`https://rajaongkir.komerce.id/api/v1/destination/domestic-destination?search=${encodeURIComponent(location)}&limit=10&offset=0`,
+      { headers: { key: process.env.SHIPPING! } }
+    )
+    if(res.ok){ return await res.json() }
+  } catch (err) { return err }
 }
