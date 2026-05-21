@@ -9,8 +9,10 @@ export default function cekOngkir(){
         const form = new FormData(e.currentTarget)
         const location = form.get('destination') as string
         console.log(location, 'TEMPAATTT')
-        const data = await getDestinationOption(location)
-        console.log(data)
+        if (location?.trim()) {
+            const data = await getDestinationOption(location)
+            console.log(data)
+        }
     }
 
     return (
