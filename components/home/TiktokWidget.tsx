@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useRef, MouseEvent } from "react";
 import { TIKTOK_CONFIG } from "@/config/tiktok";
-import { TikTokOEmbedResponse } from "@/interface";
+import type { TikTokOEmbedResponse } from "@/interface";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -70,82 +70,39 @@ function VideoCard({ videoUrl, index }: VideoCardProps) {
     injectEmbedScript();
   }, [data, expanded]);
 
-  function handleMouseEnter(e: MouseEvent<HTMLDivElement>) {
-    e.currentTarget.style.transform = "translateY(-4px)";
-    e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,0,0,0.12)";
-  }
-
-  function handleMouseLeave(e: MouseEvent<HTMLDivElement>) {
-    e.currentTarget.style.transform = "";
-    e.currentTarget.style.boxShadow = "";
-  }
-
   return (
-    <div
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        background: "var(--card-bg)",
-        borderRadius: 18,
-        overflow: "hidden",
-        border: "1px solid var(--border-color)",
-        transition: "transform 0.22s cubic-bezier(.4,0,.2,1), box-shadow 0.22s cubic-bezier(.4,0,.2,1)",
-        animation: `fadeUp 0.4s cubic-bezier(.4,0,.2,1) ${index * 80}ms both`,
-      }}
-    >
+    <div className="group bg-white dark:bg-neutral-900 rounded-2xl overflow-hidden border border-black/[0.08] dark:border-white/10 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-xl">
+
       {/* Thumbnail / Embed area */}
       <div
         onClick={() => !expanded && setExpanded(true)}
-        style={{
-          position: "relative",
-          aspectRatio: "9/16",
-          background: "var(--thumb-bg)",
-          cursor: expanded ? "default" : "pointer",
-          overflow: "hidden",
-        }}
+        className={`relative bg-neutral-100 dark:bg-neutral-800 overflow-hidden ${expanded ? "cursor-default" : "cursor-pointer"}`}
+        style={{ aspectRatio: "9/16" }}
       >
+        {/* Skeleton */}
         {loading && (
-          <div style={{
-            position: "absolute", inset: 0,
-            background: "var(--thumb-bg)",
-            animation: "shimmer 1.4s ease-in-out infinite",
-          }} />
+          <div className="absolute inset-0 bg-neutral-100 dark:bg-neutral-800 animate-pulse" />
         )}
 
+        {/* Error */}
         {error && (
-          <div style={{
-            position: "absolute", inset: 0,
-            display: "flex", flexDirection: "column",
-            alignItems: "center", justifyContent: "center",
-            gap: 8, color: "var(--muted)",
-          }}>
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-neutral-400">
             <TikTokLogo size={32} />
-            <span style={{ fontSize: 12 }}>Tidak dapat dimuat</span>
+            <span className="text-xs">Tidak dapat dimuat</span>
           </div>
         )}
 
+        {/* Thumbnail */}
         {!loading && !error && !expanded && data?.thumbnail_url && (
           <>
             <img
               src={data.thumbnail_url}
               alt={data.title}
-              style={{
-                width: "100%", height: "100%",
-                objectFit: "cover", display: "block",
-                transition: "transform 0.35s ease",
-              }}
+              className="w-full h-full object-cover block transition-transform duration-300 group-hover:scale-[1.03]"
             />
-            <div style={{
-              position: "absolute", inset: 0,
-              background: "rgba(0,0,0,0.18)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-            }}>
-              <div style={{
-                width: 52, height: 52, borderRadius: "50%",
-                background: "rgba(255,255,255,0.93)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-              }}>
-                <svg width={22} height={22} viewBox="0 0 24 24" fill="#111" style={{ marginLeft: 3 }}>
+            <div className="absolute inset-0 bg-black/[0.18] flex items-center justify-center">
+              <div className="w-13 h-13 rounded-full bg-white/[0.93] flex items-center justify-center shadow-md">
+                <svg width={22} height={22} viewBox="0 0 24 24" fill="#111" className="ml-0.5">
                   <path d="M8 5v14l11-7z" />
                 </svg>
               </div>
@@ -153,40 +110,26 @@ function VideoCard({ videoUrl, index }: VideoCardProps) {
           </>
         )}
 
+        {/* Embed */}
         {expanded && (
           <div
             ref={embedRef}
-            style={{
-              position: "absolute", inset: 0,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              overflow: "hidden",
-            }}
+            className="absolute inset-0 flex items-center justify-center overflow-hidden"
           />
         )}
       </div>
 
       {/* Caption */}
       {!loading && !error && data && (
-        <div style={{ padding: "14px 16px 16px" }}>
-          <p style={{
-            margin: "0 0 10px", fontSize: 13,
-            lineHeight: 1.55,
-            color: "var(--text-secondary)",
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-          }}>
+        <div className="px-4 py-3.5">
+          <p className="text-sm leading-relaxed text-neutral-500 dark:text-neutral-400 line-clamp-2 mb-2">
             {data.title}
           </p>
           <a
             href={videoUrl}
             target="_blank"
             rel="noopener noreferrer"
-            style={{
-              fontSize: 12, color: "var(--accent)",
-              textDecoration: "none", fontWeight: 500,
-            }}
+            className="text-xs font-medium text-[#fe2c55] hover:opacity-75 transition-opacity"
           >
             Lihat di TikTok →
           </a>
@@ -230,30 +173,17 @@ function ProfileCard({ profileUrl }: ProfileCardProps) {
   }, [data]);
 
   if (loading) {
-    return (
-      <div style={{
-        height: 88, borderRadius: 16, marginBottom: 36,
-        background: "var(--thumb-bg)",
-        animation: "shimmer 1.4s ease-in-out infinite",
-      }} />
-    );
+    return <div className="h-22 rounded-2xl mb-9 bg-neutral-100 dark:bg-neutral-800 animate-pulse" />;
   }
 
   if (!data) return null;
 
   return (
-    <div style={{
-      marginBottom: 40,
-      animation: "fadeUp 0.35s cubic-bezier(.4,0,.2,1) both",
-    }}>
-      <div style={{
-        display: "flex", alignItems: "center",
-        justifyContent: "space-between",
-        marginBottom: 14,
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <TikTokLogo size={16} />
-          <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)", letterSpacing: "0.02em" }}>
+    <div className="mb-10">
+      <div className="flex items-center justify-between mb-3.5">
+        <div className="flex items-center gap-2">
+          <TikTokLogo size={20} />
+          <span className="text-base font-semibold text-neutral-900 dark:text-neutral-100 tracking-tight">
             {data.author_name ?? "Profil TikTok"}
           </span>
         </div>
@@ -261,11 +191,7 @@ function ProfileCard({ profileUrl }: ProfileCardProps) {
           href={profileUrl}
           target="_blank"
           rel="noopener noreferrer"
-          style={{
-            fontSize: 12, color: "var(--accent)",
-            textDecoration: "none", fontWeight: 500,
-            display: "flex", alignItems: "center", gap: 4,
-          }}
+          className="flex items-center gap-1 text-[#fe2c55] font-medium text-[18px] hover:opacity-75 transition-opacity"
         >
           Buka profil
           <ExternalLinkIcon />
@@ -274,11 +200,7 @@ function ProfileCard({ profileUrl }: ProfileCardProps) {
 
       <div
         ref={embedRef}
-        style={{
-          borderRadius: 16,
-          overflow: "hidden",
-          border: "1px solid var(--border-color)",
-        }}
+        className="rounded-2xl overflow-hidden border border-black/[0.08] dark:border-white/10"
       />
     </div>
   );
@@ -287,123 +209,37 @@ function ProfileCard({ profileUrl }: ProfileCardProps) {
 // ── Main Widget ───────────────────────────────────────────────────────────────
 
 export default function TikTokWidget() {
-  const css = `
-    :root {
-      --accent: #fe2c55;
-      --card-bg: #ffffff;
-      --border-color: rgba(0,0,0,0.08);
-      --text-primary: #0f0f0f;
-      --text-secondary: #555;
-      --muted: #999;
-      --thumb-bg: #f0f0f0;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --card-bg: #1a1a1a;
-        --border-color: rgba(255,255,255,0.1);
-        --text-primary: #f0f0f0;
-        --text-secondary: #aaa;
-        --muted: #666;
-        --thumb-bg: #2a2a2a;
-      }
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes shimmer {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.5; }
-    }
-    .tiktok-videos-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-    @media (max-width: 640px) {
-      .tiktok-videos-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-      }
-    }
-    @media (max-width: 400px) {
-      .tiktok-videos-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-    }
-  `;
-
   return (
-    <>
-      <style>{css}</style>
-      <div style={{
-        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-        width: "100%",
-        maxWidth: 1100,
-        margin: "0 auto",
-        padding: "0 16px",
-        boxSizing: "border-box",
-      }}>
-        <ProfileCard profileUrl={TIKTOK_CONFIG.profileUrl} />
+    <div className="w-full max-w-[1100px] mx-auto px-4 font-sans">
+      <ProfileCard profileUrl={TIKTOK_CONFIG.profileUrl} />
 
-        {/* Section label */}
-        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-          <span style={{
-            fontSize: 11, fontWeight: 700,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            color: "var(--muted)",
-            whiteSpace: "nowrap",
-          }}>
-            Video terbaru
-          </span>
-          <div style={{ flex: 1, height: 1, background: "var(--border-color)" }} />
-        </div>
-
-        {/* Video grid — responsive via CSS class */}
-        <div className="tiktok-videos-grid">
-          {TIKTOK_CONFIG.videoUrls.map((url, i) => (
-            <VideoCard key={url} videoUrl={url} index={i} />
-          ))}
-        </div>
-
-        {/* Footer */}
-        <div style={{
-          marginTop: 28,
-          paddingTop: 20,
-          borderTop: "1px solid var(--border-color)",
-          display: "flex",
-          justifyContent: "center",
-        }}>
-          <a
-            href={TIKTOK_CONFIG.profileUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 8,
-              fontSize: 13, fontWeight: 600,
-              color: "var(--text-primary)",
-              textDecoration: "none",
-              padding: "10px 24px",
-              borderRadius: 50,
-              border: "1.5px solid var(--border-color)",
-              transition: "border-color 0.15s, color 0.15s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "var(--accent)";
-              e.currentTarget.style.color = "var(--accent)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "var(--border-color)";
-              e.currentTarget.style.color = "var(--text-primary)";
-            }}
-          >
-            <TikTokLogo size={15} />
-            Lihat semua video
-          </a>
-        </div>
+      {/* Section label */}
+      <div className="flex items-center gap-3 mb-5">
+        <span className="text-[11px] font-bold tracking-[0.1em] uppercase text-neutral-400 whitespace-nowrap">
+          Video terbaru
+        </span>
+        <div className="flex-1 h-px bg-black/[0.08] dark:bg-white/10" />
       </div>
-    </>
+
+      {/* Video grid */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-3 md:grid-cols-3 md:gap-[18px]">
+        {TIKTOK_CONFIG.videoUrls.map((url, i) => (
+          <VideoCard key={url} videoUrl={url} index={i} />
+        ))}
+      </div>
+
+      {/* Footer */}
+      <div className="mt-7 pt-5 border-t border-black/[0.08] dark:border-white/10 flex justify-center">
+        <a
+          href={TIKTOK_CONFIG.profileUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-[18px] font-semibold text-neutral-900 dark:text-neutral-100 no-underline px-6 py-2.5 rounded-full border-[1.5px] border-black/[0.08] dark:border-white/10 transition-colors duration-150 hover:border-[#fe2c55] hover:text-[#fe2c55]"
+        >
+          <TikTokLogo size={20} />
+          Lihat semua video
+        </a>
+      </div>
+    </div>
   );
 }
