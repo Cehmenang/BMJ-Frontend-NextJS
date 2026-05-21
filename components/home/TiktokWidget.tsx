@@ -222,7 +222,7 @@ export default function TikTokWidget() {
       </div>
 
       {/* Video grid */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-3 md:grid-cols-3 md:gap-[18px]">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-3 md:grid-cols-5 md:gap-[18px]">
         {TIKTOK_CONFIG.videoUrls.map((url, i) => (
           <VideoCard key={url} videoUrl={url} index={i} />
         ))}
