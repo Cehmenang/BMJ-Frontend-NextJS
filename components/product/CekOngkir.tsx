@@ -12,6 +12,7 @@ export default function cekOngkir(){
                 <input type="text" name="destination" placeholder="Kota/Kecamatan Tujuan" onChange={(e)=>setDestInput(e.target.value)}/>
                 <button onClick={async()=>{
                     if(destInput && destInput?.trim()){
+                        console.log(destInput, 'INPITTTT')
                        const data = await getDestinationOption(destInput!)
                        console.log(data, 'DATANYEEEE')
                     } 
