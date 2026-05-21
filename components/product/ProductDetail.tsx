@@ -174,8 +174,15 @@ export default function ProductDetail({ product }: { product?: any }) {
 
   useEffect(()=>{
     (async()=>{
-      const data = await cekOngkir('sawah besar')
-      console.log(data)
+      try{
+        console.log(process.env.NEXT_PUBLIC_SHIPPING!, 'kocaaaaag')
+        const response = await fetch(`https://rajaongkir.komerce.id/api/v1/destination/domestic-destination?search=pejaringan&limit=10`, {
+            method: 'GET',
+            headers: { 'key': process.env.NEXT_PUBLIC_SHIPPING! }
+        }) as any
+        const data = await response.json()
+        if(response.ok){ return data }
+    }catch(err){ console.log(err) }
     })()
   }, [])
 
