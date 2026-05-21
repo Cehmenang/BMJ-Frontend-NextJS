@@ -2,7 +2,7 @@ import TikTokWidget from "./TiktokWidget";
 
 export default function TiktokShowcase() {
   return (
-    <main style={{ padding: "48px 16px", minHeight: "100vh" }} className="mt-28">
+    <main className="mt-28 min-h-dvh px-8">
       <TikTokWidget />
     </main>
   );

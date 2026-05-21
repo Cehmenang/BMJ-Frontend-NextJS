@@ -2,17 +2,10 @@
 // components/TikTokWidget.tsx
 
 import { useState, useEffect, useRef, MouseEvent } from "react";
-import { TikTokOEmbedResponse } from "@/interface";
 import { TIKTOK_CONFIG } from "@/config/tiktok";
+import { TikTokOEmbedResponse } from "@/interface";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-
-function formatCount(n?: number): string {
-  if (!n) return "0";
-  if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(".0", "") + "M";
-  if (n >= 1_000) return (n / 1_000).toFixed(1).replace(".0", "") + "K";
-  return String(n);
-}
 
 function injectEmbedScript(): void {
   const existing = document.querySelector('script[src="https://www.tiktok.com/embed.js"]');
@@ -78,8 +71,8 @@ function VideoCard({ videoUrl, index }: VideoCardProps) {
   }, [data, expanded]);
 
   function handleMouseEnter(e: MouseEvent<HTMLDivElement>) {
-    e.currentTarget.style.transform = "translateY(-3px)";
-    e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.10)";
+    e.currentTarget.style.transform = "translateY(-4px)";
+    e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,0,0,0.12)";
   }
 
   function handleMouseLeave(e: MouseEvent<HTMLDivElement>) {
@@ -93,7 +86,7 @@ function VideoCard({ videoUrl, index }: VideoCardProps) {
       onMouseLeave={handleMouseLeave}
       style={{
         background: "var(--card-bg)",
-        borderRadius: 16,
+        borderRadius: 18,
         overflow: "hidden",
         border: "1px solid var(--border-color)",
         transition: "transform 0.22s cubic-bezier(.4,0,.2,1), box-shadow 0.22s cubic-bezier(.4,0,.2,1)",
@@ -139,7 +132,7 @@ function VideoCard({ videoUrl, index }: VideoCardProps) {
               style={{
                 width: "100%", height: "100%",
                 objectFit: "cover", display: "block",
-                transition: "transform 0.3s ease",
+                transition: "transform 0.35s ease",
               }}
             />
             <div style={{
@@ -148,11 +141,11 @@ function VideoCard({ videoUrl, index }: VideoCardProps) {
               display: "flex", alignItems: "center", justifyContent: "center",
             }}>
               <div style={{
-                width: 48, height: 48, borderRadius: "50%",
-                background: "rgba(255,255,255,0.92)",
+                width: 52, height: 52, borderRadius: "50%",
+                background: "rgba(255,255,255,0.93)",
                 display: "flex", alignItems: "center", justifyContent: "center",
               }}>
-                <svg width={20} height={20} viewBox="0 0 24 24" fill="#111" style={{ marginLeft: 2 }}>
+                <svg width={22} height={22} viewBox="0 0 24 24" fill="#111" style={{ marginLeft: 3 }}>
                   <path d="M8 5v14l11-7z" />
                 </svg>
               </div>
@@ -174,10 +167,10 @@ function VideoCard({ videoUrl, index }: VideoCardProps) {
 
       {/* Caption */}
       {!loading && !error && data && (
-        <div style={{ padding: "12px 14px 14px" }}>
+        <div style={{ padding: "14px 16px 16px" }}>
           <p style={{
-            margin: "0 0 8px", fontSize: 13,
-            lineHeight: 1.5,
+            margin: "0 0 10px", fontSize: 13,
+            lineHeight: 1.55,
             color: "var(--text-secondary)",
             display: "-webkit-box",
             WebkitLineClamp: 2,
@@ -239,7 +232,7 @@ function ProfileCard({ profileUrl }: ProfileCardProps) {
   if (loading) {
     return (
       <div style={{
-        height: 80, borderRadius: 14, marginBottom: 32,
+        height: 88, borderRadius: 16, marginBottom: 36,
         background: "var(--thumb-bg)",
         animation: "shimmer 1.4s ease-in-out infinite",
       }} />
@@ -250,7 +243,7 @@ function ProfileCard({ profileUrl }: ProfileCardProps) {
 
   return (
     <div style={{
-      marginBottom: 36,
+      marginBottom: 40,
       animation: "fadeUp 0.35s cubic-bezier(.4,0,.2,1) both",
     }}>
       <div style={{
@@ -282,7 +275,7 @@ function ProfileCard({ profileUrl }: ProfileCardProps) {
       <div
         ref={embedRef}
         style={{
-          borderRadius: 14,
+          borderRadius: 16,
           overflow: "hidden",
           border: "1px solid var(--border-color)",
         }}
@@ -322,6 +315,23 @@ export default function TikTokWidget() {
       0%, 100% { opacity: 1; }
       50%       { opacity: 0.5; }
     }
+    .tiktok-videos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    @media (max-width: 640px) {
+      .tiktok-videos-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+    }
+    @media (max-width: 400px) {
+      .tiktok-videos-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+    }
   `;
 
   return (
@@ -329,27 +339,30 @@ export default function TikTokWidget() {
       <style>{css}</style>
       <div style={{
         fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-        maxWidth: 680,
+        width: "100%",
+        maxWidth: 1100,
         margin: "0 auto",
-        padding: "0 4px",
+        padding: "0 16px",
+        boxSizing: "border-box",
       }}>
         <ProfileCard profileUrl={TIKTOK_CONFIG.profileUrl} />
 
         {/* Section label */}
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
           <span style={{
             fontSize: 11, fontWeight: 700,
             letterSpacing: "0.1em",
             textTransform: "uppercase",
             color: "var(--muted)",
+            whiteSpace: "nowrap",
           }}>
             Video terbaru
           </span>
           <div style={{ flex: 1, height: 1, background: "var(--border-color)" }} />
         </div>
 
-        {/* Video grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+        {/* Video grid — responsive via CSS class */}
+        <div className="tiktok-videos-grid">
           {TIKTOK_CONFIG.videoUrls.map((url, i) => (
             <VideoCard key={url} videoUrl={url} index={i} />
           ))}
@@ -357,8 +370,8 @@ export default function TikTokWidget() {
 
         {/* Footer */}
         <div style={{
-          marginTop: 20,
-          paddingTop: 16,
+          marginTop: 28,
+          paddingTop: 20,
           borderTop: "1px solid var(--border-color)",
           display: "flex",
           justifyContent: "center",
@@ -368,11 +381,11 @@ export default function TikTokWidget() {
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              display: "inline-flex", alignItems: "center", gap: 7,
+              display: "inline-flex", alignItems: "center", gap: 8,
               fontSize: 13, fontWeight: 600,
               color: "var(--text-primary)",
               textDecoration: "none",
-              padding: "9px 20px",
+              padding: "10px 24px",
               borderRadius: 50,
               border: "1.5px solid var(--border-color)",
               transition: "border-color 0.15s, color 0.15s",
