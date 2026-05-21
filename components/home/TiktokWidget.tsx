@@ -210,7 +210,7 @@ function ProfileCard({ profileUrl }: ProfileCardProps) {
 
 export default function TikTokWidget() {
   return (
-    <div className="w-full max-w-[1100px] mx-auto px-4 font-sans">
+    <div className="w-full max-w-[1800px] mx-auto px-4 font-sans">
       <ProfileCard profileUrl={TIKTOK_CONFIG.profileUrl} />
 
       {/* Section label */}
