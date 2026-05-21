@@ -95,14 +95,10 @@ export async function getProductsBySearch(pagination: number, query: string){
     }catch(err){ console.log(err) }
 }
 
-export async function saveProduct(formData: any, url: string){
+export async function getDestinationOption(location: string){
     try{
-        await fetch(`${process.env.SERVER_API}/api/update/quick/produk/${url}`, {
-            method: "POST", 
-            body: formData,
-            headers: { "Accept": "application/json" }
-        })
-    }catch(err){
-        return err
-    }
+        const response = await fetch(`/api/ongkir?location=${location}`, { method: 'GET' })
+        const data = await response.json()
+        if(response.ok){ return data }
+    }catch(err){ console.log(err) }
 }

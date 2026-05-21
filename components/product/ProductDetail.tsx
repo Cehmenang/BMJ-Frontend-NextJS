@@ -568,8 +568,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
                 </div>
 
-                { cekOngkir && <CekOngkir weight={1300} subtotal={350000} onSelect={(s) => console.log("dipilih:", s)}
-/> }
+                { cekOngkir && <CekOngkir/>}
 
                 {/* Row 2: WhatsApp — full width on mobile */}
                 {waUrl && (
