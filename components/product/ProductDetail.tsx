@@ -171,6 +171,13 @@ export default function ProductDetail({ product }: { product?: any }) {
   const mainImgRef  = useRef<HTMLImageElement>(null);
   const imgWrapRef  = useRef<HTMLDivElement>(null);
 
+  useEffect(()=>{
+    (async()=>{
+      const data = await fetch('/api/ongkir?location=Jakarta')
+      console.log(data)
+    })()
+  }, [])
+
   const imageList: string[] =
     typeof product.images === "string"
       ? JSON.parse(product.images)
