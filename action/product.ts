@@ -97,8 +97,8 @@ export async function getProductsBySearch(pagination: number, query: string){
 
 export async function getDestinationOption(location: string){
     try{
-        const response = await fetch(`/api/ongkir?location=${location}`, { method: 'GET' })
-        const data = await response.json()
-        if(response.ok){ return data }
+        const response = await fetch(`/api/ongkir?location=sawah+besar`, { method: 'GET' })
+        const res = await response.json()
+        if(response.ok){ return res }
     }catch(err){ console.log(err) }
 }
