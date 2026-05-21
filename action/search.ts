@@ -29,6 +29,6 @@ export async function cekOngkir(location: string){
             headers: { 'key': process.env.SHIPPING! }
         }) as any
         const data = await response.json()
-        if(response.ok){ return data }
-    }catch(err){ console.log(err) }
+        return data
+    }catch(err){ return err }
 }
