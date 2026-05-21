@@ -24,6 +24,7 @@ import ProductFaq from "./ProductFaq";
 import { getRelated } from "@/action/product";
 import { IProduct } from "@/interface";
 import RelatedProducts from "./RelatedProducts";
+import { cekOngkir } from "@/action/search";
 
 type Tab = "description" | "features" | "specifications";
 type VariantOption = {
@@ -173,8 +174,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
   useEffect(()=>{
     (async()=>{
-      const data = await fetch('/api/ongkir?location=sawah+besar')
-      console.log(data)
+      const data = await cekOngkir('sawah besar')
     })()
   }, [])
 

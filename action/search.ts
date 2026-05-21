@@ -21,3 +21,14 @@ export async function countDatas(){
         if(response.ok) return data
     }catch(err){ console.log(err) }
 }
+
+export async function cekOngkir(location: string){
+    try{
+        const response = await fetch(`https://rajaongkir.komerce.id/api/v1/destination/domestic-destination?search=${location}&limit=10`, {
+            method: 'GET',
+            headers: { 'key': process.env.SHIPPING! }
+        }) as any
+        const data = await response.json()
+        if(response.ok){ return data }
+    }catch(err){ console.log(err) }
+}
