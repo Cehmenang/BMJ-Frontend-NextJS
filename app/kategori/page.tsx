@@ -121,10 +121,9 @@ export default function KategoriPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 md:px-24 md:mt-20 py-10">
-
+    <>
       {/* Hero */}
-<div ref={heroRef} className="relative overflow-hidden bg-third pt-32 pb-16 px-6 md:px-20">
+    <div ref={heroRef} className="relative overflow-hidden bg-third pt-32 pb-16 px-6 md:px-20">
 
   {/* Deco text */}
   <span
@@ -173,7 +172,9 @@ export default function KategoriPage() {
     </div>
   </div>
 
-</div>
+    </div>
+
+    <div className="max-w-7xl mx-auto px-6 md:px-24 md:mt-20 py-10">
 
       {/* Tag filter */}
       <div ref={tagsRef} className="flex gap-2 flex-wrap mb-8">
@@ -279,5 +280,6 @@ export default function KategoriPage() {
       </p>
 
     </div>
+    </>
   )
 }
