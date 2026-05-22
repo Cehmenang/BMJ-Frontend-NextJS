@@ -21,9 +21,9 @@ function KategoriCard({ label, icon: Icon, href }: { label: string, icon: IconTy
       className="group flex flex-col items-center gap-2 py-4 px-2 border-r border-b border-third/8 hover:bg-second/5 bg-white transition-all duration-200 last:border-r-0"
     >
       <div className="flex items-center justify-center transition-transform duration-200 group-hover:scale-110">
-        <Icon size={100} className="text-third/50 group-hover:text-third transition-colors duration-200" />
+        <Icon size={72} className="text-third/50 group-hover:text-third transition-colors duration-200" />
       </div>
-      <p className="font-poppins text-[24px] font-medium text-third/65 text-center leading-snug group-hover:text-third transition-colors duration-200">
+      <p className="font-poppins text-[18px] font-medium text-third/65 text-center leading-snug group-hover:text-third transition-colors duration-200">
         {label}
       </p>
     </Link>
@@ -40,7 +40,7 @@ export default function KategoriShowcase() {
           <p className="font-poppins text-[11px] font-semibold tracking-[0.18em] uppercase text-third/35 mb-1">
             Kategori
           </p>
-          <h2 className="font-poppins text-[40px] font-bold text-third leading-tight">
+          <h2 className="font-poppins text-[48px] font-bold text-third leading-tight">
             Sudut <em className="font-play italic text-second">Kategori</em>
           </h2>
         </div>
