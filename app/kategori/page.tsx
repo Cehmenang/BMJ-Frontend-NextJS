@@ -53,7 +53,7 @@ export default function KategoriPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 md:px-24 py-10">
+    <div className="max-w-7xl mx-auto px-6 md:px-24 md:mt-20 py-10">
 
       {/* Tag filter */}
       <div className="flex gap-2 flex-wrap mb-8">
