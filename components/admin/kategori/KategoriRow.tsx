@@ -1,4 +1,5 @@
 "use client"
+import { updateCategory } from "@/action/kategori"
 import { ICategory } from "@/interface"
 import { useEffect, useState } from "react"
 
@@ -38,30 +39,9 @@ export default function KategoriRow({ category }: { category: ICategory }) {
 
   const handleSave = async () => {
     setLoading(true)
-    try {
-        console.log(row.title, row.tag, "CUYYYY")
-    //   const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_API}/api/categories/${row.id}`, {
-    //     method: "POST",
-    //     body: JSON.stringify({
-    //       _method: "PUT",
-    //       title: row.title,
-    //       tag: row.tag ?? [],
-    //     }),
-    //     headers: {
-    //       "Accept": "application/json",
-    //       "Content-Type": "application/json",
-    //     }
-    //   })
-    //   const data = await response.json()
-    //   if (!response.ok) {
-    //     console.log(data, "error")
-    //   } else {
-    //     setSaved(true)
-    //     setIsDirty(false)
-    //   }
-    } catch (err) {
-      console.log(err)
-    }
+    await updateCategory(row.id, row.title, row.tag!)
+    setSaved(true)
+    setIsDirty(false)
     setLoading(false)
   }
 
