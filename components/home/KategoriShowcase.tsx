@@ -2,28 +2,30 @@
 import Link from "next/link"
 import { GiDrumKit, GiGuitar, GiPianoKeys, GiMicrophone, GiSpeaker, GiSoundWaves, GiHeadphones } from "react-icons/gi"
 import { IconType } from "react-icons"
+import { useRef } from "react"
 
 const KATEGORI = [
-  { label: "Gitar", icon: GiGuitar,      href: "/kategori/Gitar Elektrik" },
-  { label: "Bass",  icon: GiGuitar,       href: "/kategori/Bass Elektrik"  },
-  { label: "Drum",  icon: GiDrumKit,      href: "/kategori/Drum Elektrik"  },
-  { label: "Piano",  icon: GiPianoKeys,    href: "/kategori/Digital Piano"  },
-  { label: "Efek",    icon: GiSoundWaves,   href: "/kategori/Pedal Gitar"    },
-  { label: "Mikrofon",     icon: GiMicrophone,   href: "/kategori/Condenser Microphone"     },
-  { label: "Speaker", icon: GiSpeaker,      href: "/kategori/Active Speaker" },
-  { label: "DJ Controller",  icon: GiHeadphones,   href: "/kategori/DJ Controller"  },
+  { label: "Gitar", icon: GiGuitar,     href: "/kategori/Gitar Elektrik" },
+  { label: "Bass",  icon: GiGuitar,      href: "/kategori/Bass Elektrik"  },
+  { label: "Drum & Perkusi",  icon: GiDrumKit,     href: "/kategori/Drum Elektrik"  },
+  { label: "Piano & Keyboard",  icon: GiPianoKeys,   href: "/kategori/Digital Piano"  },
+  { label: "Efek Gitar",    icon: GiSoundWaves,  href: "/kategori/Pedal Gitar"    },
+  { label: "Mikrofon",     icon: GiMicrophone,  href: "/kategori/Microphone"     },
+  { label: "Speaker", icon: GiSpeaker,     href: "/kategori/Active Speaker" },
+  { label: "DJ Gear",  icon: GiHeadphones,  href: "/kategori/DJ Controller"  },
 ]
 
 function KategoriCard({ label, icon: Icon, href }: { label: string, icon: IconType, href: string }) {
   return (
     <Link
       href={href}
-      className="group flex flex-col items-center gap-2 py-4 px-2 border-r border-b border-third/8 hover:bg-second/5 bg-white transition-all duration-200 last:border-r-0"
+      className="group flex flex-col items-center gap-3 min-w-[100px] md:min-w-[120px] flex-shrink-0"
     >
-      <div className="flex items-center justify-center transition-transform duration-200 group-hover:scale-110">
-        <Icon size={72} className="text-third/50 group-hover:text-third transition-colors duration-200" />
-      </div>
-      <p className="font-poppins text-[18px] font-medium text-third/65 text-center leading-snug group-hover:text-third transition-colors duration-200">
+      <Icon
+        size={64}
+        className="text-third/70 group-hover:text-third transition-colors duration-200"
+      />
+      <p className="font-poppins text-[12px] md:text-[13px] text-third/65 text-center leading-snug group-hover:text-third transition-colors duration-200">
         {label}
       </p>
     </Link>
@@ -31,36 +33,61 @@ function KategoriCard({ label, icon: Icon, href }: { label: string, icon: IconTy
 }
 
 export default function KategoriShowcase() {
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  const scroll = (dir: "left" | "right") => {
+    if (!scrollRef.current) return
+    scrollRef.current.scrollBy({ left: dir === "left" ? -240 : 240, behavior: "smooth" })
+  }
+
   return (
-    <section className="py-10 mx-28">
+    <section className="py-8">
 
       {/* Header */}
-      <div className="flex items-end justify-between mb-6">
-        <div>
-          <p className="font-poppins text-[11px] font-semibold tracking-[0.18em] uppercase text-third/35 mb-1">
-            Kategori
-          </p>
-          <h2 className="font-poppins text-[48px] font-bold text-third leading-tight">
-            Sudut <em className="font-play italic text-second">Kategori</em>
-          </h2>
-        </div>
+      <div className="flex items-center gap-4 mb-6">
+        <h2 className="font-poppins text-[15px] md:text-[17px] font-bold text-third tracking-wide uppercase whitespace-nowrap">
+          Beli Berdasarkan Kategori
+        </h2>
+        <div className="w-px h-5 bg-third/20 flex-shrink-0" />
         <Link
           href="/kategori"
-          className="font-poppins text-[12px] text-third/45 hover:text-third transition-colors flex items-center gap-1"
+          className="font-poppins text-[13px] text-third/55 hover:text-third transition-colors flex items-center gap-1 whitespace-nowrap"
         >
-          Lihat semua
+          Lihat Semua Kategori
           <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 18l6-6-6-6" />
           </svg>
         </Link>
       </div>
 
-      {/* Grid nempel */}
-      <div className="border border-third/8 rounded-2xl overflow-hidden grid grid-cols-2 md:grid-cols-4 bg-white">
-        {KATEGORI.map((k, i) => (
-          <KategoriCard key={k.label} {...k} />
-        ))}
+      {/* Divider atas */}
+      <div className="w-full h-px bg-third/8 mb-6" />
+
+      {/* Scroll row */}
+      <div className="relative">
+        <div
+          ref={scrollRef}
+          className="flex gap-6 md:gap-10 overflow-x-auto scrollbar-hide pb-2"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          {KATEGORI.map(k => (
+            <KategoriCard key={k.label} {...k} />
+          ))}
+        </div>
+
+        {/* Arrow kanan */}
+        <button
+          onClick={() => scroll("right")}
+          className="absolute -right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white border border-third/10 flex items-center justify-center shadow-sm hover:border-third/25 transition-all"
+        >
+          <svg className="w-4 h-4 text-third/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </button>
       </div>
+
+      {/* Divider bawah */}
+      <div className="w-full h-px bg-third/8 mt-6" />
 
     </section>
   )
