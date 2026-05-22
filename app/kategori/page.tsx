@@ -70,18 +70,14 @@ export default function KategoriPage() {
 
   // animasi grid masuk
   useEffect(() => {
-    if (!gridRef.current) return
-    const cards = gridRef.current.querySelectorAll(".cat-card")
-    if (!cards.length) return
-    gsap.set(cards, { opacity: 0, y: 20 })
-    gsap.to(cards, {
-      opacity: 1,
-      y: 0,
-      stagger: 0.07,
-      duration: 0.35,
-      ease: "power2.out"
-    })
-  }, [filtered, page])
+  if (!gridRef.current) return
+  const cards = gridRef.current.querySelectorAll(".cat-card")
+  if (!cards.length) return
+  gsap.fromTo(cards,
+    { opacity: 0, y: 20 },
+    { opacity: 1, y: 0, stagger: 0.07, duration: 0.35, ease: "power2.out" }
+  )
+}, [filtered, page])
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE)
   const currentItems = filtered.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE)
@@ -113,21 +109,7 @@ export default function KategoriPage() {
 
   const handleTagSelect = (tag: string) => {
     if (tag === selectedTag) return
-
-    const cards = gridRef.current?.querySelectorAll(".cat-card")
-
-    if (!cards || !cards.length) {
-      setSelectedTag(tag)
-      return
-    }
-
-    gsap.to(cards, {
-      opacity: 0,
-      y: -10,
-      duration: 0.18,
-      ease: "power2.in",
-      onComplete: () => setSelectedTag(tag)
-    })
+    setSelectedTag(tag)
   }
 
   return (
