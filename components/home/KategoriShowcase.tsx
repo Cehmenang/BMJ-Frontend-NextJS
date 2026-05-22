@@ -44,7 +44,7 @@ export default function KategoriShowcase() {
     <section className="py-8 mb-20">
 
       {/* Header */}
-      <div className="flex items-center gap-4 mb-6 md:mx-20">
+      <div className="flex items-center gap-4 mb-6 md:mx-28">
         <h2 className="font-poppins text-[15px] md:text-[36px] font-bold text-third whitespace-nowrap">
           Berdasarkan Kategori
         </h2>
@@ -67,7 +67,7 @@ export default function KategoriShowcase() {
       <div className="relative">
         <div
           ref={scrollRef}
-          className="flex gap-6 md:gap-10 overflow-x-auto scrollbar-hide pb-2 md:mx-20"
+          className="flex gap-6 md:gap-10 overflow-x-auto scrollbar-hide pb-2 md:mx-28"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {KATEGORI.map(k => (
