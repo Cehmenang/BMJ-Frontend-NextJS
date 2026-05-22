@@ -3,6 +3,7 @@ import { getCategories } from "@/action/kategori"
 import { TAG_OPTIONS } from "@/config/tag"
 import { ICategory } from "@/interface"
 import Image from "next/image"
+import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
 
 export default function KategoriPage() {
@@ -83,9 +84,9 @@ export default function KategoriPage() {
         </button>
 
         {/* Grid kategori */}
-        <div ref={scrollRef} className="grid grid-cols-4 gap-5 overflow-hidden">
+        <div ref={scrollRef} className="grid grid-cols-1 md:grid-cols-2 gap-5 overflow-hidden">
           {currentItems.length > 0 ? currentItems.map(cat => (
-            <div
+            <Link href={`/kategori/${cat.title}`}
               key={cat.id}
               className="flex flex-col items-center gap-3 p-4 rounded-2xl border border-third/8 hover:border-third/20 transition-colors cursor-pointer group"
             >
@@ -100,7 +101,7 @@ export default function KategoriPage() {
               <p className="font-poppins text-[13px] font-medium text-third text-center leading-snug">
                 {cat.title}
               </p>
-            </div>
+            </Link>
           )) : (
             <div className="col-span-4 py-16 text-center font-poppins text-[13px] text-third/30">
               Tidak ada kategori untuk tag ini
