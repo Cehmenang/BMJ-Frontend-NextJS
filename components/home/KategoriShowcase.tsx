@@ -4,26 +4,26 @@ import { GiDrumKit, GiGuitar, GiPianoKeys, GiMicrophone, GiSpeaker, GiSoundWaves
 import { IconType } from "react-icons"
 
 const KATEGORI = [
-  { label: "Gitar Elektrik", icon: GiGuitar,     href: "/kategori/Gitar Elektrik" },
-  { label: "Bass Elektrik",  icon: GiGuitar,  href: "/kategori/Bass Elektrik"  },
-  { label: "Drum Elektrik",  icon: GiDrumKit,     href: "/kategori/Drum Elektrik"  },
-  { label: "Digital Piano",  icon: GiPianoKeys,   href: "/kategori/Digital Piano"  },
-  { label: "Pedal Gitar",    icon: GiSoundWaves,  href: "/kategori/Pedal Gitar"    },
-  { label: "Microphone",     icon: GiMicrophone,  href: "/kategori/Microphone"     },
-  { label: "Active Speaker", icon: GiSpeaker,     href: "/kategori/Active Speaker" },
-  { label: "DJ Controller",  icon: GiHeadphones, href: "/kategori/DJ Controller"  },
+  { label: "Gitar Elektrik", icon: GiGuitar,      href: "/kategori/Gitar Elektrik" },
+  { label: "Bass Elektrik",  icon: GiGuitar,       href: "/kategori/Bass Elektrik"  },
+  { label: "Drum Elektrik",  icon: GiDrumKit,      href: "/kategori/Drum Elektrik"  },
+  { label: "Digital Piano",  icon: GiPianoKeys,    href: "/kategori/Digital Piano"  },
+  { label: "Pedal Gitar",    icon: GiSoundWaves,   href: "/kategori/Pedal Gitar"    },
+  { label: "Microphone",     icon: GiMicrophone,   href: "/kategori/Microphone"     },
+  { label: "Active Speaker", icon: GiSpeaker,      href: "/kategori/Active Speaker" },
+  { label: "DJ Controller",  icon: GiHeadphones,   href: "/kategori/DJ Controller"  },
 ]
 
 function KategoriCard({ label, icon: Icon, href }: { label: string, icon: IconType, href: string }) {
   return (
     <Link
       href={href}
-      className="group flex flex-col items-center gap-3 p-5 rounded-2xl border border-third/8 hover:border-second hover:bg-second/5 bg-white transition-all duration-200"
+      className="group flex flex-col items-center gap-2 py-4 px-2 border-r border-b border-third/8 hover:bg-second/5 bg-white transition-all duration-200 last:border-r-0"
     >
-      <div className="w-14 h-14 rounded-2xl bg-third/5 flex items-center justify-center transition-all duration-200 group-hover:bg-second/15 group-hover:scale-110">
-        <Icon size={28} className="text-third/60 group-hover:text-third transition-colors duration-200" />
+      <div className="flex items-center justify-center transition-transform duration-200 group-hover:scale-110">
+        <Icon size={40} className="text-third/50 group-hover:text-third transition-colors duration-200" />
       </div>
-      <p className="font-poppins text-[12px] font-medium text-third/70 text-center leading-snug group-hover:text-third transition-colors duration-200">
+      <p className="font-poppins text-[13px] font-medium text-third/65 text-center leading-snug group-hover:text-third transition-colors duration-200">
         {label}
       </p>
     </Link>
@@ -55,9 +55,9 @@ export default function KategoriShowcase() {
         </Link>
       </div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {KATEGORI.map(k => (
+      {/* Grid nempel */}
+      <div className="border border-third/8 rounded-2xl overflow-hidden grid grid-cols-2 md:grid-cols-4 bg-white">
+        {KATEGORI.map((k, i) => (
           <KategoriCard key={k.label} {...k} />
         ))}
       </div>
