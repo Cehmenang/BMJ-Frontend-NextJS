@@ -1,3 +1,5 @@
+"use client"
+
 import { getCategories } from "@/action/kategori"
 import { useEffect } from "react"
 
