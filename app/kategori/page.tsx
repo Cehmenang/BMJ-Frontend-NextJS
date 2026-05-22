@@ -1,12 +1,13 @@
 "use client"
 import { getCategories } from "@/action/kategori"
+import { TAG_OPTIONS } from "@/config/tag"
 import { ICategory } from "@/interface"
 import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
 
 export default function KategoriPage() {
   const [categories, setCategories] = useState<ICategory[]>([])
-  const [allTags, setAllTags] = useState<string[]>([])
+  const [allTags, setAllTags] = useState<string[]>(TAG_OPTIONS)
   const [selectedTag, setSelectedTag] = useState<string>("")
   const [filtered, setFiltered] = useState<ICategory[]>([])
   const [page, setPage] = useState(0)
