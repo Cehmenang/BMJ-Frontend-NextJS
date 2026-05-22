@@ -62,11 +62,13 @@ export default function KategoriPage() {
 
   // filter by tag
   useEffect(() => {
-    if (!selectedTag) return
-    const result = categories.filter(c => (c.tag ?? []).includes(selectedTag))
-    setFiltered(result)
-    setPage(0)
-  }, [selectedTag, categories])
+  if (!selectedTag) return
+  console.log("selectedTag:", selectedTag)
+  const result = categories.filter(c => (c.tag ?? []).includes(selectedTag))
+  console.log("filtered result:", result.length, result.map(c => c.title))
+  setFiltered(result)
+  setPage(0)
+}, [selectedTag, categories])
 
   // animasi grid masuk tiap ganti page / tag
   useEffect(() => {
