@@ -24,14 +24,8 @@ export default function KategoriPage() {
         a.title.localeCompare(b.title, "id")
       )
 
-      // kumpulin semua tag unik
-      const tags = Array.from(
-        new Set(sorted.flatMap(c => c.tag ?? []))
-      ).sort()
-
       setCategories(sorted)
-      setAllTags(tags)
-      setSelectedTag(tags[0] ?? "")
+      setSelectedTag(allTags[0] ?? "")
     })()
   }, [])
 
