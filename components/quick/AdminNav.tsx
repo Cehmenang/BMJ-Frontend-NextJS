@@ -8,7 +8,8 @@ const pages = [
     { text: 'Dashboard', target: '/dashboard' },
     { text: 'Upload Produk', target: '/upload/product' },
     { text: 'Upload Brand', target: '/upload/brand' },
-    { text: 'Products', target: '/dashboard/products' }
+    { text: 'Produk', target: '/dashboard/products' },
+    { text: 'Kategori', target: '/dashboard/kategori' },
 ]
 
 export default function AdminNav(){
