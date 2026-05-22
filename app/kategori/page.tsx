@@ -141,8 +141,8 @@ export default function KategoriPage() {
               key={cat.id}
               className="cat-card group flex flex-col gap-0 rounded-2xl border border-third/8 hover:border-third/20 overflow-hidden transition-colors"
             >
-              {/* Banner 3:2 */}
-              <div className="relative w-full overflow-hidden" style={{ aspectRatio: "3/2" }}>
+              
+              <div className="relative w-full overflow-hidden" style={{ aspectRatio: "16/9" }}>
                 <Image
                   src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${cat.image}`}
                   alt={cat.title}
