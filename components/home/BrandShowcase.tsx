@@ -225,7 +225,7 @@ export default function BrandShowcase() {
 
           <div className="px-14 overflow-hidden">
             {brands.length === 0 ? (
-              <div className="grid grid-cols-8">
+              <div className="grid grid-cols-8 gap-2">
                 {[...Array(36)].map((_, i) => (
                   <div key={i} className="aspect-square rounded-xl border border-third/8 flex items-center justify-center overflow-hidden">
                     <div className="w-full h-full bg-gradient-to-br from-third/6 to-third/10 animate-pulse" />
@@ -233,7 +233,7 @@ export default function BrandShowcase() {
                 ))}
               </div>
             ) : (
-              <div className={`grid grid-cols-8 transition-all duration-[420ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${animClass}`}>
+              <div className={`grid grid-cols-8 gap-2 transition-all duration-[420ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${animClass}`}>
                 {visibleBrands.map((brand, i: number) => (
                   <BrandCard key={`${page}-${i}`} brand={brand} />
                 ))}
