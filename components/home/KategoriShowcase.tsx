@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link"
-import { GiDrumKit, GiGuitar, GiPianoKeys, GiMicrophone, GiSpeaker, GiSoundWaves, GiHeadphones } from "react-icons/gi"
+import { GiDrumKit, GiGuitar, GiPianoKeys, GiMicrophone, GiSpeaker, GiSoundWaves, GiHeadphones, GiCardDraw } from "react-icons/gi"
 import { IconType } from "react-icons"
 import { useRef } from "react"
 
@@ -11,6 +11,7 @@ const KATEGORI = [
   { label: "Piano & Keyboard",  icon: GiPianoKeys,   href: "/kategori/Digital Piano"  },
   { label: "Efek Gitar",    icon: GiSoundWaves,  href: "/kategori/Pedal Gitar"    },
   { label: "Mikrofon",     icon: GiMicrophone,  href: "/kategori/Microphone"     },
+  { label: "Audio Interface",     icon: GiCardDraw,  href: "/kategori/Audio Interface"     },
   { label: "Speaker", icon: GiSpeaker,     href: "/kategori/Active Speaker" },
   { label: "DJ Gear",  icon: GiHeadphones,  href: "/kategori/DJ Controller"  },
 ]
@@ -22,7 +23,7 @@ function KategoriCard({ label, icon: Icon, href }: { label: string, icon: IconTy
       className="group flex flex-col items-center gap-3 min-w-[100px] md:min-w-[120px] flex-shrink-0"
     >
       <Icon
-        size={64}
+        size={70}
         className="text-third/70 group-hover:text-third transition-colors duration-200"
       />
       <p className="font-poppins text-[12px] md:text-[13px] text-third/65 text-center leading-snug group-hover:text-third transition-colors duration-200">
@@ -67,7 +68,7 @@ export default function KategoriShowcase() {
       <div className="relative">
         <div
           ref={scrollRef}
-          className="flex gap-6 md:gap-10 overflow-x-auto scrollbar-hide pb-2 md:mx-28"
+          className="flex gap-6 md:grid md:grid-cols-8 overflow-x-auto scrollbar-hide pb-2 md:mx-28"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {KATEGORI.map(k => (
