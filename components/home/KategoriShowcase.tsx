@@ -41,11 +41,11 @@ export default function KategoriShowcase() {
   }
 
   return (
-    <section className="py-8">
+    <section className="py-8 mb-20">
 
       {/* Header */}
       <div className="flex items-center gap-4 mb-6 md:mx-20">
-        <h2 className="font-poppins text-[15px] md:text-[30px] font-bold text-third whitespace-nowrap">
+        <h2 className="font-poppins text-[15px] md:text-[36px] font-bold text-third whitespace-nowrap">
           Berdasarkan Kategori
         </h2>
         <div className="w-px h-5 bg-third/20 flex-shrink-0" />
