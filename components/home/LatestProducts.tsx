@@ -55,7 +55,7 @@ export default function LatestProducts() {
   };
 
   return (
-    <section className="py-10 sm:py-16">
+    <section className="py-10 sm:py-16 mx-28">
 
       {/* Header */}
       <div className="px-4 sm:px-8 md:px-14 mb-6 sm:mb-8 flex items-end justify-between">

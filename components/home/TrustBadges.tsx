@@ -85,7 +85,7 @@ export default function TrustBadges() {
   return (
     <section
       ref={sectionRef}
-      className="px-4 sm:px-8 md:px-14 relative z-20"
+      className="px-4 sm:mx-8 md:mx-28 relative z-20"
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {BADGES.map((badge, i) => (

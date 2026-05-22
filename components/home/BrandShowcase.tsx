@@ -155,7 +155,7 @@ export default function BrandShowcase() {
   const mobileRow2 = sorted.slice(MOBILE_COUNT / 2, MOBILE_COUNT); // 10 brand, gerak kanan
 
   return (
-    <section className="pb-16 sm:pb-20">
+    <section className="pb-16 sm:pb-20 mx-28">
       {/* Header */}
       <div className="px-4 sm:px-14 mb-6 sm:mb-8 flex items-end justify-between">
         <div>
