@@ -39,25 +39,26 @@ export default function KategoriRow({ category }: { category: ICategory }) {
   const handleSave = async () => {
     setLoading(true)
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_API}/api/categories/${row.id}`, {
-        method: "POST",
-        body: JSON.stringify({
-          _method: "PUT",
-          title: row.title,
-          tag: row.tag ?? [],
-        }),
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-        }
-      })
-      const data = await response.json()
-      if (!response.ok) {
-        console.log(data, "error")
-      } else {
-        setSaved(true)
-        setIsDirty(false)
-      }
+        console.log(row.title, row.tag, "CUYYYY")
+    //   const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_API}/api/categories/${row.id}`, {
+    //     method: "POST",
+    //     body: JSON.stringify({
+    //       _method: "PUT",
+    //       title: row.title,
+    //       tag: row.tag ?? [],
+    //     }),
+    //     headers: {
+    //       "Accept": "application/json",
+    //       "Content-Type": "application/json",
+    //     }
+    //   })
+    //   const data = await response.json()
+    //   if (!response.ok) {
+    //     console.log(data, "error")
+    //   } else {
+    //     setSaved(true)
+    //     setIsDirty(false)
+    //   }
     } catch (err) {
       console.log(err)
     }
