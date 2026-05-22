@@ -3,6 +3,7 @@ import Carousel from "../components/home/Carousel";
 import TrustBadges from "../components/home/TrustBadges";
 import BrandShowcase from "@/components/home/BrandShowcase";
 import TiktokShowcase from "@/components/home/TiktokShowcase";
+import KategoriShowcase from "@/components/home/KategoriShowcase";
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
       <div className="content px-16">
           <TrustBadges/>
           <LatestProducts/>
+          <KategoriShowcase/>
           <BrandShowcase/>
           <TiktokShowcase/>
       </div>
