@@ -4,13 +4,13 @@ import { GiDrumKit, GiGuitar, GiPianoKeys, GiMicrophone, GiSpeaker, GiSoundWaves
 import { IconType } from "react-icons"
 
 const KATEGORI = [
-  { label: "Gitar Elektrik", icon: GiGuitar,      href: "/kategori/Gitar Elektrik" },
-  { label: "Bass Elektrik",  icon: GiGuitar,       href: "/kategori/Bass Elektrik"  },
-  { label: "Drum Elektrik",  icon: GiDrumKit,      href: "/kategori/Drum Elektrik"  },
-  { label: "Digital Piano",  icon: GiPianoKeys,    href: "/kategori/Digital Piano"  },
-  { label: "Pedal Gitar",    icon: GiSoundWaves,   href: "/kategori/Pedal Gitar"    },
-  { label: "Microphone",     icon: GiMicrophone,   href: "/kategori/Microphone"     },
-  { label: "Active Speaker", icon: GiSpeaker,      href: "/kategori/Active Speaker" },
+  { label: "Gitar", icon: GiGuitar,      href: "/kategori/Gitar Elektrik" },
+  { label: "Bass",  icon: GiGuitar,       href: "/kategori/Bass Elektrik"  },
+  { label: "Drum",  icon: GiDrumKit,      href: "/kategori/Drum Elektrik"  },
+  { label: "Piano",  icon: GiPianoKeys,    href: "/kategori/Digital Piano"  },
+  { label: "Efek",    icon: GiSoundWaves,   href: "/kategori/Pedal Gitar"    },
+  { label: "Mikrofon",     icon: GiMicrophone,   href: "/kategori/Condenser Microphone"     },
+  { label: "Speaker", icon: GiSpeaker,      href: "/kategori/Active Speaker" },
   { label: "DJ Controller",  icon: GiHeadphones,   href: "/kategori/DJ Controller"  },
 ]
 
