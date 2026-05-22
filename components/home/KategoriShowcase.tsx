@@ -11,7 +11,6 @@ const KATEGORI = [
   { label: "Piano & Keyboard",  icon: GiPianoKeys,   href: "/kategori/Digital Piano"  },
   { label: "Efek Gitar",    icon: GiSoundWaves,  href: "/kategori/Pedal Gitar"    },
   { label: "Mikrofon",     icon: GiMicrophone,  href: "/kategori/Microphone"     },
-  { label: "Audio Interface",     icon: GiCardDraw,  href: "/kategori/Audio Interface"     },
   { label: "Speaker", icon: GiSpeaker,     href: "/kategori/Active Speaker" },
   { label: "DJ Gear",  icon: GiHeadphones,  href: "/kategori/DJ Controller"  },
 ]
