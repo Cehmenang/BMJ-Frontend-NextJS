@@ -62,23 +62,25 @@ export default function KategoriPage() {
 
   // filter by tag
   useEffect(() => {
-  if (!selectedTag) return
-  console.log("selectedTag:", selectedTag)
-  const result = categories.filter(c => (c.tag ?? []).includes(selectedTag))
-  console.log("filtered result:", result.length, result.map(c => c.title))
-  setFiltered(result)
-  setPage(0)
-}, [selectedTag, categories])
+    if (!selectedTag) return
+    const result = categories.filter(c => (c.tag ?? []).includes(selectedTag))
+    setFiltered(result)
+    setPage(0)
+  }, [selectedTag, categories])
 
-  // animasi grid masuk tiap ganti page / tag
+  // animasi grid masuk
   useEffect(() => {
     if (!gridRef.current) return
     const cards = gridRef.current.querySelectorAll(".cat-card")
     if (!cards.length) return
-    gsap.fromTo(cards,
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, stagger: 0.07, duration: 0.35, ease: "power2.out" }
-    )
+    gsap.set(cards, { opacity: 0, y: 20 })
+    gsap.to(cards, {
+      opacity: 1,
+      y: 0,
+      stagger: 0.07,
+      duration: 0.35,
+      ease: "power2.out"
+    })
   }, [filtered, page])
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE)
@@ -93,7 +95,7 @@ export default function KategoriPage() {
       duration: 0.2,
       ease: "power2.in",
       onComplete: () => {
-        gsap.set(cards, { x: 0, opacity: 1 })
+        gsap.set(cards, { x: 0 })
         cb()
       }
     })
@@ -124,10 +126,7 @@ export default function KategoriPage() {
       y: -10,
       duration: 0.18,
       ease: "power2.in",
-      onComplete: () => {
-        gsap.set(cards, { opacity: 1, y: 0 })
-        setSelectedTag(tag)
-      }
+      onComplete: () => setSelectedTag(tag)
     })
   }
 
@@ -184,7 +183,6 @@ export default function KategoriPage() {
       {/* Content */}
       <div className="max-w-7xl mx-auto px-6 md:px-24 md:mt-10 py-10">
 
-        {/* Tag filter duplikat di bawah */}
         <div ref={tagsRef} className="flex gap-2 flex-wrap mb-8">
           {allTags.map(tag => (
             <button
@@ -260,7 +258,6 @@ export default function KategoriPage() {
           </button>
         </div>
 
-        {/* Indicator dots */}
         {totalPages > 1 && (
           <div className="flex justify-center gap-1.5 mt-6">
             {Array.from({ length: totalPages }).map((_, i) => (
