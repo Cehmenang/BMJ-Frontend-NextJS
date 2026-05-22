@@ -85,7 +85,7 @@ function BrandCard({ brand }: { brand: { name: string; image: string; descriptio
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${brand.image}`}
         alt={brand.name}
-        className="w-full h-full object-contain grayscale opacity-55 transition-all duration-220 group-hover:grayscale-0 group-hover:opacity-100"
+        className="w-full h-full p-2 object-contain grayscale opacity-55 transition-all duration-220 group-hover:grayscale-0 group-hover:opacity-100"
         loading="lazy"
       />
     </a>
@@ -225,7 +225,7 @@ export default function BrandShowcase() {
 
           <div className="px-14 overflow-hidden">
             {brands.length === 0 ? (
-              <div className="grid grid-cols-6 gap-1">
+              <div className="grid grid-cols-8 gap-1">
                 {[...Array(36)].map((_, i) => (
                   <div key={i} className="aspect-square rounded-xl border border-third/8 flex items-center justify-center overflow-hidden">
                     <div className="w-full h-full bg-gradient-to-br from-third/6 to-third/10 animate-pulse" />
@@ -233,7 +233,7 @@ export default function BrandShowcase() {
                 ))}
               </div>
             ) : (
-              <div className={`grid grid-cols-6 gap-1 transition-all duration-[420ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${animClass}`}>
+              <div className={`grid grid-cols-8 gap-1 transition-all duration-[420ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${animClass}`}>
                 {visibleBrands.map((brand, i: number) => (
                   <BrandCard key={`${page}-${i}`} brand={brand} />
                 ))}
