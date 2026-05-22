@@ -39,7 +39,7 @@ export default function KategoriRow({ category }: { category: ICategory }) {
 
   const handleSave = async () => {
     setLoading(true)
-    await updateCategory(row.id, row.title, row.tag!)
+    await updateCategory(row.title, row.tag!)
     setSaved(true)
     setIsDirty(false)
     setLoading(false)

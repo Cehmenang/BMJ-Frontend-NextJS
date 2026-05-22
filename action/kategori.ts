@@ -9,12 +9,11 @@ export async function getCategories(){
     }catch(err){ console.log(err) }
 }
 
-export async function updateCategory(id: number, title: string, tag: string[]){
+export async function updateCategory(title: string, tag: string[]){
      try {
-      const response = await fetch(`${process.env.SERVER_API}/api/update/kategori/info/${id}`, {
+      const response = await fetch(`${process.env.SERVER_API}/api/update/kategori/info/${title}`, {
         method: "POST",
         body: JSON.stringify({
-          title,
           tag: tag ?? [],
         }),
         headers: {
