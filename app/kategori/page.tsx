@@ -13,6 +13,7 @@ export default function KategoriPage() {
   const [selectedTag, setSelectedTag] = useState<string>("")
   const [filtered, setFiltered] = useState<ICategory[]>([])
   const [page, setPage] = useState(0)
+  const heroRef = useRef<HTMLDivElement>(null)
 
   const ITEMS_PER_PAGE = 6
   const gridRef = useRef<HTMLDivElement>(null)
@@ -31,13 +32,34 @@ export default function KategoriPage() {
 
   // animasi tag pills masuk
   useEffect(() => {
-    if (!tagsRef.current) return
-    const pills = tagsRef.current.querySelectorAll("button")
-    gsap.fromTo(pills,
-      { opacity: 0, y: 10 },
-      { opacity: 1, y: 0, stagger: 0.04, duration: 0.4, ease: "power2.out" }
-    )
-  }, [allTags])
+  if (!heroRef.current) return
+  const tl = gsap.timeline()
+
+  tl.fromTo("[data-hero-deco]",
+    { opacity: 0, x: 40 },
+    { opacity: 1, x: 0, duration: 1, ease: "power3.out" }
+  )
+  .fromTo("[data-hero-tag]",
+    { opacity: 0, y: 16 },
+    { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
+    "-=0.7"
+  )
+  .fromTo("[data-hero-title]",
+    { opacity: 0, y: 20 },
+    { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
+    "-=0.4"
+  )
+  .fromTo("[data-hero-sub]",
+    { opacity: 0, y: 16 },
+    { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
+    "-=0.3"
+  )
+  .fromTo("[data-hero-tags]",
+    { opacity: 0, y: 12 },
+    { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
+    "-=0.2"
+  )
+}, [allTags])
 
   // filter by tag
   useEffect(() => {
@@ -101,6 +123,58 @@ export default function KategoriPage() {
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-24 md:mt-20 py-10">
 
+      {/* Hero */}
+<div ref={heroRef} className="relative overflow-hidden bg-third pt-32 pb-16 px-6 md:px-20">
+
+  {/* Deco text */}
+  <span
+    data-hero-deco
+    className="pointer-events-none select-none absolute -right-6 -top-8 text-[clamp(100px,18vw,220px)] font-black text-white/5 leading-none font-play"
+    style={{ opacity: 0 }}
+  >
+    KATEGORI
+  </span>
+
+  {/* Grid background */}
+  <div
+    className="absolute inset-0 opacity-[0.03]"
+    style={{
+      backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+      backgroundSize: "40px 40px"
+    }}
+  />
+
+  <div className="relative z-10 max-w-6xl mx-auto">
+    <p data-hero-tag className="text-second text-[11px] font-poppins font-semibold tracking-[0.2em] uppercase mb-3" style={{ opacity: 0 }}>
+      Jelajahi
+    </p>
+    <h1 data-hero-title className="font-poppins tracking-tight text-[clamp(32px,5vw,64px)] font-bold text-primary leading-tight mb-4" style={{ opacity: 0 }}>
+      Daftar <em className="text-second italic font-play">Kategori</em>
+    </h1>
+    <p data-hero-sub className="font-poppins text-primary/60 text-[13px] md:text-[14px] max-w-lg leading-relaxed" style={{ opacity: 0 }}>
+      Temukan produk berdasarkan kategori yang tersedia di Bandar Musik Jakarta.
+    </p>
+
+    {/* Tag pills di hero */}
+    <div data-hero-tags className="mt-8 flex flex-wrap gap-2" style={{ opacity: 0 }}>
+      {allTags.map(tag => (
+        <button
+          key={tag}
+          onClick={() => handleTagSelect(tag)}
+          className={`font-poppins text-[12px] px-3.5 py-1.5 rounded-full border transition-colors
+            ${selectedTag === tag
+              ? "bg-second text-third border-second font-medium"
+              : "bg-white/8 text-primary/60 border-white/12 hover:bg-white/15 hover:text-primary/90"
+            }`}
+        >
+          {tag}
+        </button>
+      ))}
+    </div>
+  </div>
+
+</div>
+
       {/* Tag filter */}
       <div ref={tagsRef} className="flex gap-2 flex-wrap mb-8">
         {allTags.map(tag => (
@@ -141,7 +215,7 @@ export default function KategoriPage() {
               key={cat.id}
               className="cat-card group flex flex-col gap-0 rounded-2xl border border-third/8 hover:border-third/20 overflow-hidden transition-colors"
             >
-              
+
               <div className="relative w-full overflow-hidden" style={{ aspectRatio: "16/9" }}>
                 <Image
                   src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${cat.image}`}
