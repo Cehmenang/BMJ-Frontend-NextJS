@@ -11,9 +11,8 @@ export interface IBrand {
 export interface ICategory {
     id: number,
     title: string,
-    parent: string | null,
     image: string,
-    subparent: string | null,
+    tag: string[] | null,
     brands: string[] | null,
     created_at: string,
     updated_at: string

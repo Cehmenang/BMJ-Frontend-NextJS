@@ -3,7 +3,6 @@
 import { useTransition, useState, useEffect, useRef } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import {
-  Navigation, ShoppingCart, InfoIcon,
   Search, SlidersHorizontal, X, ChevronDown
 } from "lucide-react";
 import { IProduct } from "@/interface";
