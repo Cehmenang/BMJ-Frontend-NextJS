@@ -1,11 +1,8 @@
 "use client"
 import { updateCategory } from "@/action/kategori"
+import { TAG_OPTIONS } from "@/config/tag"
 import { ICategory } from "@/interface"
 import { useEffect, useState } from "react"
-
-const TAG_OPTIONS = [
-  "Accessories", "Aerofon", "Bass", "DJ Gear", "Effect", "Guitars", "Karaoke", "Keyboard", "Percussion", "Recording", "Software", "Sound System", "Strings", "Wireless System"
-]
 
 export default function KategoriRow({ category }: { category: ICategory }) {
   const [row, setRow] = useState<ICategory>(category)
