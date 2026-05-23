@@ -13,7 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const kategoriData = await kategoriRes.json();
 
   const sanitizeUrl = (url: string) =>
-  url.replace(/&/g, "-").replace(/[<>"']/g, "");
+  url.replace(/[^a-zA-Z0-9\-\/]/g, "-");
 
 const produkUrls = produkData.produk.map((produk: { url: string; updated_at: string }) => ({
   url: `${baseUrl}/produk/${sanitizeUrl(produk.url)}`,
