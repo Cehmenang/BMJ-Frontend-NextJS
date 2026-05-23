@@ -5,11 +5,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://www.bandarmusikjakarta.com";
 
   // Fetch semua produk
-  const produkRes = await fetch(`${process.env.API_URL}/api/produk/all`, { method: 'GET', headers: { 'Accept': 'application/json' } });
+  const produkRes = await fetch(`${process.env.SERVER_API}/api/produk/all`, { method: 'GET', headers: { 'Accept': 'application/json' } });
   const produkData = await produkRes.json();
 
   // Fetch semua kategori
-  const kategoriRes = await fetch(`${process.env.API_URL}/api/kategori`, { method: 'GET', headers: { 'Accept': 'application/json' } });
+  const kategoriRes = await fetch(`${process.env.SERVER_API}/api/kategori`, { method: 'GET', headers: { 'Accept': 'application/json' } });
   const kategoriData = await kategoriRes.json();
 
   const produkUrls = produkData.produk.map((produk: { url: string; updated_at: string }) => ({
