@@ -13,14 +13,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const kategoriData = await kategoriRes.json();
 
   const produkUrls = produkData.produk.map((produk: { url: string; updated_at: string }) => ({
-    url: `${baseUrl}/produk/${produk.url}`,
-    lastModified: new Date(produk.updated_at),
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
-  }));
+  url: `${baseUrl}/produk/${encodeURIComponent(produk.url)}`,
+  lastModified: new Date(produk.updated_at),
+  changeFrequency: "weekly" as const,
+  priority: 0.8,
+}));
 
-  const kategoriUrls = kategoriData.categories.map((kategori: { url: string; updated_at: string }) => ({
-    url: `${baseUrl}/kategori/${kategori.url}`,
+  const kategoriUrls = kategoriData.categories.map((kategori: { title: string; updated_at: string }) => ({
+    url: `${baseUrl}/kategori/${kategori.title}`,
     lastModified: new Date(kategori.updated_at),
     changeFrequency: "weekly" as const,
     priority: 0.7,
