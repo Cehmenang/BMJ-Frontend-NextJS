@@ -12,15 +12,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const kategoriRes = await fetch(`${process.env.SERVER_API}/api/kategori`, { method: 'GET', headers: { 'Accept': 'application/json' } });
   const kategoriData = await kategoriRes.json();
 
+  const sanitizeUrl = (url: string) =>
+  url.replace(/[^a-zA-Z0-9\-\/]/g, "-");
+
 const produkUrls = produkData.produk.map((produk: { url: string; updated_at: string }) => ({
-  url: `${baseUrl}/produk/${produk.url}`,
+  url: `${baseUrl}/produk/${sanitizeUrl(produk.url)}`,
   lastModified: new Date(produk.updated_at),
   changeFrequency: "weekly" as const,
   priority: 0.8,
 }));
 
   const kategoriUrls = kategoriData.categories.map((kategori: { title: string; updated_at: string }) => ({
-    url: `${baseUrl}/kategori/${kategori.title}`,
+    url: `${baseUrl}/kategori/${sanitizeUrl(kategori.title)}`,
     lastModified: new Date(kategori.updated_at),
     changeFrequency: "weekly" as const,
     priority: 0.7,
