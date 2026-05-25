@@ -5,14 +5,14 @@ import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 
 const SLIDES = [
   {
-    id: 1,
-    tag: "LIMITED STOCK",
-    title: "Schecter",
-    titleEm: "Synyster Gates",
-    sub: "Sustain tanpa batas dengan Pickup Sustainiac®️ dan Floyd Rose 1500. Senjata utama untuk shredding maksimal.",
+    id: 0,
+    tag: "Seri Terbaru",
+    title: "Fena",
+    titleEm: "Dencas",
+    sub: "Kini Hadir Gitar Fena Signature dari Denny Chasmala",
     cta: "Belanja Sekarang",
-    href: "/brand/schecter",
-    bg: "/BannerSchecter.webp",
+    href: "/produk/-fena-dencas-producer-series-signature-denny-chasmala-electric-guitar",
+    bg: "/fenadencas.webp",
     glow: "radial-gradient(ellipse 80% 60% at 70% 40%, rgba(249,173,82,0.18) 0%, transparent 70%)",
   },
   {
