@@ -36,7 +36,9 @@ export async function uploadKategori(formData: FormData){
     const response = await fetch(`${process.env.SERVER_API}/api/tambah/kategori`, {
       method: 'POST', headers: { "Accept": "application/json", "Content-Type": 'application/json' }, body: formData
     })
+    console.log(response, 'RESPONGG')
     const data = await response.json()
+    console.log(data, 'DATANYEEEE')
     if(response.ok){ return data }
   }catch(err){ console.log(err) }
 }
