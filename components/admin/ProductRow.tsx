@@ -62,7 +62,7 @@ export default function ProductRow({ product, onSave, kategori }: { product: IPr
           promo: String(row.promo ?? ""),
           stock: String(row.stock ?? ""),
           namaPromo: String(row.namaPromo ?? ""),
-          kategori: row.kategoriId ?? "",
+          kategoriId: row.kategoriId ?? "",
         }),
         headers: { "Accept": "application/json", "Content-Type": "application/json" }
       })
