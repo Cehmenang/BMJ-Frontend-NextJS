@@ -1,5 +1,6 @@
+// ProductRow.tsx
 "use client"
-import { IProduct } from "@/interface"
+import { ICategory, IProduct } from "@/interface"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 
@@ -30,12 +31,14 @@ function PriceInput({ value, onChange }: { value: any, onChange: (raw: string) =
   )
 }
 
-export default function ProductRow({ product, onSave }: { product: IProduct, onSave: (product: IProduct) => void }) {
+export default function ProductRow({ product, onSave, kategori }: { product: IProduct, onSave: (product: IProduct) => void, kategori: ICategory[] }) {
   const [row, setRow] = useState<IProduct>(product)
   const [promoOn, setPromoOn] = useState(false)
   const [loading, setLoading] = useState(false)
   const [saved, setSaved] = useState(false)
   const [isDirty, setIsDirty] = useState(false)
+  const [katSearch, setKatSearch] = useState("")
+  const [katOpen, setKatOpen] = useState(false)
 
   useEffect(() => {
     setRow(product)
@@ -49,32 +52,25 @@ export default function ProductRow({ product, onSave }: { product: IProduct, onS
 
   const handleSave = async () => {
     setLoading(true)
-
-    const formData = new FormData()
-    formData.append("pricelist", String(row.pricelist ?? ""))
-    formData.append("offlinePrice", String(row.offlinePrice ?? ""))
-    formData.append("onlinePrice", String(row.onlinePrice ?? ""))
-    // formData.append("promo", String(row.promo ?? ""))
-    // formData.append("stock", String(row.stock ?? ""))
-    // formData.append("namaPromo", String(row.namaPromo ?? ""))
-    try{
-        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_API}/api/update/harga/${row.url}`, {
-            method: "POST", 
-            body: JSON.stringify({
-                pricelist: String(row.pricelist ?? ""),
-                offlinePrice: String(row.onlinePrice ?? ""),
-                onlinePrice: String(row.onlinePrice ?? ""),
-            }),
-            headers: { "Accept": "application/json", "Content-Type": 'application/json' }
-        })
-        const data = await response.text()
-        if(!response.ok){
-            console.log(data, 'error')
-        }
-    }catch(err){
-        console.log(err)
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_API}/api/update/harga/${row.url}`, {
+        method: "POST",
+        body: JSON.stringify({
+          pricelist: String(row.pricelist ?? ""),
+          offlinePrice: String(row.offlinePrice ?? ""),
+          onlinePrice: String(row.onlinePrice ?? ""),
+          promo: String(row.promo ?? ""),
+          stock: String(row.stock ?? ""),
+          namaPromo: String(row.namaPromo ?? ""),
+          kategori: row.kategoriId ?? "",
+        }),
+        headers: { "Accept": "application/json", "Content-Type": "application/json" }
+      })
+      const data = await response.text()
+      if (!response.ok) console.log(data, "error")
+    } catch (err) {
+      console.log(err)
     }
-
     await onSave(row)
     setLoading(false)
     setSaved(true)
@@ -86,7 +82,14 @@ export default function ProductRow({ product, onSave }: { product: IProduct, onS
     setPromoOn(false)
     setIsDirty(false)
     setSaved(false)
+    setKatSearch("")
   }
+
+  const filteredKat = katSearch
+    ? kategori.filter(k => k.title.toLowerCase().includes(katSearch.toLowerCase()))
+    : kategori
+
+  const selectedKat = kategori.find(k => k.title === row.kategoriId)
 
   const promoDisc =
     parseInt(row.pricelist!) > 0
@@ -106,19 +109,17 @@ export default function ProductRow({ product, onSave }: { product: IProduct, onS
       {/* Produk */}
       <td className="px-4 py-3">
         <div className="flex items-center gap-2.5">
-            <div className="image-parent-table">
-
-          {product.images?.[0]?.[0] && (
-            <Image
-              src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0][0]}`}
-              alt={product.name}
-              width={36}
-              height={36}
-              className="rounded-lg object-cover flex-shrink-0"
-            />
-          )}
-
-            </div>
+          <div className="image-parent-table">
+            {product.images?.[0]?.[0] && (
+              <Image
+                src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0][0]}`}
+                alt={product.name}
+                width={36}
+                height={36}
+                className="rounded-lg object-cover flex-shrink-0"
+              />
+            )}
+          </div>
           <div>
             <p className="font-poppins text-[10px] text-third/40 uppercase tracking-wider mb-0.5">
               {product.brandId}
@@ -207,6 +208,88 @@ export default function ProductRow({ product, onSave }: { product: IProduct, onS
             </select>
           )}
         </div>
+      </td>
+
+      {/* Kategori */}
+      <td className="px-3 py-3 bg-green-50/30">
+        <div className="relative">
+
+          {/* Selected / trigger */}
+          <button
+            onClick={() => { setKatOpen(v => !v); setKatSearch("") }}
+            className="w-full text-left font-poppins text-[11px] border border-third/10 rounded-lg px-2 py-1.5 bg-third/4 text-third outline-none hover:border-second transition-colors flex items-center justify-between gap-1"
+          >
+            <span className={row.kategoriId ? "text-third" : "text-third/30"}>
+              {row.kategoriId || "Pilih kategori"}
+            </span>
+            <svg className={`w-3 h-3 text-third/30 flex-shrink-0 transition-transform ${katOpen ? "rotate-180" : ""}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
+
+          {/* Dropdown */}
+          {katOpen && (
+            <div className="absolute top-[calc(100%+4px)] left-0 z-50 w-48 bg-white border border-third/10 rounded-xl shadow-lg overflow-hidden">
+
+              {/* Search */}
+              <div className="p-2 border-b border-third/8">
+                <input
+                  type="text"
+                  value={katSearch}
+                  onChange={(e) => setKatSearch(e.target.value)}
+                  placeholder="Cari kategori..."
+                  autoFocus
+                  className="w-full font-poppins text-[11px] px-2 py-1.5 rounded-lg border border-third/10 bg-third/4 text-third outline-none focus:border-second transition-colors placeholder:text-third/30"
+                />
+              </div>
+
+              {/* List */}
+              <div className="max-h-48 overflow-y-auto">
+                {/* Reset option */}
+                <button
+                  onClick={() => { update("kategori", ""); setKatOpen(false); setKatSearch("") }}
+                  className="w-full text-left px-3 py-2 font-poppins text-[11px] text-third/35 hover:bg-third/4 transition-colors italic"
+                >
+                  Tanpa kategori
+                </button>
+
+                {filteredKat.length > 0 ? filteredKat.map(k => (
+                  <button
+                    key={k.id}
+                    onClick={() => { update("kategori", k.title); setKatOpen(false); setKatSearch("") }}
+                    className={`w-full text-left px-3 py-2 font-poppins text-[11px] transition-colors flex items-center gap-2
+                      ${row.kategoriId === k.title
+                        ? "bg-second/10 text-third font-medium"
+                        : "text-third/70 hover:bg-third/4"
+                      }`}
+                  >
+                    {k.image && (
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${k.image}`}
+                        alt={k.title}
+                        width={16}
+                        height={16}
+                        className="rounded object-cover flex-shrink-0"
+                      />
+                    )}
+                    {k.title}
+                  </button>
+                )) : (
+                  <p className="px-3 py-3 font-poppins text-[11px] text-third/30 text-center">
+                    Tidak ditemukan
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Current badge */}
+        {row.kategoriId && (
+          <span className="mt-1.5 block font-poppins text-[10px] px-2 py-0.5 rounded-full bg-green-50 text-green-700 text-center truncate">
+            {row.kategoriId}
+          </span>
+        )}
       </td>
 
       {/* Aksi */}

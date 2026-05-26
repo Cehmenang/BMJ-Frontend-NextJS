@@ -5,7 +5,7 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import {
   Search, SlidersHorizontal, X, ChevronDown
 } from "lucide-react";
-import { IProduct } from "@/interface";
+import { ICategory, IProduct } from "@/interface";
 import ProductCard from "./ProductCard";
 import Pagination from "./ProductsPagination";
 import ProductTable from "../admin/ProductTable";
@@ -31,7 +31,8 @@ type Props = {
   initialQuery: string;
   initialStock: boolean;
   hideBrandFilter?: boolean;
-  role?: string
+  role?: string,
+  kategori?: ICategory[]
 };
 
 export default function ProductsLayout({
@@ -45,7 +46,8 @@ export default function ProductsLayout({
   initialQuery,
   initialStock,
   hideBrandFilter = false,
-  role
+  role,
+  kategori
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
@@ -273,7 +275,7 @@ export default function ProductsLayout({
             </button>
           </form>
           </div>
-            <ProductTable products={products} onSave={onSave}/>
+            <ProductTable products={products} onSave={onSave} kategori={kategori!}/>
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}

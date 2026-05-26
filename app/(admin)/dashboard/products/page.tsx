@@ -1,5 +1,6 @@
 "use server"
 
+import { getCategories } from "@/action/kategori";
 import { getProducts, getProductsBySearch } from "@/action/product";
 import ProductsLayout from "@/components/product/ProductsLayout";
 import { cookies } from "next/headers";
@@ -18,6 +19,7 @@ export default async function Products({ searchParams }: {
     const role = cookieStore.get('role')?.value
     const pageValue = Number(page) || 1
     const result = q && q.trim() !== "" ? await getProductsBySearch(pageValue, q) : await getProducts(pageValue)
+    const categories = await getCategories()
 
     return (
         <div className="products-display mt-16">
@@ -32,6 +34,7 @@ export default async function Products({ searchParams }: {
                     initialQuery={q!}
                     initialStock={stock === "1"}
                     role={role}
+                    kategori={categories}
             />}
         </div>
     )

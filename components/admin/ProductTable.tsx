@@ -1,8 +1,9 @@
+// ProductTable.tsx
 "use client"
-import { IProduct } from "@/interface"
+import { ICategory, IProduct } from "@/interface"
 import ProductRow from "./ProductRow"
 
-export default function ProductTable({ products, onSave }: { products: IProduct[], onSave: (product: IProduct) => void }) {
+export default function ProductTable({ products, onSave, kategori }: { products: IProduct[], onSave: (product: IProduct) => void, kategori: ICategory[] }) {
   return (
     <div className="overflow-x-auto px-[200px]">
       <table className="w-full text-sm border-collapse">
@@ -15,12 +16,13 @@ export default function ProductTable({ products, onSave }: { products: IProduct[
             <th className="px-3 py-3 w-[130px] bg-blue-50">Online</th>
             <th className="px-3 py-3 w-[130px] bg-amber-50">Promo</th>
             <th className="px-3 py-3 w-[180px]">Set promo</th>
+            <th className="px-3 py-3 w-[160px] bg-green-50">Kategori</th>
             <th className="px-3 py-3 w-[100px]"></th>
           </tr>
         </thead>
         <tbody>
           {products.map(p => (
-            <ProductRow key={p.id} product={p} onSave={onSave} />
+            <ProductRow key={p.id} product={p} onSave={onSave} kategori={kategori} />
           ))}
         </tbody>
       </table>
