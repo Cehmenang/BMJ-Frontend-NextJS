@@ -8,6 +8,7 @@ const pages = [
     { text: 'Dashboard', target: '/dashboard' },
     { text: 'Upload Produk', target: '/upload/product' },
     { text: 'Upload Brand', target: '/upload/brand' },
+    { text: 'Upload Kategori', target: '/upload/kategori' },
     { text: 'Produk', target: '/dashboard/products' },
     { text: 'Kategori', target: '/dashboard/kategori' },
 ]

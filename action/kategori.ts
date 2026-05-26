@@ -30,3 +30,13 @@ export async function updateCategory(title: string, tag: string[]){
       console.log(err)
     }
 }
+
+export async function uploadKategori(formData: FormData){
+  try{
+    const response = await fetch(`${process.env.SERVER_API}/api/tambah/kategori`, {
+      method: 'POST', headers: { "Accept": "application/json", "Content-Type": 'application/json' }, body: formData
+    })
+    const data = await response.json()
+    if(response.ok){ return data }
+  }catch(err){ console.log(err) }
+}
