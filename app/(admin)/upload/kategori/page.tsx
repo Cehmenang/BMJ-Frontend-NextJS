@@ -69,7 +69,11 @@ export default function AddKategori() {
       const formData = new FormData()
       formData.append("title", data.title)
       formData.append("image", imageFile)
-      const result = await uploadKategori(formData)
+        
+      console.log(formData.get('title'), formData.get('image'))
+
+    //   const result = await uploadKategori(formData)
+    const result = true
       if (result) {
         setSuccess(true)
         reset()
