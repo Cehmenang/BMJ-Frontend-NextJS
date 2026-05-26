@@ -141,8 +141,8 @@ export default function MainNav({ token, username, wishlist }: { token: string |
 
           {/* Logo */}
           <Link href="/" className="flex gap-x-1.5 md:gap-x-2 cursor-pointer items-center">
-            <img src="/bmjletter.webp" width={70} className="p-1.5 md:p-2 md:w-[90px]" />
-            <img src="/BMJLogo.webp" width={110} className="md:w-[136px]" />
+            <img src="/bmjletter.webp" width={70} className="p-1.5 md:p-2 md:w-[90px]" alt="Bandar Musik Jakarta - Toko Alat Musik & Audio Terlengkap di Jakarta"/>
+            <img src="/BMJLogo.webp" width={110} className="md:w-[136px]" alt="Bandar Musik Jakarta - Toko Alat Musik & Audio Terlengkap di Jakarta"/>
           </Link>
 
           {/* Desktop nav links */}

@@ -11,7 +11,7 @@ const SLIDES = [
     titleEm: "Dencas",
     sub: "Kini Hadir Gitar Fena Signature dari Denny Chasmala",
     cta: "Belanja Sekarang",
-    href: "/produk/-fena-dencas-producer-series-signature-denny-chasmala-electric-guitar",
+    href: "/produk/fena-dencas-producer-series-signature-denny-chasmala-electric-guitar",
     bg: "/fenadencas.webp",
     glow: "radial-gradient(ellipse 80% 60% at 70% 40%, rgba(249,173,82,0.18) 0%, transparent 70%)",
   },
