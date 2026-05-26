@@ -115,7 +115,7 @@ export default function ProductCard({ product }: { product: IProduct }) {
 
         {/* Name */}
         <p className="text-[14px] font-extrabold text-third leading-snug mb-3 line-clamp-2 min-h-[40px] font-inter">
-          {product.name}
+          {product.name.toUpperCase()}
         </p>
 
         {/* Price + CTA */}

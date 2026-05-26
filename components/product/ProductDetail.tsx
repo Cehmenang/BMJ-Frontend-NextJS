@@ -278,7 +278,7 @@ export default function ProductDetail({ product }: { product?: any }) {
           <span>/</span>
           <Link href={`/brand/${product.brandId}`} className="hover:text-third transition-colors flex-shrink-0">{product.brandId}</Link>
           <span>/</span>
-          <span className="text-third truncate">{product.name}</span>
+          <span className="text-third truncate">{product.name.toUpperCase()}</span>
         </div>
 
         <div className="px-0 md:px-28 lg:px-48 py-4 md:py-8">
@@ -379,7 +379,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                   {product.kategoriId}
                 </p>
                 <h1 className="font-display text-[22px] md:text-[28px] font-black text-third leading-snug">
-                  {product.name}
+                  {product.name.toUpperCase()}
                 </h1>
               </div>
 
