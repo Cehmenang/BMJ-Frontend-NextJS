@@ -10,7 +10,7 @@ export async function login(data: { username: string, password: string }){
              const cookieStore = await cookies()
                 cookieStore.set('access_token', response.data.api_token,{  
                     httpOnly: true,
-                    maxAge: 3600,
+                    maxAge: 3600 * 24,
                     secure: true,
                     sameSite: "lax"
                 })
@@ -21,14 +21,14 @@ export async function login(data: { username: string, password: string }){
         
             cookieStore.set('username', response.data.user.username, {
                 httpOnly: true,
-                maxAge: 3600,
+                maxAge: 3600 * 24,
                 secure: true,
                 sameSite: 'lax'
             })
 
             cookieStore.set('role', roleResult.data.role, {
                 httpOnly: true,
-                maxAge: 3600,
+                maxAge: 3600 * 24,
                 secure: true,
                 sameSite: "lax"
             })
