@@ -576,7 +576,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                   </button>
 
                   <Link href={'https://www.tokopedia.com/bandarmusikjakarta'} className="p-2 border-2 border-third rounded-md">
-                      <Image src={'/tokped.webp'} alt="Tokopedia - Bandar Musik Jakarta" />
+                      <Image src={'/tokped.webp'} alt="Tokopedia - Bandar Musik Jakarta" width={100}/>
                   </Link>
 
                   {/* <button onClick={()=>setCekOngkir(cekOngkir ? false : true)}>Cek Ongkir</button> */}
