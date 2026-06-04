@@ -20,6 +20,8 @@ const SORT_OPTIONS = [
 const CATEGORIES = ["Semua", "Gitar & Bass", "Drum", "Keyboard", "Studio", "Aksesori"];
 const BRANDS = ["Semua", "Fender", "Gibson", "Yamaha", "Roland", "Pearl", "Kawai", "Taylor"];
 
+type ViewMode = "grid" | "list";
+
 type Props = {
   products: IProduct[];
   totalPages: number;
@@ -54,7 +56,7 @@ export default function ProductsLayout({
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
-  const [gridCols, setGridCols] = useState<2 | 3>(3);
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [sortOpen, setSortOpen] = useState(false);
   const [sort, setSort] = useState(SORT_OPTIONS.find(o => o.value === initialSort) ?? SORT_OPTIONS[0]);
   const [filterOpen, setFilterOpen] = useState(false);
@@ -66,7 +68,7 @@ export default function ProductsLayout({
   const [availabilityOpen, setAvailabilityOpen] = useState(false);
   const [onlyInStock, setOnlyInStock] = useState(initialStock);
   const sortRef = useRef<HTMLDivElement>(null);
-  const [save, onSave] = useState<IProduct | null>(null)
+  const [save, onSave] = useState<IProduct | null>(null);
 
   useEffect(() => {
     setSort(SORT_OPTIONS.find(o => o.value === (searchParams.get("sort") || "latest")) ?? SORT_OPTIONS[0]);
@@ -89,7 +91,6 @@ export default function ProductsLayout({
     return () => { document.body.style.overflow = ""; };
   }, [filterOpen]);
 
-  // ── semua navigasi URL lewat sini, selalu pakai startTransition ──
   const updateURL = (params: Record<string, string>) => {
     const current = new URLSearchParams(Array.from(searchParams.entries()));
     Object.entries(params).forEach(([key, val]) => {
@@ -102,13 +103,12 @@ export default function ProductsLayout({
     });
   };
 
-  // ← fix utama: handlePageChange sekarang pakai updateURL → startTransition
   const handlePageChange = (newPage: number) => {
     updateURL({ page: String(newPage) });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleSearch = async(e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     updateURL({ q: searchInput, page: "1" });
   };
@@ -211,7 +211,7 @@ export default function ProductsLayout({
         </div>
       </div>
 
-      {/* Brand — hanya tampil kalau hideBrandFilter = false */}
+      {/* Brand */}
       {!hideBrandFilter && (
         <div className="border-b border-third/8">
           <button
@@ -243,11 +243,11 @@ export default function ProductsLayout({
     </div>
   );
 
-  if(role && role?.toLowerCase() == "admin"){
+  if (role && role?.toLowerCase() == "admin") {
     return (
       <div>
-          <div className="top-filter-admin">
-            <form onSubmit={handleSearch} className="hidden md:flex items-center gap-2 flex-shrink-0">
+        <div className="top-filter-admin">
+          <form onSubmit={handleSearch} className="hidden md:flex items-center gap-2 flex-shrink-0">
             <div className="relative">
               <input
                 type="text"
@@ -274,48 +274,58 @@ export default function ProductsLayout({
               Cari
             </button>
           </form>
-          </div>
-            <ProductTable products={products} onSave={onSave} kategori={kategori!}/>
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-              isPending={isPending}
-            />
-
-            <p className="text-center font-poppins text-[11px] text-third/25 mt-3">
-              Halaman {currentPage} dari {totalPages}
-            </p>
+        </div>
+        <ProductTable products={products} onSave={onSave} kategori={kategori!} />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+          isPending={isPending}
+        />
+        <p className="text-center font-poppins text-[11px] text-third/25 mt-3">
+          Halaman {currentPage} dari {totalPages}
+        </p>
       </div>
-    )
+    );
   }
 
-  else return (
+  return (
     <div className="min-h-screen bg-bg-site pt-[60px] md:pt-[66px]">
 
       {/* Top bar */}
       <div className="sticky top-[60px] md:top-[66px] z-30 bg-bg-site/90 backdrop-blur-md border-b border-third/8">
         <div className="max-w-7xl mx-auto px-6 md:px-24 h-[50px] flex items-center gap-5">
 
-          {/* Grid toggle */}
+          {/* View mode toggle: grid (3 col) | list (1 col) */}
           <div className="flex items-center gap-1 flex-shrink-0">
+            {/* Grid view */}
             <button
-              onClick={() => setGridCols(2)}
-              className={`w-7 h-7 rounded-md flex items-center justify-center transition-colors ${gridCols === 2 ? "bg-third text-primary" : "text-third/35 hover:text-third"}`}
+              onClick={() => setViewMode("grid")}
+              title="Tampilan grid"
+              className={`w-7 h-7 rounded-md flex items-center justify-center transition-colors ${viewMode === "grid" ? "bg-third text-primary" : "text-third/35 hover:text-third"}`}
             >
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                <rect x="3" y="3" width="8" height="8" rx="1" /><rect x="13" y="3" width="8" height="8" rx="1" />
-                <rect x="3" y="13" width="8" height="8" rx="1" /><rect x="13" y="13" width="8" height="8" rx="1" />
+                <rect x="2" y="2" width="6" height="6" rx="0.5" />
+                <rect x="9" y="2" width="6" height="6" rx="0.5" />
+                <rect x="16" y="2" width="6" height="6" rx="0.5" />
+                <rect x="2" y="9" width="6" height="6" rx="0.5" />
+                <rect x="9" y="9" width="6" height="6" rx="0.5" />
+                <rect x="16" y="9" width="6" height="6" rx="0.5" />
+                <rect x="2" y="16" width="6" height="6" rx="0.5" />
+                <rect x="9" y="16" width="6" height="6" rx="0.5" />
+                <rect x="16" y="16" width="6" height="6" rx="0.5" />
               </svg>
             </button>
+            {/* List view */}
             <button
-              onClick={() => setGridCols(3)}
-              className={`w-7 h-7 rounded-md flex items-center justify-center transition-colors ${gridCols === 3 ? "bg-third text-primary" : "text-third/35 hover:text-third"}`}
+              onClick={() => setViewMode("list")}
+              title="Tampilan list"
+              className={`w-7 h-7 rounded-md flex items-center justify-center transition-colors ${viewMode === "list" ? "bg-third text-primary" : "text-third/35 hover:text-third"}`}
             >
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                <rect x="2" y="2" width="6" height="6" rx="0.5" /><rect x="9" y="2" width="6" height="6" rx="0.5" /><rect x="16" y="2" width="6" height="6" rx="0.5" />
-                <rect x="2" y="9" width="6" height="6" rx="0.5" /><rect x="9" y="9" width="6" height="6" rx="0.5" /><rect x="16" y="9" width="6" height="6" rx="0.5" />
-                <rect x="2" y="16" width="6" height="6" rx="0.5" /><rect x="9" y="16" width="6" height="6" rx="0.5" /><rect x="16" y="16" width="6" height="6" rx="0.5" />
+                <rect x="2" y="3" width="20" height="4" rx="1" />
+                <rect x="2" y="10" width="20" height="4" rx="1" />
+                <rect x="2" y="17" width="20" height="4" rx="1" />
               </svg>
             </button>
           </div>
@@ -456,32 +466,58 @@ export default function ProductsLayout({
             {/* Skeleton overlay */}
             {isPending && (
               <div className="absolute inset-0 z-10">
-                <div className={`grid gap-5 ${gridCols === 2 ? "grid-cols-2" : "grid-cols-2 md:grid-cols-3"}`}>
-                  {[...Array(products.length || 36)].map((_, i) => (
-                    <div key={i} className="flex flex-col gap-2.5">
-                      <div className="aspect-square rounded-xl bg-third/8 animate-pulse" />
-                      <div className="space-y-2 px-0.5">
-                        <div className="h-2.5 w-14 bg-third/8 rounded-full animate-pulse" />
-                        <div className="h-3 w-full bg-third/8 rounded-full animate-pulse" />
-                        <div className="h-3 w-3/4 bg-third/8 rounded-full animate-pulse" />
-                        <div className="flex justify-between items-center mt-1">
-                          <div className="h-4 w-20 bg-third/8 rounded-full animate-pulse" />
-                          <div className="h-6 w-12 bg-third/8 rounded-lg animate-pulse" />
+                {viewMode === "grid" ? (
+                  <div className="grid gap-5 grid-cols-2 md:grid-cols-3">
+                    {[...Array(products.length || 36)].map((_, i) => (
+                      <div key={i} className="flex flex-col gap-2.5">
+                        <div className="aspect-square rounded-xl bg-third/8 animate-pulse" />
+                        <div className="space-y-2 px-0.5">
+                          <div className="h-2.5 w-14 bg-third/8 rounded-full animate-pulse" />
+                          <div className="h-3 w-full bg-third/8 rounded-full animate-pulse" />
+                          <div className="h-3 w-3/4 bg-third/8 rounded-full animate-pulse" />
+                          <div className="flex justify-between items-center mt-1">
+                            <div className="h-4 w-20 bg-third/8 rounded-full animate-pulse" />
+                            <div className="h-6 w-12 bg-third/8 rounded-lg animate-pulse" />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-3">
+                    {[...Array(products.length || 8)].map((_, i) => (
+                      <div key={i} className="flex gap-4 p-3 rounded-xl">
+                        <div className="w-28 h-28 rounded-xl bg-third/8 animate-pulse flex-shrink-0" />
+                        <div className="flex-1 space-y-2 py-1">
+                          <div className="h-2.5 w-14 bg-third/8 rounded-full animate-pulse" />
+                          <div className="h-3.5 w-3/4 bg-third/8 rounded-full animate-pulse" />
+                          <div className="h-3 w-1/2 bg-third/8 rounded-full animate-pulse" />
+                          <div className="h-4 w-24 bg-third/8 rounded-full animate-pulse mt-2" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
             {/* Products — dim saat pending */}
             <div className={`transition-opacity duration-200 ${isPending ? "opacity-25 pointer-events-none" : "opacity-100"}`}>
-              <div className={`grid gap-x-2 gap-y-8 md:gap-5 ${gridCols === 2 ? "grid-cols-2" : "grid-cols-2 md:grid-cols-3"}`}>
-                {products.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
+              {viewMode === "grid" ? (
+                // ── Grid view: 3 kolom ──
+                <div className="grid gap-x-2 gap-y-8 md:gap-5 grid-cols-2 md:grid-cols-3">
+                  {products.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+              ) : (
+                // ── List view: 1 produk per baris, horizontal layout ──
+                <div className="flex flex-col gap-3">
+                  {products.map((product) => (
+                    <ProductCard key={product.id} product={product}/>
+                  ))}
+                </div>
+              )}
             </div>
 
             <Pagination
