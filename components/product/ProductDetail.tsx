@@ -575,7 +575,10 @@ export default function ProductDetail({ product }: { product?: any }) {
                     <span>Keranjang</span>
                   </button>
 
-                  <Link href={'https://www.tokopedia.com/bandarmusikjakarta'} className="p-1 border-2 border-third rounded-md">
+                  <Link href={`${product.tautan || "https://www.tokopedia.com/bandarmusikjakarta"}`} 
+                    target="_blank"
+                    suppressHydrationWarning
+                    className="p-1 border-2 border-third rounded-md">
                       <Image src={'/tokped.webp'} alt="Tokopedia - Bandar Musik Jakarta" width={30}/>
                   </Link>
 
