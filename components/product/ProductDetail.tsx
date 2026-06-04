@@ -388,7 +388,7 @@ export default function ProductDetail({ product }: { product?: any }) {
               {/* Price */}
               <div>
                 <div className="grid grid-cols-2 md:flex gap-2.5 md:gap-5">
-                  {product.onlinePrice && product.onlinePrice.trim() !== "" ? (
+                  {/* {product.onlinePrice && product.onlinePrice.trim() !== "" ? (
                     <div
                       suppressHydrationWarning
                       className="font-display leading-none px-3 py-2.5 md:px-5 md:py-2 border rounded-md border-third flex flex-col gap-y-1"
@@ -411,7 +411,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                         <p className="text-[17px] md:text-[20px] font-black">Harga Online</p>
                       </div>
                     </Link>
-                  )}
+                  )} */}
 
                   {waUrl && (
                     <Link
@@ -574,6 +574,10 @@ export default function ProductDetail({ product }: { product?: any }) {
                     <ShoppingCart strokeWidth={3} className="w-5 h-5 md:w-6 md:h-6" />
                     <span>Keranjang</span>
                   </button>
+
+                  <Link href={'https://www.tokopedia.com/bandarmusikjakarta'} className="p-2 border-2 border-third rounded-md">
+                      <Image src={'/tokped.webp'} alt="Tokopedia - Bandar Musik Jakarta" />
+                  </Link>
 
                   {/* <button onClick={()=>setCekOngkir(cekOngkir ? false : true)}>Cek Ongkir</button> */}
 
