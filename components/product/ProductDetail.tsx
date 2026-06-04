@@ -425,6 +425,17 @@ export default function ProductDetail({ product }: { product?: any }) {
                       </p>
                     </Link>
                   )}
+
+                  {waUrl && (
+                    <Link
+                      href={waUrl}
+                      suppressHydrationWarning
+                      className="font-display leading-none px-3 py-2.5 md:px-5 md:py-2 border rounded-md border-third flex flex-col gap-y-1"
+                    >
+                      <p className="text-[12px] md:text-[14px] italic opacity-60">Special Price</p>
+                      <p className="text-[17px] md:text-[20px] font-black text-red-500">Rp.XXXXXXX</p>
+                    </Link>
+                  )}
                 </div>
 
                 {product.pricelist && (
