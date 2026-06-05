@@ -353,7 +353,10 @@ export default function ProductsLayout({
                 <path d="M21 12a9 9 0 1 1-6.219-8.56" />
               </svg>
             )}
-            <span className="font-bold text-third">{totalProducts} produk</span>
+            <span className="font-bold">
+                <span className="text-amber-700 bg-amber-200 border border-amber-300 rounded-xl px-2 py-1">{totalProducts}</span>
+                <span className="italic text-third/50">Produk</span>
+              </span>
             {searchParams.get("q") && (
               <> · "<span className="text-third/55">{searchParams.get("q")}</span>"</>
             )}
