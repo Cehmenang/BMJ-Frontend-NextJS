@@ -216,7 +216,11 @@ export default function ProductDetail({ product }: { product?: any }) {
   useEffect(() => {
     if (product) {
       const waMessage = encodeURIComponent(
-        `Halo, saya ingin menanyakan ketersediaan produk: ${product?.name} dengan harga ${formatPrice(product.offlinePrice)}. Apakah barangnya tersedia?\n\nUntuk detailnya ada disini https://bandarmusikjakarta.com/produk/${product.url}.`
+        `Halo, saya ingin menanyakan ketersediaan : \n
+        Nama Produk: ${product?.name}\n
+        Harga Offline: ${formatPrice(product.offlinePrice)}\n
+        Tokopedia: ${product.tautan ? product.tautan : 'https://www.tokopedia.com/bandarmusikjakarta'}\n\n
+        Apakah barangnya tersedia dan harganya sesuai?\n\nUntuk detailnya ada disini https://bandarmusikjakarta.com/produk/${product.url}.`
       );
       setWaUrl(`https://wa.me/6281929290560?text=${waMessage}`);
     }
