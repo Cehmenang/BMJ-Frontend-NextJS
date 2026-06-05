@@ -347,13 +347,13 @@ export default function ProductsLayout({
           </button>
 
           {/* Product count + spinner */}
-          <p className="flex-1 text-center font-poppins text-[11.5px] text-third/35 flex items-center justify-center gap-2">
+          <p className="flex-1 text-center font-poppins text-[11.5px] flex items-center justify-center gap-2">
             {isPending && (
-              <svg className="w-3 h-3 animate-spin text-second flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg className="w-3 h-3 animate-spin text-second flex-shrink-0 text-third/35" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 12a9 9 0 1 1-6.219-8.56" />
               </svg>
             )}
-            {totalProducts} produk
+            <span className="font-bold text-third">{totalProducts} produk</span>
             {searchParams.get("q") && (
               <> · "<span className="text-third/55">{searchParams.get("q")}</span>"</>
             )}
