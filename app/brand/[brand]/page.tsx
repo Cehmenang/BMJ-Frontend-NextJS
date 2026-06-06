@@ -30,7 +30,7 @@ export default async function BrandPage({
   if(brandResult.brand){
     return (
     <div className="mt-[60px] md:mt-[66px]">
-      <div className="bg-third py-12 px-6 md:px-24">
+      <div className="bg-[#ccc] py-12 px-6 md:px-24">
         <div className="max-w-7xl mx-auto flex justify-center items-center flex-col">
           <p className="font-poppins text-[11px] font-semibold tracking-[0.2em] uppercase text-second mb-2">
             Brand
