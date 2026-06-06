@@ -25,6 +25,7 @@ export default async function BrandPage({
     const pageValue = Number(page) || 1
     const result = await getProductByBrand(brand, pageValue)
     const brandResult = await getBrandByName(brand)
+    console.log(brandResult, 'yee')
 
   if(brandResult.brand){
     return (
@@ -34,7 +35,7 @@ export default async function BrandPage({
           <p className="font-poppins text-[11px] font-semibold tracking-[0.2em] uppercase text-second mb-2">
             Brand
           </p>
-          <div className="headline flex">
+          <div className="headline flex justify-center items-center">
             <Image src={`${process.env.SERVER_API}/storage/${brandResult.brand.image}`} alt={`Bandar Musik Jakarta - ${brandResult.brand.name}`} width={200}/>
             <div className="headline-txt">
               <h1 className="text-[clamp(28px,4vw,48px)] text-[24px] font-extrabold text-primary capitalize">
