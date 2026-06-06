@@ -24,6 +24,7 @@ export default async function BrandPage({
     const pageValue = Number(page) || 1
     const result = await getProductByBrand(brand, pageValue)
     const brandResult = await getBrandByName(brand)
+    console.log(brandResult)
 
   return (
     <div className="mt-[60px] md:mt-[66px]">
