@@ -36,7 +36,7 @@ export default async function BrandPage({
             Brand
           </p>
           <div className="headline flex justify-center items-center">
-            <Image src={`${process.env.SERVER_API}/storage/${brandResult.brand.image}`} alt={`Bandar Musik Jakarta - ${brandResult.brand.name}`} width={200}/>
+            <Image src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${brandResult.brand.image}`} alt={`Bandar Musik Jakarta - ${brandResult.brand.name}`} width={200}/>
             <div className="headline-txt">
               <h1 className="text-[clamp(28px,4vw,48px)] text-[24px] font-extrabold text-primary capitalize">
                 {brandResult.brand.name}
