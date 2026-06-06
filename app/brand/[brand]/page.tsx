@@ -3,6 +3,7 @@
 import { getBrandByName } from "@/action/brand"
 import { getProductByBrand } from "@/action/product"
 import ProductsLayout from "@/components/product/ProductsLayout"
+import Image from "next/image"
 
 export default async function BrandPage({
   params,
@@ -24,18 +25,24 @@ export default async function BrandPage({
     const pageValue = Number(page) || 1
     const result = await getProductByBrand(brand, pageValue)
     const brandResult = await getBrandByName(brand)
-    console.log(brandResult, "BRANNNDYAA")
 
-  return (
+  if(brandResult.brand){
+    return (
     <div className="mt-[60px] md:mt-[66px]">
       <div className="bg-third py-12 px-6 md:px-24">
         <div className="max-w-7xl mx-auto flex justify-center items-center flex-col">
           <p className="font-poppins text-[11px] font-semibold tracking-[0.2em] uppercase text-second mb-2">
             Brand
           </p>
-          <h1 className="text-[clamp(28px,4vw,48px)] text-[24px] font-extrabold text-primary capitalize">
-            {brandResult.name}
-          </h1>
+          <div className="headline flex">
+            <Image src={`${process.env.SERVER_API}/storage/${brandResult.brand.image}`} alt={`Bandar Musik Jakarta - ${brandResult.brand.name}`} width={200}/>
+            <div className="headline-txt">
+              <h1 className="text-[clamp(28px,4vw,48px)] text-[24px] font-extrabold text-primary capitalize">
+                {brandResult.brand.name}
+              </h1>
+              <span className="text-primary/50 italic font-light">{brandResult.brand.description}</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -52,5 +59,5 @@ export default async function BrandPage({
         hideBrandFilter
       />}
     </div>
-  )
+  )}
 }
