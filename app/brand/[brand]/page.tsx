@@ -1,5 +1,6 @@
 "use server"
 
+import { getBrandByName } from "@/action/brand"
 import { getProductByBrand } from "@/action/product"
 import ProductsLayout from "@/components/product/ProductsLayout"
 
@@ -22,6 +23,7 @@ export default async function BrandPage({
 
     const pageValue = Number(page) || 1
     const result = await getProductByBrand(brand, pageValue)
+    const brandResult = await getBrandByName(brand)
 
   return (
     <div className="mt-[60px] md:mt-[66px]">
@@ -31,7 +33,7 @@ export default async function BrandPage({
             Brand
           </p>
           <h1 className="text-[clamp(28px,4vw,48px)] text-[24px] font-extrabold text-primary capitalize">
-            {brand}
+            {brandResult.name}
           </h1>
         </div>
       </div>
