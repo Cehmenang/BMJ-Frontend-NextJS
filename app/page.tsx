@@ -12,7 +12,6 @@ export default function Home() {
       <Carousel/>
       <div className="content px-16">
           <TrustBadges/>
-          <h1>HAI</h1>
           <MilestoneSection/>
           <LatestProducts/>
           <KategoriShowcase/>
