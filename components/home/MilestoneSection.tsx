@@ -156,7 +156,7 @@ export default function MilestoneSection() {
             <span className="text-[#f9ad52]">Bicara Sendiri</span>
           </h2>
           <p className="mt-3 sm:mt-4 text-[#3e3f20]/50 text-sm max-w-md mx-auto">
-            Kami hadir untuk semua musisi — dari pemula sampai profesional.
+            Kami hadir untuk memenuhi kebutuhan musik anda.
           </p>
         </div>
 

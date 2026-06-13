@@ -12,10 +12,10 @@ export default function Home() {
       <Carousel/>
       <div className="content px-16">
           <TrustBadges/>
-          <MilestoneSection/>
           <LatestProducts/>
           <KategoriShowcase/>
           <BrandShowcase/>
+          <MilestoneSection/>
           <TiktokShowcase/>
       </div>
     </div>
