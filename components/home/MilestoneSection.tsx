@@ -31,7 +31,7 @@ const milestones: Milestone[] = [
   },
   {
     icon: <Store className="w-6 h-6 sm:w-7 sm:h-7" />,
-    value: 5.0,
+    value: 5,
     suffix: "",
     label: "Penilaian Toko",
   },
@@ -76,8 +76,8 @@ function MilestoneCard({
   return (
     <div
       className="group flex flex-col items-center gap-3 px-4 py-6 sm:px-6 sm:py-8 
-                 rounded-2xl bg-white/5 border border-white/10 
-                 hover:border-yellow-400/40 hover:bg-white/10 
+                 rounded-2xl border border-third/10
+                 hover:border-third/40 hover:bg-third/10 
                  transition-colors duration-300"
       style={{
         opacity: isVisible ? 1 : 0,
@@ -88,8 +88,8 @@ function MilestoneCard({
       {/* Icon */}
       <div
         className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 
-                      rounded-xl bg-yellow-400/10 text-yellow-400 
-                      group-hover:bg-yellow-400/20 group-hover:scale-110 
+                      rounded-xl bg-second/10 text-third
+                      group-hover:bg-third/20 group-hover:scale-110 
                       transition-all duration-300"
       >
         {milestone.icon}
@@ -97,16 +97,16 @@ function MilestoneCard({
 
       {/* Number */}
       <div className="flex items-end gap-0.5">
-        <span className="text-[28px] sm:text-4xl font-bold text-white tabular-nums leading-none">
+        <span className="text-[28px] sm:text-4xl font-bold tabular-nums leading-none">
           {count.toLocaleString("id-ID")}
         </span>
-        <span className="text-[16px] sm:text-xl font-semibold text-yellow-400 leading-tight pb-0.5">
+        <span className="text-[16px] sm:text-xl font-semibold text-second leading-tight pb-0.5">
           {milestone.suffix}
         </span>
       </div>
 
       {/* Label */}
-      <p className="text-xs sm:text-sm font-medium text-white/50 text-center tracking-wide uppercase">
+      <p className="text-xs sm:text-sm font-medium text-third/50 text-center tracking-wide uppercase">
         {milestone.label}
       </p>
     </div>
