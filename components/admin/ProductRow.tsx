@@ -30,7 +30,7 @@ function PriceInput({ value, onChange }: { value: any, onChange: (raw: string) =
   )
 }
 
-export default function ProductRow({ product, onSave, kategori }: { product: IProduct, onSave: (product: IProduct) => void, kategori: ICategory[] }) {
+export default function ProductRow({ product, onSave, onDelete, kategori }: { product: IProduct, onSave: (product: IProduct) => void, onDelete: (url: string) => void, kategori: ICategory[] }) {
   const [row, setRow] = useState<IProduct>(product)
   const [promoOn, setPromoOn] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -38,6 +38,8 @@ export default function ProductRow({ product, onSave, kategori }: { product: IPr
   const [isDirty, setIsDirty] = useState(false)
   const [katSearch, setKatSearch] = useState("")
   const [katOpen, setKatOpen] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     setRow(product)
@@ -49,7 +51,6 @@ export default function ProductRow({ product, onSave, kategori }: { product: IPr
     setSaved(false)
   }
 
-  // cari by title karena kategoriId nyimpen title
   const selectedKat = kategori.find(k => k.title === row.kategoriId)
 
   const filteredKat = katSearch
@@ -81,6 +82,28 @@ export default function ProductRow({ product, onSave, kategori }: { product: IPr
     setLoading(false)
     setSaved(true)
     setIsDirty(false)
+  }
+
+  const handleDelete = async () => {
+    setDeleting(true)
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_API}/api/hapus/produk/${row.url}`, {
+        method: "GET",
+        headers: { "Accept": "application/json", "Content-Type": "application/json" }
+      })
+      if (!response.ok) {
+        const data = await response.text()
+        console.log(data, "error delete")
+        setDeleting(false)
+        setConfirmDelete(false)
+        return
+      }
+      onDelete(row.url!)
+    } catch (err) {
+      console.log(err)
+      setDeleting(false)
+      setConfirmDelete(false)
+    }
   }
 
   const handleReset = () => {
@@ -214,7 +237,6 @@ export default function ProductRow({ product, onSave, kategori }: { product: IPr
       {/* Kategori */}
       <td className="px-3 py-3 bg-green-50/30">
         <div className="relative">
-
           <button
             onClick={() => { setKatOpen(v => !v); setKatSearch("") }}
             className="w-full text-left font-poppins text-[11px] border border-third/10 rounded-lg px-2 py-1.5 bg-third/4 text-third outline-none hover:border-second transition-colors flex items-center justify-between gap-1"
@@ -310,6 +332,38 @@ export default function ProductRow({ product, onSave, kategori }: { product: IPr
             >
               Reset
             </button>
+          )}
+
+          {/* Delete */}
+          {!confirmDelete ? (
+            <button
+              onClick={() => setConfirmDelete(true)}
+              className="font-poppins text-[11px] px-3 py-1.5 rounded-lg border border-red-200 text-red-400 hover:bg-red-50 hover:text-red-600 hover:border-red-300 transition-colors w-full"
+            >
+              Hapus
+            </button>
+          ) : (
+            <div className="flex flex-col gap-1">
+              <p className="font-poppins text-[10px] text-red-500 text-center leading-tight">
+                Yakin hapus produk ini?
+              </p>
+              <div className="flex gap-1">
+                <button
+                  onClick={handleDelete}
+                  disabled={deleting}
+                  className="flex-1 font-poppins text-[11px] px-2 py-1.5 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors font-medium disabled:opacity-60"
+                >
+                  {deleting ? "..." : "Ya"}
+                </button>
+                <button
+                  onClick={() => setConfirmDelete(false)}
+                  disabled={deleting}
+                  className="flex-1 font-poppins text-[11px] px-2 py-1.5 rounded-lg border border-third/10 text-third/50 hover:text-third/70 transition-colors"
+                >
+                  Batal
+                </button>
+              </div>
+            </div>
           )}
         </div>
       </td>

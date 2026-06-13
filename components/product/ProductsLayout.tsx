@@ -68,7 +68,16 @@ export default function ProductsLayout({
   const [availabilityOpen, setAvailabilityOpen] = useState(false);
   const [onlyInStock, setOnlyInStock] = useState(initialStock);
   const sortRef = useRef<HTMLDivElement>(null);
+  const [localProducts, setLocalProducts] = useState<IProduct[]>(products);
   const [save, onSave] = useState<IProduct | null>(null);
+
+  useEffect(() => {
+    setLocalProducts(products);
+  }, [products]);
+
+  const handleDelete = (url: string) => {
+    setLocalProducts(prev => prev.filter(p => p.url !== url));
+  };
 
   useEffect(() => {
     setSort(SORT_OPTIONS.find(o => o.value === (searchParams.get("sort") || "latest")) ?? SORT_OPTIONS[0]);
@@ -275,7 +284,12 @@ export default function ProductsLayout({
             </button>
           </form>
         </div>
-        <ProductTable products={products} onSave={onSave} kategori={kategori!} />
+        <ProductTable 
+          products={localProducts}
+          onSave={onSave} 
+          onDelete={handleDelete}    
+          kategori={kategori!} 
+        />
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
