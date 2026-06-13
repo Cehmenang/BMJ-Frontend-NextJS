@@ -13,27 +13,27 @@ interface Milestone {
 const milestones: Milestone[] = [
   {
     icon: <Package className="w-6 h-6 sm:w-7 sm:h-7" />,
-    value: 500,
+    value: 8000,
     suffix: "+",
     label: "Produk Tersedia",
   },
   {
     icon: <Tag className="w-6 h-6 sm:w-7 sm:h-7" />,
-    value: 40,
+    value: 300,
     suffix: "+",
     label: "Brand Ternama",
   },
   {
     icon: <Users className="w-6 h-6 sm:w-7 sm:h-7" />,
-    value: 2000,
+    value: 34000,
     suffix: "+",
     label: "Pelanggan Puas",
   },
   {
     icon: <Store className="w-6 h-6 sm:w-7 sm:h-7" />,
-    value: 10,
-    suffix: "+ Tahun",
-    label: "Pengalaman",
+    value: 5.0,
+    suffix: "",
+    label: "Penilaian Toko",
   },
 ];
 
@@ -97,10 +97,10 @@ function MilestoneCard({
 
       {/* Number */}
       <div className="flex items-end gap-0.5">
-        <span className="text-3xl sm:text-4xl font-bold text-white tabular-nums leading-none">
+        <span className="text-[28px] sm:text-4xl font-bold text-white tabular-nums leading-none">
           {count.toLocaleString("id-ID")}
         </span>
-        <span className="text-lg sm:text-xl font-semibold text-yellow-400 leading-tight pb-0.5">
+        <span className="text-[16px] sm:text-xl font-semibold text-yellow-400 leading-tight pb-0.5">
           {milestone.suffix}
         </span>
       </div>
@@ -136,7 +136,7 @@ export default function MilestoneSection() {
   return (
     <section
       ref={sectionRef}
-      className="w-full py-16 sm:py-20 px-4 bg-[#0a0a0a]" // sesuaikan bg dengan tema lo
+      className="w-full py-16 sm:py-20 px-4" // sesuaikan bg dengan tema lo
     >
       <div className="max-w-5xl mx-auto">
         {/* Heading */}
