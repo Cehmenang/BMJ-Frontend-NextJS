@@ -429,7 +429,7 @@ export default function MainNav({ token, username, wishlist }: { token: string |
                                   width={200} height={200}
                                  src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0]}`} alt={product.name} className="w-full h-full object-cover" />
                               </div>
-                              <span className="text-[13px] font-poppins text-gray-700 group-hover:text-gray-900 truncate flex-1">{product.name}</span>
+                              <span className="text-[13px] font-poppins text-gray-700 group-hover:text-gray-900 truncate flex-1">{product.name.toUpperCase()}</span>
                               <svg className="w-3 h-3 text-gray-300 group-hover:text-second flex-shrink-0 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
                               </svg>
@@ -586,7 +586,7 @@ export default function MainNav({ token, username, wishlist }: { token: string |
                               <div className="w-8 h-8 rounded-md overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-100">
                                 <Image width={200} height={200} src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0]}`} alt={product.name} className="w-full h-full object-cover" />
                               </div>
-                              <span className="text-[12.5px] font-poppins text-gray-700 group-hover:text-gray-900 truncate flex-1 leading-snug">{product.name}</span>
+                              <span className="text-[12.5px] font-poppins text-gray-700 group-hover:text-gray-900 truncate flex-1 leading-snug">{product.name.toUpperCase()}</span>
                               <svg className="w-3 h-3 text-gray-300 group-hover:text-second flex-shrink-0 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
                               </svg>
