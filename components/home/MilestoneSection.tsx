@@ -149,11 +149,11 @@ export default function MilestoneSection() {
           }}
         >
           <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#f9ad52] mb-3">
-            Kepercayaan Pelanggan
+            Mengapa Bandar Musik Jakarta?
           </p>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#3e3f20]">
-            Angka yang{" "}
-            <span className="text-[#f9ad52]">Bicara Sendiri</span>
+            Kepercayaan Menjadi {" "}
+            <span className="text-[#f9ad52]">Unggulan</span>
           </h2>
           <p className="mt-3 sm:mt-4 text-[#3e3f20]/50 text-sm max-w-md mx-auto">
             Kami hadir untuk memenuhi kebutuhan musik anda.
