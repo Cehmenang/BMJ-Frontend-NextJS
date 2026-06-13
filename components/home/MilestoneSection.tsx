@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Package, Tag, Users, Store } from "lucide-react";
+import { Package, Tag, Users, Star } from "lucide-react";
 
 interface Milestone {
   icon: React.ReactNode;
@@ -30,8 +30,8 @@ const milestones: Milestone[] = [
     label: "Pelanggan Puas",
   },
   {
-    icon: <Store className="w-6 h-6 sm:w-7 sm:h-7" />,
-    value: 5,
+    icon: <Star className="w-6 h-6 sm:w-7 sm:h-7" />,
+    value: 5.0,
     suffix: "",
     label: "Penilaian Toko",
   },
@@ -71,7 +71,7 @@ function MilestoneCard({
   isVisible: boolean;
   index: number;
 }) {
-  const count = useCountUp(milestone.value, 1600 + index * 100, shouldCount);
+  const count = milestone.label !== "Penilaian Toko" ? useCountUp(milestone.value, 1600 + index * 100, shouldCount) : milestone.value
 
   return (
     <div
