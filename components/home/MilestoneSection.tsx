@@ -76,8 +76,8 @@ function MilestoneCard({
   return (
     <div
       className="group flex flex-col items-center gap-3 px-4 py-6 sm:px-6 sm:py-8 
-                 rounded-2xl border border-third/10
-                 hover:border-third/40 hover:bg-third/10 
+                 rounded-2xl border border-[#3e3f20]/20 bg-white/60
+                 hover:border-[#f9ad52]/60 hover:bg-white/90
                  transition-colors duration-300"
       style={{
         opacity: isVisible ? 1 : 0,
@@ -88,25 +88,25 @@ function MilestoneCard({
       {/* Icon */}
       <div
         className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 
-                      rounded-xl bg-second/10 text-third
-                      group-hover:bg-third/20 group-hover:scale-110 
-                      transition-all duration-300"
+                   rounded-xl bg-[#f9ad52]/15 text-[#3e3f20]
+                   group-hover:bg-[#f9ad52]/30 group-hover:scale-110 
+                   transition-all duration-300"
       >
         {milestone.icon}
       </div>
 
       {/* Number */}
       <div className="flex items-end gap-0.5">
-        <span className="text-[28px] sm:text-4xl font-bold tabular-nums leading-none">
+        <span className="text-[28px] sm:text-4xl font-bold text-[#3e3f20] tabular-nums leading-none">
           {count.toLocaleString("id-ID")}
         </span>
-        <span className="text-[16px] sm:text-xl font-semibold text-second leading-tight pb-0.5">
+        <span className="text-[16px] sm:text-xl font-semibold text-[#f9ad52] leading-tight pb-0.5">
           {milestone.suffix}
         </span>
       </div>
 
       {/* Label */}
-      <p className="text-xs sm:text-sm font-medium text-third/50 text-center tracking-wide uppercase">
+      <p className="text-xs sm:text-sm font-medium text-[#3e3f20]/50 text-center tracking-wide uppercase">
         {milestone.label}
       </p>
     </div>
@@ -136,7 +136,7 @@ export default function MilestoneSection() {
   return (
     <section
       ref={sectionRef}
-      className="w-full py-16 sm:py-20 px-4" // sesuaikan bg dengan tema lo
+      className="w-full py-16 sm:py-20 px-4 bg-[#f5f4ef]"
     >
       <div className="max-w-5xl mx-auto">
         {/* Heading */}
@@ -148,14 +148,14 @@ export default function MilestoneSection() {
             transition: "opacity 0.5s ease 0ms, transform 0.5s ease 0ms",
           }}
         >
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-yellow-400 mb-3">
+          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#f9ad52] mb-3">
             Kepercayaan Pelanggan
           </p>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#3e3f20]">
             Angka yang{" "}
-            <span className="text-yellow-400">Bicara Sendiri</span>
+            <span className="text-[#f9ad52]">Bicara Sendiri</span>
           </h2>
-          <p className="mt-3 sm:mt-4 text-white/40 text-sm max-w-md mx-auto">
+          <p className="mt-3 sm:mt-4 text-[#3e3f20]/50 text-sm max-w-md mx-auto">
             Kami hadir untuk semua musisi — dari pemula sampai profesional.
           </p>
         </div>
