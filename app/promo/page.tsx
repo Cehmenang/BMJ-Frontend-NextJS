@@ -2,7 +2,6 @@
 
 import { getAllProductsByPromo } from "@/action/product"
 import ProductsLayout from "@/components/product/ProductsLayout"
-import { useSearchParams } from "next/navigation"
 
 export default async function Promo({ searchParams }: {
     searchParams: {
@@ -13,7 +12,7 @@ export default async function Promo({ searchParams }: {
         stock?: string
     }
 }){
-    const { page, q, sort, kategori, stock } = await useSearchParams as any
+    const { page, q, sort, kategori, stock } = await searchParams as any
     const pageValue = Number(page) || 1
     const result = await getAllProductsByPromo(pageValue)
 
