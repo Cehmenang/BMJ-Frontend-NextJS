@@ -103,3 +103,13 @@ export async function getDestinationOption(location: string) {
     if(res.ok){ return await res.json() }
   } catch (err) { return err }
 }
+
+export async function getAllProductsByPromo(){
+    try{
+        const res = await fetch(`${process.env.SERVER_API}/api/produk/promo`, {
+            method: "GET", headers: { "Accept": "application/json" }
+        })
+        const result = await res.json()
+        if(res.ok) return await result.produk
+    }catch(err){ console.log(err) }
+}
