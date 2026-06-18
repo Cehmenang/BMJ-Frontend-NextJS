@@ -110,6 +110,7 @@ export async function getAllProductsByPromo(){
             method: "GET", headers: { "Accept": "application/json" }
         })
         const result = await res.json()
+        console.log(result, 'HASIL')
         if(res.ok) return await result.produk
     }catch(err){ console.log(err) }
 }

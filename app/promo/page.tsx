@@ -4,7 +4,7 @@ import { getAllProductsByPromo } from "@/action/product"
 
 export default async function Promo(){
     const products = await getAllProductsByPromo()
-    console.log(products)
+    console.log(products, 'PRODUKKNYAA')
 
     return (
         <div className="main-promo">
