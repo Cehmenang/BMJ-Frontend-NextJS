@@ -107,7 +107,7 @@ export async function getDestinationOption(location: string) {
 export async function getAllProductsByPromo(){
     try{
         const res = await fetch(`${process.env.SERVER_API}/api/produk/promo`, {
-            method: "GET", headers: { "Accept": "application/json" }
+            method: "GET", headers: { "Content-Type": "application/json", "Accept": "application/json" }
         })
         const result = await res.json()
         console.log(result, 'HASIL')
