@@ -1,3 +1,5 @@
+"use server"
+
 import { getAllProductsByPromo } from "@/action/product"
 
 export default async function Promo(){
