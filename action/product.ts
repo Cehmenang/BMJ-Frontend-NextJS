@@ -104,13 +104,12 @@ export async function getDestinationOption(location: string) {
   } catch (err) { return err }
 }
 
-export async function getAllProductsByPromo(){
+export async function getAllProductsByPromo(pagination: number){
     try{
-        const res = await fetch(`${process.env.SERVER_API}/api/produk/promo`, {
+        const res = await fetch(`${process.env.SERVER_API}/api/produk/promo?page=${pagination}`, {
             method: "GET", headers: { "Content-Type": "application/json", "Accept": "application/json" }
         })
         const result = await res.json()
-        console.log(result, 'HASIL')
         if(res.ok) return await result.produk
     }catch(err){ console.log(err) }
 }

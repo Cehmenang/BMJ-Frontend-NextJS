@@ -1,14 +1,35 @@
 "use server"
 
 import { getAllProductsByPromo } from "@/action/product"
+import ProductsLayout from "@/components/product/ProductsLayout"
+import { useSearchParams } from "next/navigation"
 
-export default async function Promo(){
-    const products = await getAllProductsByPromo()
-    console.log(products, 'PRODUKKNYAA')
+export default async function Promo({ searchParams }: {
+    searchParams: {
+        page?: string
+        q?: string
+        sort?: string
+        kategori?: string
+        stock?: string
+    }
+}){
+    const { page, q, sort, kategori, stock } = await useSearchParams as any
+    const pageValue = Number(page) || 1
+    const result = await getAllProductsByPromo(pageValue)
 
     return (
-        <div className="main-promo">
-            <h1>HALAMAN PROMO</h1>
+        <div className="main-promo mt-16">
+                    {result && <ProductsLayout
+                            products={result.data}
+                            totalPages={result.last_page}
+                            totalProducts={result.total}
+                            currentPage={result.current_page}
+                            initialSort={sort!}
+                            initialKategori={kategori!}
+                            initialBrand="Semua"
+                            initialQuery={q!}
+                            initialStock={stock === "1"}
+                    />}
         </div>
     )
 }
