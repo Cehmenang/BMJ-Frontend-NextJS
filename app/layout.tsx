@@ -4,6 +4,34 @@ import LayoutNav from "@/components/navbar/LayoutNav";
 import Footer from "@/components/footer/MainFooter";
 import QuickAction from "@/components/quick/QuickAction";
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "MusicStore",
+  "name": "Bandar Musik Jakarta",
+  "url": "https://www.bandarmusikjakarta.com",
+  "telephone": "+6281929290560",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Jl. Rajawali Selatan I No.26A, RT.3/RW.2, Gerbang Hitam, Kecamatan Sawah Besar, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta",
+    "addressLocality": "Jakarta Pusat",
+    "addressCountry": "ID",
+    "postalCode": "10720"
+  },
+  "openingHours": "Mo-Sa 10:00-20:00",
+  "priceRange": "$$",
+  "image": "https://www.bandarmusikjakarta.com/meta/BMJOG.webp",
+  "logo": "https://www.bandarmusikjakarta.com/meta/BMJOGSquare.webp",
+  "sameAs": [
+    "https://www.instagram.com/bandarmusikjakarta_bmj",
+    "https://wa.me/6281929290560"
+  ],
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": -6.146694, 
+    "longitude": 106.837833
+  }
+}
+
 export const metadata: Metadata = {
  
   title: {
@@ -119,6 +147,7 @@ export default function RootLayout({
           <link rel="dns-prefetch" href="https://server.bandarmusikjakarta.com" />
           <link rel="preconnect" href="https://server.bandarmusikjakarta.com" crossOrigin={'anonymous'} />
           <script defer src="https://analytics.bandarmusikjakarta.com/script.js" data-website-id="9b499a3d-a083-4aa8-8dbd-1a894483150c"></script>
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}/>
       </head>
 
 
