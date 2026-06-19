@@ -162,6 +162,12 @@ export default function ProductCard({
           </div>
         </div>
 
+        {/* Promo */}
+        {product.promo && <div className="product-promo absolute top-20 left-0">
+            <h1>{product.namaPromo}</h1>
+            <h1>{formatPrice(parseInt(product.promo))}</h1>
+        </div>}
+
         {/* Toast */}
         <div
           className={`absolute top-3 left-1/2 -translate-x-1/2 z-20 transition-all duration-300 whitespace-nowrap ${
