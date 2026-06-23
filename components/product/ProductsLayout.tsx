@@ -256,15 +256,15 @@ export default function ProductsLayout({
   if (role && role?.toLowerCase() == "admin") {
     return (
       <div>
-        <div className="top-filter-admin">
-          <form onSubmit={handleSearch} className="hidden md:flex items-center gap-2 flex-shrink-0 mx-auto w-[70%] my-8">
+        <div className="top-filter-admin pt-8">
+          <form onSubmit={handleSearch} className="hidden md:flex items-center gap-2 flex-shrink-0 mx-auto w-[74%]">
             <div className="relative">
               <input
                 type="text"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 placeholder="Cari produk…"
-                className="font-poppins text-[11.5px] text-third placeholder:text-third/25 bg-white border border-third/10 rounded-lg px-3 py-1.5 pr-7 outline-none focus:border-third/25 transition-colors w-40"
+                className="font-poppins text-[11.5px] text-third placeholder:text-third/25 bg-white border border-third/10 rounded-lg px-3 py-1.5 pr-7 outline-none focus:border-third/25 transition-colors w-full"
               />
               {searchInput && (
                 <button
