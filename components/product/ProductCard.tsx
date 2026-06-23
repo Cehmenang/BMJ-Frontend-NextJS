@@ -188,8 +188,8 @@ export default function ProductCard({
       )}
       <div className="md:w-[100%] transition group relative overflow-hidden rounded-2xl border-1 border-slate-200 hover:border-slate-300 hover:bg-gray-200 transition">
         { product.promo && <div className="promo-section absolute bottom-[16px] left-[6px] z-10 border border-amber-700 rounded-md bg-amber-200 px-5">
-            <h1 className="text-[10px] leading-1.5 opacity-50">{product.namaPromo ? product.namaPromo : 'Promo'}</h1>
-            <h1 className="text-[12px] font-bold leading-0">{formatPrice(parseInt(product.promo))}</h1>
+            <h1 className="text-[10px] opacity-50">{product.namaPromo ? product.namaPromo : 'Promo'}</h1>
+            <h1 className="text-[12px] font-bold">{formatPrice(parseInt(product.promo))}</h1>
         </div> }
 
         <Image
