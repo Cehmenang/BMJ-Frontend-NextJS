@@ -87,9 +87,10 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
   const handleDelete = async () => {
     setDeleting(true)
     try {
+      console.log(row.url, 'URL PRODUK!')
       const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_API}/api/hapus/produk/${row.url}`, {
         method: "GET",
-        headers: { "Accept": "application/json", "Content-Type": "application/json" }
+        headers: { "Accept": "application/json" }
       })
       if (!response.ok) {
         const data = await response.text()
