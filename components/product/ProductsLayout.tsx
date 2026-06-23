@@ -256,8 +256,8 @@ export default function ProductsLayout({
   if (role && role?.toLowerCase() == "admin") {
     return (
       <div>
-        <div className="top-filter-admin pt-8">
-          <form onSubmit={handleSearch} className="hidden md:flex items-center gap-2 flex-shrink-0 mx-auto w-[74%]">
+        <div className="top-filter-admin pt-8 py-3">
+          <form onSubmit={handleSearch} className="hidden md:flex items-center gap-2 flex-shrink-0 mx-auto w-[72%]">
             <div className="relative">
               <input
                 type="text"
