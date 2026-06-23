@@ -77,6 +77,7 @@ export default function ProductsLayout({
 
   const handleDelete = (url: string) => {
     setLocalProducts(prev => prev.filter(p => p.url !== url));
+
   };
 
   useEffect(() => {
@@ -256,7 +257,7 @@ export default function ProductsLayout({
     return (
       <div>
         <div className="top-filter-admin">
-          <form onSubmit={handleSearch} className="hidden md:flex items-center gap-2 flex-shrink-0">
+          <form onSubmit={handleSearch} className="hidden md:flex items-center gap-2 flex-shrink-0 mx-auto w-[70%] my-8">
             <div className="relative">
               <input
                 type="text"
