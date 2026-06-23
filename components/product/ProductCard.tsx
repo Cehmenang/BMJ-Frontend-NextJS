@@ -1,6 +1,7 @@
 "use client"
 
 import { IProduct } from "@/interface";
+import { section } from "framer-motion/client";
 import { InfoIcon, Navigation, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -162,8 +163,6 @@ export default function ProductCard({
           </div>
         </div>
 
-        <h1>{product.promo} CEKKKK</h1>
-
         {/* Toast */}
         <div
           className={`absolute top-3 left-1/2 -translate-x-1/2 z-20 transition-all duration-300 whitespace-nowrap ${
@@ -188,6 +187,9 @@ export default function ProductCard({
         </span>
       )}
       <div className="md:w-[100%] transition group relative overflow-hidden rounded-2xl border-1 border-slate-200 hover:border-slate-300 hover:bg-gray-200 transition">
+        { product.promo && <div className="promo-section absolute top-0 left-0 z-10">
+            <h1>{formatPrice(parseInt(product.promo))}</h1>
+        </div> }
         <Image
           width={500}
           height={500}
