@@ -164,8 +164,9 @@ export default function ProductCard({
 
         {/* Promo */}
         {product.promo && <div className="product-promo absolute top-20 left-0">
-            <h1>{product.namaPromo}</h1>
-            <h1>{formatPrice(parseInt(product.promo))}</h1>
+          <h1>HAITAYO</h1>
+            {/* <h1>{product.namaPromo}</h1> */}
+            {/* <h1>{formatPrice(parseInt(product.promo))}</h1> */}
         </div>}
 
         {/* Toast */}
