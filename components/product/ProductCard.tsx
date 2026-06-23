@@ -162,12 +162,7 @@ export default function ProductCard({
           </div>
         </div>
 
-        {/* Promo */}
-        {product.promo && <div className="product-promo">
-          <h1>HAITAYO</h1>
-            {/* <h1>{product.namaPromo}</h1> */}
-            {/* <h1>{formatPrice(parseInt(product.promo))}</h1> */}
-        </div>}
+        <h1>{product.promo}</h1>
 
         {/* Toast */}
         <div
