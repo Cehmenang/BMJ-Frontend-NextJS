@@ -162,7 +162,7 @@ export default function ProductCard({
           </div>
         </div>
 
-        <h1>{product.promo}</h1>
+        <h1>{product.promo} CEKKKK</h1>
 
         {/* Toast */}
         <div
