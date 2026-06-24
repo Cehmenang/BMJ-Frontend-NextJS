@@ -54,19 +54,19 @@ export async function uploadProduct(formData: FormData){
     }catch(err){ console.log(err) }
 }
 
-export async function getProducts(pagination: number){
-    try{
-        const response = await fetch(`${process.env.SERVER_API}/api/produk/semua?page=${pagination}`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json', "Accept": "application/json" },
-            next: { revalidate: 300 }
-        })
-        const result= await response.json()
-        if(response.ok) {
-            return await result.produk
-        }
-    }catch(err){ console.log(err) }
-}
+    export async function getProducts(pagination: number){
+        try{
+            const response = await fetch(`${process.env.SERVER_API}/api/produk/semua?page=${pagination}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json', "Accept": "application/json" },
+                next: { tags: ['products'] }
+            })
+            const result= await response.json()
+            if(response.ok) {
+                return await result.produk
+            }
+        }catch(err){ console.log(err) }
+    }
 
 export async function getRelated(kategori? : string, url?: string){
     try{
