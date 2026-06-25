@@ -24,7 +24,7 @@ export async function getProductByBrand(brandName: string, pagination: number){
         const response = await fetch(`${process.env.SERVER_API}/api/produk/brand/${brandName}?page=${pagination}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json', "Accept": "application/json" },
-            next: { revalidate: 300 }
+            next: { tags: ['products'] }
         })
         const result= await response.json()
         if(response.ok) {
