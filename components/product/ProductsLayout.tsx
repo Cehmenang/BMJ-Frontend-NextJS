@@ -73,6 +73,11 @@ export default function ProductsLayout({
   const [localProducts, setLocalProducts] = useState<IProduct[]>(products);
   const [save, onSave] = useState<IProduct | null>(null);
 
+
+  useEffect(()=>{
+    console.log(activeBrand)
+  }, [activeBrand, 'activeBrand'])
+
   useEffect(() => {
     setLocalProducts(products);
   }, [products]);
