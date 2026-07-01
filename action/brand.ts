@@ -31,12 +31,11 @@ export async function getBrandByName(name: string){
     }catch(err){ console.log(err) }
 }
 
-export async function getSelectedBrands(names: string[]){
+export async function getSelectedBrands(title: string){
     try{
-        const response = await fetch(`${process.env.SERVER_API}/api/selected/brand`,{
-            method: 'POST',
+        const response = await fetch(`${process.env.SERVER_API}/api/selected/brand/${title}`,{
+            method: 'GET',
             headers: { 'Content-Type': "application/json" },
-            body: JSON.stringify({ titles: names })
         })
         const brands = await response.json()
         if(response.ok){ return brands }

@@ -13,18 +13,17 @@ export default async function CategoryDetail({ params, searchParams }: {
         sort?: string
         kategori?: string
         stock?: string
+        brand?: string
     }
  }){
     const { title } = await params
-    const { page, q, sort, kategori, stock } = await searchParams
+    const { page, q, sort, kategori, stock, brand} = await searchParams
     const pageValue = Number(page) || 1
     const result = await getProductByCategory(title, pageValue)
-    const brandIds = [...new Set(result.data.map((p: IProduct) => p.brandId))] as string[]
-    const brands = await getSelectedBrands(brandIds)
+    const brands = await getSelectedBrands(title)
 
     return (
-        <div className="main-category">
-            <h1>You talk to her</h1>
+        <div className="main-category mt-20">
             {result && <ProductsLayout
                     products={result.data}
                     totalPages={result.last_page}
