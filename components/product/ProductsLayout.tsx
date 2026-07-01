@@ -9,6 +9,7 @@ import { ICategory, IProduct } from "@/interface";
 import ProductCard from "./ProductCard";
 import Pagination from "./ProductsPagination";
 import ProductTable from "../admin/ProductTable";
+import Image from "next/image";
 
 const SORT_OPTIONS = [
   { label: "Terbaru", value: "latest" },
@@ -256,7 +257,12 @@ export default function ProductsLayout({
                       : "text-third/50 hover:text-third hover:bg-third/4"
                   }`}
                 >
-                  {brand.name}
+                  <Image 
+                    width={200}
+                    height={200}
+                    alt={brand.name}
+                    src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${brand.image}`}
+                  />
                 </button>
               ))}
             </div>
