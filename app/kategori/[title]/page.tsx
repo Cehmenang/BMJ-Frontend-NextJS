@@ -2,7 +2,6 @@
 
 import { getSelectedBrands } from "@/action/brand"
 import { getProductByCategory } from "@/action/product"
-import ProductDetail from "@/components/product/ProductDetail"
 import ProductsLayout from "@/components/product/ProductsLayout"
 import { IProduct } from "@/interface"
 

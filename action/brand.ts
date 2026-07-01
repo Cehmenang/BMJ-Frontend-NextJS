@@ -31,7 +31,7 @@ export async function getBrandByName(name: string){
     }catch(err){ console.log(err) }
 }
 
-export async function getSelectedBrand(names: string[]){
+export async function getSelectedBrands(names: string[]){
     try{
         const response = await fetch(`${process.env.SERVER_API}/api/selected/brand`,{
             method: 'POST',
