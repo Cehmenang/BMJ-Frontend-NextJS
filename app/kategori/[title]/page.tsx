@@ -21,6 +21,7 @@ export default async function CategoryDetail({ params, searchParams }: {
     const pageValue = Number(page) || 1
     const result = await getProductByCategory(title, pageValue)
     const brands = await getSelectedBrands(title)
+    console.log(brands, 'BRANDSNYAAA')
 
     return (
         <div className="main-category mt-20">
