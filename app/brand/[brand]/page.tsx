@@ -24,10 +24,9 @@ export default async function BrandPage({
     const { page, q, sort, kategori, stock } = await searchParams
 
     const pageValue = Number(page) || 1
-    const result = await getProductByBrand(brand, pageValue)
+    const result = await getProductByBrand(brand, pageValue, { kategori })
     const brandResult = await getBrandByName(brand)
     const categories = await getSelectedCategories(brand)
-    console.log(categories, 'KATEGORIIIII')
 
   if(brandResult.brand){
     return (

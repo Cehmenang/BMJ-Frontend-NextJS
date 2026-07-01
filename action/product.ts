@@ -19,13 +19,22 @@ export async function getLatestProducts(){
     }catch(err){ console.log(err) }
 }
 
-export async function getProductByBrand(brandName: string, pagination: number){
+export async function getProductByBrand(brandName: string, pagination: number, query: { kategori?: string }){
     try{
-        const response = await fetch(`${process.env.SERVER_API}/api/produk/brand/${brandName}?page=${pagination}`, {
+        let response
+        if(query.kategori){
+            response = await fetch(`${process.env.SERVER_API}/api/produk/brand/${brandName}?page=${pagination}&kategori=${query.kategori}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json', "Accept": "application/json" },
             next: { tags: ['products'] }
-        })
+            })
+        }else {
+            response = await fetch(`${process.env.SERVER_API}/api/produk/brand/${brandName}?page=${pagination}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json', "Accept": "application/json" },
+                next: { tags: ['products'] }
+            })
+        }
         const result= await response.json()
         if(response.ok) {
             return await result.produk
