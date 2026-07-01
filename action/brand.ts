@@ -37,6 +37,7 @@ export async function getSelectedBrands(title: string){
             method: 'GET',
             headers: { 'Content-Type': "application/json" },
         })
+        console.log(response, 'RESPONSE FETCH!')
         const brands = await response.json()
         if(response.ok){ return brands }
     }catch(err){ console.log(err) }
