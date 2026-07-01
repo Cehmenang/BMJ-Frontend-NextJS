@@ -19,9 +19,8 @@ export default async function CategoryDetail({ params, searchParams }: {
     const { title } = await params
     const { page, q, sort, kategori, stock, brand} = await searchParams
     const pageValue = Number(page) || 1
-    const result = await getProductByCategory(title, pageValue)
+    const result = await getProductByCategory(title, pageValue, { brand })
     const brands = await getSelectedBrands(title)
-    console.log(brands, 'BRANDSNYAAA')
 
     return (
         <div className="main-category mt-20">

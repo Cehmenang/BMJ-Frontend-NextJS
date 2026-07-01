@@ -33,9 +33,11 @@ export async function getProductByBrand(brandName: string, pagination: number){
     }catch(err){ console.log(err) }
 }
 
-export async function getProductByCategory(kategoriName: string, pagination: number){
+export async function getProductByCategory(kategoriName: string, pagination: number, query: { brand?: string }){
     try{
-        const response = await fetch(`${process.env.SERVER_API}/api/produk/kategori/${kategoriName}?page=${pagination}`, {
+        const params = new URLSearchParams({ page: pagination.toString() })
+        console.log(params)
+        const response = await fetch(`${process.env.SERVER_API}/api/produk/kategori/${kategoriName}?page=${pagination}&brand=${query.brand}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json', "Accept": "application/json" },
             next: { revalidate: 300 }
