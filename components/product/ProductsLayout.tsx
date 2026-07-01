@@ -248,19 +248,21 @@ export default function ProductsLayout({
                     setActiveBrand(newBrand || "Semua")
                     updateURL({brand: newBrand, page: "1"})
                   }}
-                  className={`w-full flex justify-between items-center font-poppins text-[12px] px-2 rounded-lg transition-colors ${
+                  className={`w-full flex justify-between items-center font-poppins text-[12px] px-2 py-1.5 rounded-lg transition-colors ${
                     activeBrand === brand.name
                       ? "text-third font-semibold bg-third/6"
                       : "text-third/50 hover:text-third hover:bg-third/4"
                   }`}
-                >
+                >\
+                  
                   <Image 
-                    width={70}
-                    height={70}
+                    width={80}
+                    height={80}
                     alt={brand.name}
                     src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${brand.image}`}
                   />
-                  <p className="font-bold w-[30px] h-[30px] leading-[30px] text-[10px] bg-gray-200 rounded-md">({brand.produk_count})</p>
+
+                  <p className="font-bold w-[30px] h-[30px] leading-[30px] text-[8px] px-2 py-[2px] border border-gray-200 rounded-md">({brand.produk_count})</p>
                 </button>
               ))}
             </div>
