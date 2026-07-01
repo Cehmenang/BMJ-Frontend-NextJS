@@ -73,11 +73,6 @@ export default function ProductsLayout({
   const [localProducts, setLocalProducts] = useState<IProduct[]>(products);
   const [save, onSave] = useState<IProduct | null>(null);
 
-
-  useEffect(()=>{
-    console.log(activeBrand)
-  }, [activeBrand, 'activeBrand'])
-
   useEffect(() => {
     setLocalProducts(products);
   }, [products]);
@@ -243,7 +238,11 @@ export default function ProductsLayout({
               {brands!.map((brand, index) => (
                 <button
                   key={index}
-                  onClick={() => setActiveBrand(brand.name)}
+                  onClick={() =>{
+                    const newBrand = activeBrand === brand.name ? "" : brand.name;
+                    setActiveBrand(newBrand || "Semua")
+                    updateURL({brand: newBrand, page: "1"})
+                  }}
                   className={`w-full text-left font-poppins text-[12px] px-2 py-1.5 rounded-lg transition-colors ${
                     activeBrand === brand.name
                       ? "text-third font-semibold bg-third/6"
