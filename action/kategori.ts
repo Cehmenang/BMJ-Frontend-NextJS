@@ -40,3 +40,14 @@ export async function uploadKategori(formData: FormData){
     if(response.ok){ return data }
   }catch(err){ console.log(err) }
 }
+
+export async function getSelectedCategories(name: string){
+    try{
+        const response = await fetch(`${process.env.SERVER_API}/api/selected/kategori/${name}`,{
+            method: 'GET',
+            headers: { 'Content-Type': "application/json" },
+        })
+        const categories = await response.json()
+        if(response.ok){ return categories }
+    }catch(err){ console.log(err) }
+}

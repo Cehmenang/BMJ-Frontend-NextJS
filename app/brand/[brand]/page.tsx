@@ -1,6 +1,7 @@
 "use server"
 
 import { getBrandByName } from "@/action/brand"
+import { getSelectedCategories } from "@/action/kategori"
 import { getProductByBrand } from "@/action/product"
 import ProductsLayout from "@/components/product/ProductsLayout"
 import Image from "next/image"
@@ -25,7 +26,7 @@ export default async function BrandPage({
     const pageValue = Number(page) || 1
     const result = await getProductByBrand(brand, pageValue)
     const brandResult = await getBrandByName(brand)
-    console.log(brandResult, 'yee')
+    const categories = await getSelectedCategories(brand)
 
   if(brandResult.brand){
     return (
@@ -58,6 +59,7 @@ export default async function BrandPage({
         initialQuery={q!}
         initialStock={stock === "1"}
         hideBrandFilter
+        categories={categories}
       />}
     </div>
   )}
