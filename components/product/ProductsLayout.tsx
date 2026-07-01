@@ -504,7 +504,7 @@ export default function ProductsLayout({
             {isPending && (
               <div className="absolute inset-0 z-10">
                 {viewMode === "grid" ? (
-                  <div className="grid gap-5 grid-cols-2 md:grid-cols-4">
+                  <div className="grid gap-x-2 gap-y-6 md:gap-x-5 md:gap-y-10">
                     {[...Array(products.length || 36)].map((_, i) => (
                       <div key={i} className="flex flex-col gap-2.5">
                         <div className="aspect-square rounded-xl bg-third/8 animate-pulse" />
@@ -542,7 +542,7 @@ export default function ProductsLayout({
             <div className={`transition-opacity duration-200 ${isPending ? "opacity-25 pointer-events-none" : "opacity-100"}`}>
               {viewMode === "grid" ? (
                 // ── Grid view: 3 kolom ──
-                <div className="grid gap-x-2 gap-y-6 md:gap-5 grid-cols-2 md:grid-cols-4">
+                <div className="grid gap-x-2 gap-y-6 md:gap-x-5 md:gap-y-10 grid-cols-2 md:grid-cols-4">
                   {products.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
