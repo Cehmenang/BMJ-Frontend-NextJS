@@ -211,7 +211,12 @@ export default function ProductsLayout({
             {categories!.map((cat, index) => (
               <button
                 key={index}
-                onClick={() => setActiveCategory(cat.title)}
+                onClick={() => {
+                  const newCat = activeCategory === cat.title ? "" : cat.title;
+                  setActiveCategory(cat.title)
+                  setActiveBrand(newCat || "Semua")
+                  updateURL({kategori: newCat, page: "1"})
+                }}
                 className={`w-full text-left font-poppins text-[12px] px-2 py-1.5 rounded-lg transition-colors ${
                   activeCategory === cat.title
                     ? "text-third font-semibold bg-third/6"
