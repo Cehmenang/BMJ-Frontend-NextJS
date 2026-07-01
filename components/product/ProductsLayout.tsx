@@ -18,9 +18,6 @@ const SORT_OPTIONS = [
   { label: "Nama A–Z", value: "name_asc" },
 ];
 
-const CATEGORIES = ["Semua", "Gitar & Bass", "Drum", "Keyboard", "Studio", "Aksesori"];
-const BRANDS = ["Semua", "Fender", "Gibson", "Yamaha", "Roland", "Pearl", "Kawai", "Taylor"];
-
 type ViewMode = "grid" | "list";
 
 type Props = {
@@ -258,8 +255,8 @@ export default function ProductsLayout({
                   }`}
                 >
                   <Image 
-                    width={200}
-                    height={200}
+                    width={80}
+                    height={80}
                     alt={brand.name}
                     src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${brand.image}`}
                   />
