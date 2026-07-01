@@ -224,7 +224,7 @@ export default function ProductsLayout({
       </div>
 
       {/* Brand */}
-      {(
+      {brands && (
         <div className="border-b border-third/8">
           <button
             onClick={() => setBrandOpen(v => !v)}
