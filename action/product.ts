@@ -36,8 +36,8 @@ export async function getProductByBrand(brandName: string, pagination: number){
 export async function getProductByCategory(kategoriName: string, pagination: number, query: { brand?: string }){
     try{
         const params = new URLSearchParams({ page: pagination.toString() })
-        console.log(params)
-        const response = await fetch(`${process.env.SERVER_API}/api/produk/kategori/${kategoriName}?page=${pagination}&brand=${query.brand}`, {
+        if(query.brand) params.set('brand', query.brand)
+        const response = await fetch(`${process.env.SERVER_API}/api/produk/kategori/${kategoriName}?${params.toString()}}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json', "Accept": "application/json" },
             next: { revalidate: 300 }
