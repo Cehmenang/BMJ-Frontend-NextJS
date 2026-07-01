@@ -34,7 +34,8 @@ type Props = {
   initialStock: boolean;
   hideBrandFilter?: boolean;
   role?: string,
-  kategori?: ICategory[]
+  kategori?: ICategory[],
+  brands?: { name: string, image: string }[]
 };
 
 export default function ProductsLayout({
@@ -49,7 +50,8 @@ export default function ProductsLayout({
   initialStock,
   hideBrandFilter = false,
   role,
-  kategori
+  kategori,
+  brands
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
@@ -233,17 +235,17 @@ export default function ProductsLayout({
           </button>
           <div className={`overflow-hidden transition-all duration-200 ${brandOpen ? "max-h-96 pb-3" : "max-h-0"}`}>
             <div className="space-y-0.5">
-              {BRANDS.map(brand => (
+              {brands!.map((brand, index) => (
                 <button
-                  key={brand}
-                  onClick={() => setActiveBrand(brand)}
+                  key={index}
+                  onClick={() => setActiveBrand(brand.name)}
                   className={`w-full text-left font-poppins text-[12px] px-2 py-1.5 rounded-lg transition-colors ${
-                    activeBrand === brand
+                    activeBrand === brand.name
                       ? "text-third font-semibold bg-third/6"
                       : "text-third/50 hover:text-third hover:bg-third/4"
                   }`}
                 >
-                  {brand}
+                  {brand.name}
                 </button>
               ))}
             </div>
