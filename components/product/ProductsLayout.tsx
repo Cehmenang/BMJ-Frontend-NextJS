@@ -33,7 +33,7 @@ type Props = {
   hideBrandFilter?: boolean;
   role?: string,
   kategori?: ICategory[],
-  brands?: { name: string, image: string }[],
+  brands?: { name: string, image: string, produk_count: string | number }[],
   categories?: { title: string }[]
 };
 
@@ -238,7 +238,7 @@ export default function ProductsLayout({
             Brand
             <ChevronDown className={`w-3.5 h-3.5 flex-shrink-0 transition-transform duration-200 ${brandOpen ? "rotate-180" : ""}`} />
           </button>
-          <div className={`overflow-hidden transition-all duration-200 ${brandOpen ? "max-h-96 pb-3" : "max-h-0"}`}>
+          <div className={`overflow-hidden transition-all duration-200 ${brandOpen ? "pb-3" : "max-h-0"}`}>
             <div className="space-y-0.5">
               {brands!.map((brand, index) => (
                 <button
@@ -248,18 +248,19 @@ export default function ProductsLayout({
                     setActiveBrand(newBrand || "Semua")
                     updateURL({brand: newBrand, page: "1"})
                   }}
-                  className={`w-full text-left font-poppins text-[12px] px-2 py-1.5 rounded-lg transition-colors ${
+                  className={`w-full flex justify-center items-center font-poppins text-[12px] px-2 rounded-lg transition-colors ${
                     activeBrand === brand.name
                       ? "text-third font-semibold bg-third/6"
                       : "text-third/50 hover:text-third hover:bg-third/4"
                   }`}
                 >
                   <Image 
-                    width={80}
-                    height={80}
+                    width={50}
+                    height={50}
                     alt={brand.name}
                     src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${brand.image}`}
                   />
+                  <p className="font-bold w-[30px] h-[30px] leading-[30px] text-[12px] bg-gray-200 rounded-md">({brand.produk_count})</p>
                 </button>
               ))}
             </div>
