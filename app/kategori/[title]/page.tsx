@@ -36,6 +36,7 @@ export default async function CategoryDetail({ params, searchParams }: {
                     initialStock={stock === "1"}
                     hideBrandFilter
                     brands={brands}
+                    categories={categories}
             />}
         </div>
     )

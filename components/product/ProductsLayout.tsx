@@ -35,7 +35,8 @@ type Props = {
   hideBrandFilter?: boolean;
   role?: string,
   kategori?: ICategory[],
-  brands?: { name: string, image: string }[]
+  brands?: { name: string, image: string }[],
+  categories?: { title: string }[]
 };
 
 export default function ProductsLayout({
@@ -51,7 +52,8 @@ export default function ProductsLayout({
   hideBrandFilter = false,
   role,
   kategori,
-  brands
+  brands,
+  categories
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
@@ -196,7 +198,7 @@ export default function ProductsLayout({
       </div>
 
       {/* Category */}
-      <div className="border-b border-third/8">
+      {categories && <div className="border-b border-third/8">
         <button
           onClick={() => setCategoryOpen(v => !v)}
           className="w-full flex items-center justify-between py-3 font-poppins text-[11px] font-semibold tracking-[0.1em] uppercase text-third/55 hover:text-third transition-colors"
@@ -206,22 +208,22 @@ export default function ProductsLayout({
         </button>
         <div className={`overflow-hidden transition-all duration-200 ${categoryOpen ? "max-h-72 pb-3" : "max-h-0"}`}>
           <div className="space-y-0.5">
-            {CATEGORIES.map(cat => (
+            {categories!.map((cat, index) => (
               <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
+                key={index}
+                onClick={() => setActiveCategory(cat.title)}
                 className={`w-full text-left font-poppins text-[12px] px-2 py-1.5 rounded-lg transition-colors ${
-                  activeCategory === cat
+                  activeCategory === cat.title
                     ? "text-third font-semibold bg-third/6"
                     : "text-third/50 hover:text-third hover:bg-third/4"
                 }`}
               >
-                {cat}
+                {cat.title}
               </button>
             ))}
           </div>
         </div>
-      </div>
+      </div>}
 
       {/* Brand */}
       {brands && (
