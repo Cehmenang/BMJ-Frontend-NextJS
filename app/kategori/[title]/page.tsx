@@ -22,6 +22,7 @@ export default async function CategoryDetail({ params, searchParams }: {
     const result = await getProductByCategory(title, pageValue)
     const brandIds = [...new Set(result.data.map((p: IProduct) => p.brandId))] as string[]
     const brands = await getSelectedBrands(brandIds)
+    console.log(brands)
 
     return (
         <div className="main-category">
