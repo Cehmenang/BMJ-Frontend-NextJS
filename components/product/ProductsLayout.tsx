@@ -523,7 +523,7 @@ export default function ProductsLayout({
             <div className={`transition-opacity duration-200 ${isPending ? "opacity-25 pointer-events-none" : "opacity-100"}`}>
               {viewMode === "grid" ? (
                 // ── Grid view: 3 kolom ──
-                <div className="grid gap-x-2 gap-y-8 md:gap-5 grid-cols-2 md:grid-cols-3">
+                <div className="grid gap-x-2 gap-y-8 md:gap-5 grid-cols-2 md:grid-cols-4">
                   {products.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
