@@ -180,7 +180,7 @@ export default function ProductCard({
 
   // ── GRID VIEW (original) ───────────────────────────────────
   return (
-    <Link href={`/produk/${product.url}`} className="flex flex-shrink-0 w-auto md:w-[260px] group flex-col gap-y-4 relative">
+    <Link href={`/produk/${product.url}`} className="flex flex-shrink-0 w-auto md:w-[200px] group flex-col gap-y-4 relative">
       {isNew && (
         <span className="absolute bg-red-600 text-white z-[15] top-[10px] left-[10px] text-[11px] font-bold px-3 py-[2px] rounded-sm">
           Baru

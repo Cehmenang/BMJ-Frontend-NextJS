@@ -474,7 +474,7 @@ export default function ProductsLayout({
         <div className="flex gap-10">
 
           {/* Sidebar desktop */}
-          <div className="hidden md:block w-52 flex-shrink-0">
+          <div className="hidden md:block w-40 flex-shrink-0">
             <FilterSidebar />
           </div>
 
@@ -523,7 +523,7 @@ export default function ProductsLayout({
             <div className={`transition-opacity duration-200 ${isPending ? "opacity-25 pointer-events-none" : "opacity-100"}`}>
               {viewMode === "grid" ? (
                 // ── Grid view: 3 kolom ──
-                <div className="grid gap-x-2 gap-y-8 md:gap-5 grid-cols-2 md:grid-cols-4">
+                <div className="grid gap-x-2 gap-y-10 md:gap-5 grid-cols-2 md:grid-cols-4">
                   {products.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
