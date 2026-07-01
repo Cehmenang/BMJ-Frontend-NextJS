@@ -255,8 +255,8 @@ export default function ProductsLayout({
                   }`}
                 >
                   <Image 
-                    width={50}
-                    height={50}
+                    width={70}
+                    height={70}
                     alt={brand.name}
                     src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${brand.image}`}
                   />
