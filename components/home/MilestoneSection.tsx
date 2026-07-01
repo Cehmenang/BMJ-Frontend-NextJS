@@ -13,7 +13,7 @@ interface Milestone {
 const milestones: Milestone[] = [
   {
     icon: <Package className="w-6 h-6 sm:w-7 sm:h-7" />,
-    value: 8000,
+    value: 10000,
     suffix: "+",
     label: "Produk Tersedia",
   },

@@ -305,7 +305,7 @@ export default function ProductsLayout({
   }
 
   return (
-    <div className="min-h-screen bg-bg-site pt-[60px] md:pt-[66px]">
+    <div className="min-h-screen bg-bg-site pt-[60px] md:pt-[0px]">
 
       {/* Top bar */}
       <div className="sticky top-[60px] md:top-[66px] z-30 bg-bg-site/90 backdrop-blur-md border-b border-third/8">
@@ -485,7 +485,7 @@ export default function ProductsLayout({
             {isPending && (
               <div className="absolute inset-0 z-10">
                 {viewMode === "grid" ? (
-                  <div className="grid gap-5 grid-cols-2 md:grid-cols-3">
+                  <div className="grid gap-5 grid-cols-2 md:grid-cols-4">
                     {[...Array(products.length || 36)].map((_, i) => (
                       <div key={i} className="flex flex-col gap-2.5">
                         <div className="aspect-square rounded-xl bg-third/8 animate-pulse" />
