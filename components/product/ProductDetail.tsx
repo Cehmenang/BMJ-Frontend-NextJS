@@ -173,7 +173,7 @@ export default function ProductDetail({ product }: { product?: any }) {
   const [qty, setQty] = useState(1);
   const [tab, setTab] = useState<Tab>("description");
   const [fsOpen, setFsOpen] = useState(false);
-  const [showingVideo, setShowingVideo] = useState(false);
+  const [showingVideo, setShowingVideo] = useState(true);
   const [videoPlaying, setVideoPlaying] = useState(false);
   const [formattedPrice, setFormattedPrice] = useState("");
   const [waUrl, setWaUrl] = useState<string | null>(null);
