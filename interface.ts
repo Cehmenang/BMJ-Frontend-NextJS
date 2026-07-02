@@ -24,6 +24,9 @@ export interface IProduct {
   kategoriId: string;
   name: string;
   description: string;
+  spesifikasi: string[];
+  fitur: string[];
+  featured: boolean;
   url: string;
   // images sudah dalam bentuk array karena sudah kita transform di Laravel
   images: string[][]; 
