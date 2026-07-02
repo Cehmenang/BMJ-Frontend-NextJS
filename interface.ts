@@ -24,10 +24,10 @@ export interface IProduct {
   kategoriId: string;
   name: string;
   description: string;
-  spesifikasi: string[];
-  fitur: string[];
-  video: string;
-  featured: boolean;
+  spesifikasi: string[] | null;
+  fitur: string[] | null;
+  video: string | null;
+  featured: boolean | null;
   url: string;
   // images sudah dalam bentuk array karena sudah kita transform di Laravel
   images: string[][]; 

@@ -25,6 +25,7 @@ import { getRelated } from "@/action/product";
 import { IProduct } from "@/interface";
 import RelatedProducts from "./RelatedProducts";
 import CekOngkir from "./CekOngkir";
+import YoutubeEmbed from "./YoutubeEmbed";
 
 type Tab = "description" | "features" | "specifications";
 type VariantOption = {
@@ -749,6 +750,7 @@ export default function ProductDetail({ product }: { product?: any }) {
           </div>
 
           <div className="px-4 md:px-0 mt-10">
+            <YoutubeEmbed url="https://youtube.com/shorts/m4_e7uKBQRg?si=2GA2bfGYiGKG5BE-"/>
             <ProductFaq />
             {(related && related.length > 0) && <RelatedProducts related={related}/>}
           </div>
