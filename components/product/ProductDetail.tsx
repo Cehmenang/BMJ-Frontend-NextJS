@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
@@ -25,7 +24,6 @@ import { getRelated } from "@/action/product";
 import { IProduct } from "@/interface";
 import RelatedProducts from "./RelatedProducts";
 import CekOngkir from "./CekOngkir";
-import YoutubeEmbed from "./YoutubeEmbed";
 
 type Tab = "description" | "features" | "specifications";
 type VariantOption = {
@@ -64,6 +62,18 @@ function formatPrice(price: number) {
     currency: "IDR",
     minimumFractionDigits: 0,
   }).format(price);
+}
+
+// ── YouTube helpers ──
+function getYoutubeId(url: string): string | null {
+  const match = url.match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+  );
+  return match ? match[1] : null;
+}
+
+function getYoutubeThumbnail(videoId: string): string {
+  return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 }
 
 // ── Fullscreen Viewer ──
@@ -117,7 +127,6 @@ function FullscreenViewer({
         className="max-w-[88vw] max-h-[65vh] object-contain rounded-lg"
         onClick={(e) => e.stopPropagation()}
       />
-      {/* Thumbnails — scrollable on mobile */}
       <div
         className="flex gap-2.5 overflow-x-auto max-w-[90vw] pb-1"
         onClick={(e) => e.stopPropagation()}
@@ -160,27 +169,20 @@ function FullscreenViewer({
 
 // ── Main Component ──
 export default function ProductDetail({ product }: { product?: any }) {
-  const [activeImg, setActiveImg]       = useState(0);
-  const [qty, setQty]                   = useState(1);
-  const [tab, setTab]                   = useState<Tab>("description");
-  const [fsOpen, setFsOpen]             = useState(false);
-  const [videoOpen, setVideoOpen]       = useState(false);
+  const [activeImg, setActiveImg] = useState(0);
+  const [qty, setQty] = useState(1);
+  const [tab, setTab] = useState<Tab>("description");
+  const [fsOpen, setFsOpen] = useState(false);
+  const [showingVideo, setShowingVideo] = useState(false);
+  const [videoPlaying, setVideoPlaying] = useState(false);
   const [formattedPrice, setFormattedPrice] = useState("");
-  const [waUrl, setWaUrl]               = useState<string | null>(null);
+  const [waUrl, setWaUrl] = useState<string | null>(null);
   const [selectedOptions, setSelectedOptions] = useState<Record<number, VariantOption>>({});
   const [activeImgSrc, setActiveImgSrc] = useState<string | null>(null);
-  const [related, setRelated] = useState<IProduct[] | []>([])
-  const [cekOngkir, setCekOngkir] = useState<boolean>(false)
-  const mainImgRef  = useRef<HTMLImageElement>(null);
-  const imgWrapRef  = useRef<HTMLDivElement>(null);
-
-  // useEffect(()=>{
-  //   (async()=>{
-  //     const response = await fetch('/api/ongkir?location=sawah+besar', { method: 'GET' })
-  //     const data = await response.json()
-  //     console.log(data)
-  //   })()
-  // }, [])
+  const [related, setRelated] = useState<IProduct[] | []>([]);
+  const [cekOngkir, setCekOngkir] = useState<boolean>(false);
+  const mainImgRef = useRef<HTMLImageElement>(null);
+  const imgWrapRef = useRef<HTMLDivElement>(null);
 
   const imageList: string[] =
     typeof product.images === "string"
@@ -190,6 +192,9 @@ export default function ProductDetail({ product }: { product?: any }) {
   const variants: Variant[] = product.variants ?? [];
   const allVariantsSelected =
     variants.length === 0 || variants.every((v) => selectedOptions[v.id]);
+
+  // Contoh URL: "https://youtube.com/shorts/m4_e7uKBQRg?si=2GA2bfGYiGKG5BE-"
+  const videoId = product.video ? getYoutubeId(product.video) : null;
 
   const currentSrc = activeImgSrc
     ? `${process.env.NEXT_PUBLIC_SERVER_API}/storage/${activeImgSrc}`
@@ -208,11 +213,11 @@ export default function ProductDetail({ product }: { product?: any }) {
     setFormattedPrice(formatPrice(activePrice));
   }, [activePrice]);
 
-  useEffect(()=>{
-    if(product){
-      (async()=>setRelated(await getRelated(product.kategoriId, product.url)))()
+  useEffect(() => {
+    if (product) {
+      (async () => setRelated(await getRelated(product.kategoriId, product.url)))();
     }
-  }, [product])
+  }, [product]);
 
   useEffect(() => {
     if (product) {
@@ -241,6 +246,8 @@ export default function ProductDetail({ product }: { product?: any }) {
   const switchImg = (idx: number) => {
     setActiveImg(idx);
     setActiveImgSrc(null);
+    setShowingVideo(false);
+    setVideoPlaying(false);
     popImage(() => {});
   };
 
@@ -249,12 +256,21 @@ export default function ProductDetail({ product }: { product?: any }) {
       if (prev[variantId]?.id === option.id) {
         const next = { ...prev };
         delete next[variantId];
+        setShowingVideo(false);
         popImage(() => setActiveImgSrc(null));
         return next;
       }
+      setShowingVideo(false);
       popImage(() => setActiveImgSrc(option.image || null));
       return { ...prev, [variantId]: option };
     });
+  };
+
+  const openVideo = () => {
+    setShowingVideo(true);
+    setVideoPlaying(false);
+    setActiveImgSrc(null);
+    popImage(() => {});
   };
 
   if (!product) return null;
@@ -268,9 +284,7 @@ export default function ProductDetail({ product }: { product?: any }) {
           onClose={() => setFsOpen(false)}
         />
       )}
-
       <div className="min-h-screen bg-bg-site font-sans">
-
         {/* Breadcrumb */}
         <div className="px-4 md:px-28 lg:px-48 pt-5 md:pt-8 flex items-center gap-1.5 text-[11px] md:text-[13px] text-third/45 overflow-x-auto whitespace-nowrap pb-1" style={{ scrollbarWidth: "none" }}>
           <Link href="/" className="hover:text-third transition-colors flex-shrink-0">Beranda</Link>
@@ -283,34 +297,63 @@ export default function ProductDetail({ product }: { product?: any }) {
         </div>
 
         <div className="px-0 md:px-28 lg:px-48 py-4 md:py-8">
-
           {/* ── Top: Gallery + Info ── */}
           <div className="flex flex-col md:grid md:grid-cols-2 gap-0 md:gap-8 mb-8 md:mb-14">
-
             {/* ── GALLERY ── */}
             <div className="flex flex-col gap-3">
-
-              {/* Main image */}
+              {/* Main image / video */}
               <div
                 className="relative mx-4 md:mx-0 rounded-2xl md:rounded-4xl border border-slate-300 overflow-hidden bg-white cursor-zoom-in"
-                onClick={() => setFsOpen(true)}
+                onClick={() => {
+                  if (showingVideo) {
+                    if (!videoPlaying) setVideoPlaying(true);
+                  } else {
+                    setFsOpen(true);
+                  }
+                }}
               >
                 {/* Discount badge */}
-                {product.offlinePrice && product.pricelist &&
+                {!showingVideo && product.offlinePrice && product.pricelist &&
                   product.pricelist.trim() && product.offlinePrice.trim() &&
                   parseInt(product.pricelist) > parseInt(product.offlinePrice) && (
                   <span className="text-[13px] md:text-[18px] absolute top-3 right-3 z-10 bg-red-600 border border-red-900 text-white px-2 py-[2px] rounded-sm font-black tracking-tight">
                     -{Math.round(((parseInt(product.pricelist) - parseInt(product.offlinePrice)) / parseInt(product.pricelist)) * 100)}%
                   </span>
                 )}
+
                 <div ref={imgWrapRef} className="w-full aspect-square md:aspect-auto md:h-[480px] p-4 md:p-8">
-                  <ZoomImage
-                    src={currentSrc}
-                    width="400"
-                    height="400"
-                    alt={product.name}
-                    productRef={mainImgRef}
-                  />
+                  {showingVideo && videoId ? (
+                    videoPlaying ? (
+                      <iframe
+                        src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+                        className="w-full h-full rounded-lg"
+                        allow="autoplay; encrypted-media; clipboard-write; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    ) : (
+                      <div className="relative w-full h-full rounded-lg overflow-hidden group">
+                        <img
+                          src={getYoutubeThumbnail(videoId)}
+                          alt="Video produk"
+                          className="w-full h-full object-cover opacity-70 group-hover:opacity-90 transition-opacity duration-200"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-third/80 group-hover:bg-third flex items-center justify-center transition-colors duration-200 shadow-xl">
+                            <Play className="w-6 h-6 md:w-7 md:h-7 text-second ml-1" fill="#f9ad52" />
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  ) : (
+                    <ZoomImage
+                      src={currentSrc}
+                      width="400"
+                      height="400"
+                      alt={product.name}
+                      productRef={mainImgRef}
+                    />
+                  )}
                 </div>
               </div>
 
@@ -324,7 +367,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                     key={i}
                     onClick={() => switchImg(i)}
                     className={`flex-shrink-0 w-[68px] h-[68px] md:w-[100px] md:h-[100px] rounded-xl overflow-hidden border-2 bg-white transition-all duration-150 ${
-                      !activeImgSrc && i === activeImg
+                      !showingVideo && !activeImgSrc && i === activeImg
                         ? "border-second"
                         : "border-transparent opacity-50 hover:opacity-80 hover:border-third/15"
                     }`}
@@ -339,8 +382,32 @@ export default function ProductDetail({ product }: { product?: any }) {
                     />
                   </button>
                 ))}
+
+                {/* Video thumbnail */}
+                {videoId && (
+                  <button
+                    onClick={openVideo}
+                    className={`flex-shrink-0 relative w-[68px] h-[68px] md:w-[100px] md:h-[100px] rounded-xl overflow-hidden border-2 bg-white transition-all duration-150 ${
+                      showingVideo
+                        ? "border-second"
+                        : "border-transparent opacity-50 hover:opacity-80 hover:border-third/15"
+                    }`}
+                  >
+                    <img
+                      src={getYoutubeThumbnail(videoId)}
+                      alt="Video produk"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/25">
+                      <div className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-third/85 flex items-center justify-center">
+                        <Play className="w-3 h-3 md:w-3.5 md:h-3.5 text-second ml-0.5" fill="#f9ad52" />
+                      </div>
+                    </div>
+                  </button>
+                )}
+
                 {variants.flatMap((v) => v.options).filter((o) => o.image).map((option) => {
-                  const isActiveVariantImg = activeImgSrc === option.image;
+                  const isActiveVariantImg = !showingVideo && activeImgSrc === option.image;
                   return (
                     <button
                       key={`opt-${option.id}`}
@@ -373,7 +440,6 @@ export default function ProductDetail({ product }: { product?: any }) {
 
             {/* ── INFO ── */}
             <div className="flex flex-col gap-4 md:gap-5 px-4 md:px-0 pt-2 md:pt-6">
-
               {/* Name */}
               <div>
                 <p className="text-[11px] md:text-[13px] text-third/50 tracking-wide uppercase font-medium mb-1">
@@ -389,31 +455,6 @@ export default function ProductDetail({ product }: { product?: any }) {
               {/* Price */}
               <div>
                 <div className="grid grid-cols-2 md:flex gap-2.5 md:gap-5">
-                  {/* {product.onlinePrice && product.onlinePrice.trim() !== "" ? (
-                    <div
-                      suppressHydrationWarning
-                      className="font-display leading-none px-3 py-2.5 md:px-5 md:py-2 border rounded-md border-third flex flex-col gap-y-1"
-                    >
-                      <p className="text-[12px] md:text-[14px] italic opacity-60">Harga Online</p>
-                      <p className="text-[17px] md:text-[20px] font-black text-red-500">
-                        {formattedPrice || `Rp ${product.onlinePrice?.toLocaleString()}`}
-                      </p>
-                    </div>
-                  ) : (
-                    <Link
-                      href={`${product.tautan || "https://www.tokopedia.com/bandarmusikjakarta"}`}
-                      target="_blank"
-                      suppressHydrationWarning
-                      className="font-display leading-none px-3 py-2.5 md:px-5 md:py-2 border rounded-md border-third flex gap-x-2 md:gap-x-3 items-center"
-                    >
-                      <ShoppingBag size={22} className="md:w-7 md:h-7 flex-shrink-0" />
-                      <div className="flex flex-col gap-y-1">
-                        <p className="text-[12px] md:text-[14px] italic opacity-60">Lihat</p>
-                        <p className="text-[17px] md:text-[20px] font-black">Harga Online</p>
-                      </div>
-                    </Link>
-                  )} */}
-
                   {waUrl && (
                     <Link
                       href={waUrl}
@@ -426,7 +467,6 @@ export default function ProductDetail({ product }: { product?: any }) {
                       </p>
                     </Link>
                   )}
-
                   {waUrl && (
                     <Link
                       href={waUrl}
@@ -438,7 +478,6 @@ export default function ProductDetail({ product }: { product?: any }) {
                     </Link>
                   )}
                 </div>
-
                 {product.pricelist && (
                   <div className="font-semibold text-[13px] md:text-[15px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center mt-2">
                     <span
@@ -545,9 +584,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
               {/* Qty + Cart + WA */}
               <div className="flex flex-col gap-3">
-                {/* Row 1: Qty + Cart */}
                 <div className="flex items-center gap-3">
-                  {/* Qty controls */}
                   <div className="flex items-center gap-1.5 border-2 border-third rounded-md overflow-hidden">
                     <button
                       onClick={() => setQty((q) => Math.max(1, q - 1))}
@@ -565,8 +602,6 @@ export default function ProductDetail({ product }: { product?: any }) {
                       <ChevronUp size={18} strokeWidth={3} />
                     </button>
                   </div>
-
-                  {/* Cart button */}
                   <button
                     disabled={!allVariantsSelected}
                     className="flex-1 py-2.5 px-4 bg-second text-third border-2 border-third rounded-md font-bold text-[16px] md:text-[18px] flex items-center justify-center gap-2 transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed drop-shadow-[4px_4px_0px_rgba(62,63,32,1)] md:drop-shadow-[6px_6px_0px_rgba(62,63,32,1)]"
@@ -575,21 +610,14 @@ export default function ProductDetail({ product }: { product?: any }) {
                     <ShoppingCart strokeWidth={3} className="w-5 h-5 md:w-6 md:h-6" />
                     <span>Keranjang</span>
                   </button>
-
-                  <Link href={`${product.tautan || "https://www.tokopedia.com/bandarmusikjakarta"}`} 
+                  <Link href={`${product.tautan || "https://www.tokopedia.com/bandarmusikjakarta"}`}
                     target="_blank"
                     suppressHydrationWarning
                     className="p-1 border-2 border-third rounded-md">
-                      <Image src={'/tokped.webp'} alt="Tokopedia - Bandar Musik Jakarta" width={30}/>
+                    <Image src={'/tokped.webp'} alt="Tokopedia - Bandar Musik Jakarta" width={30}/>
                   </Link>
-
-                  {/* <button onClick={()=>setCekOngkir(cekOngkir ? false : true)}>Cek Ongkir</button> */}
-
                 </div>
 
-                {/* { cekOngkir && <CekOngkir/>} */}
-
-                {/* Row 2: WhatsApp — full width on mobile */}
                 {waUrl && (
                   <Link
                     href={waUrl}
@@ -607,7 +635,6 @@ export default function ProductDetail({ product }: { product?: any }) {
                   </Link>
                 )}
 
-                {/* Notice */}
                 <div className="flex gap-x-2 items-start text-third/50 mt-1">
                   <Megaphone size={16} className="flex-shrink-0 mt-0.5" />
                   <p className="text-[11px] md:text-[12px] font-light italic leading-snug">
@@ -635,9 +662,8 @@ export default function ProductDetail({ product }: { product?: any }) {
             </div>
           </div>
 
-          {/* ── Bottom: Tabs + Meta + Video ── */}
+          {/* ── Bottom: Tabs + Meta ── */}
           <div className="border-t border-third/8 pt-8 md:pt-10 flex flex-col gap-8 md:gap-10 px-4 md:px-0">
-
             {/* Tabs */}
             <div>
               <div className="flex border-b border-third/8 mb-5 md:mb-6 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
@@ -659,7 +685,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                 {tab === "description" && <p>{product.description}</p>}
                 {tab === "features" && (
                   <ul className="flex flex-col gap-2 md:gap-2.5 list-none">
-                    {product.features?.map((f: string, i: number) => (
+                    {product.fitur?.map((f: string, i: number) => (
                       <li key={i} className="flex items-start gap-3">
                         <span className="w-1.5 h-1.5 rounded-full bg-second mt-2 flex-shrink-0" />
                         {f}
@@ -669,14 +695,12 @@ export default function ProductDetail({ product }: { product?: any }) {
                 )}
                 {tab === "specifications" && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-0">
-                    {product.specifications?.map(
-                      (s: { label: string; value: string }, i: number) => (
-                        <div key={i} className="flex justify-between py-2 md:py-2.5 border-b border-third/6">
-                          <span className="text-third/45 text-[12px] md:text-[13px]">{s.label}</span>
-                          <span className="text-third font-medium text-[12px] md:text-[13px]">{s.value}</span>
-                        </div>
-                      )
-                    )}
+                    {product.spesifikasi?.map((s: string, i: number) => (
+                      <div key={i} className="flex items-start gap-2 py-2 md:py-2.5 border-b border-third/6">
+                        <span className="w-1.5 h-1.5 rounded-full bg-second mt-2 flex-shrink-0" />
+                        <span className="text-third text-[12px] md:text-[13px]">{s}</span>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
@@ -703,54 +727,9 @@ export default function ProductDetail({ product }: { product?: any }) {
                 ))}
               </div>
             </div>
-
-            {/* Video */}
-            {product.videoUrl && (
-              <div>
-                <p className="text-[10px] font-semibold tracking-[0.15em] uppercase text-third/40 mb-3 md:mb-4">
-                  Video Produk
-                </p>
-                {!videoOpen ? (
-                  <div
-                    className="relative w-full max-w-2xl aspect-video bg-third/8 rounded-xl md:rounded-2xl overflow-hidden cursor-pointer group"
-                    onClick={() => setVideoOpen(true)}
-                  >
-                    <img
-                      src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${imageList[0]}`}
-                      alt="Video thumbnail"
-                      className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-200"
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-third/80 group-hover:bg-third flex items-center justify-center transition-colors duration-200 shadow-xl">
-                        <Play className="w-5 h-5 md:w-6 md:h-6 text-second ml-1" fill="#f9ad52" />
-                      </div>
-                    </div>
-                    <div className="absolute bottom-3 left-4 text-[11px] text-white/60">
-                      Demo — {product.name}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="relative w-full max-w-2xl aspect-video rounded-xl md:rounded-2xl overflow-hidden bg-black">
-                    <iframe
-                      src={product.videoUrl + "?autoplay=1"}
-                      className="w-full h-full"
-                      allow="autoplay; encrypted-media"
-                      allowFullScreen
-                    />
-                    <button
-                      onClick={() => setVideoOpen(false)}
-                      className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center transition-colors"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
 
           <div className="px-4 md:px-0 mt-10">
-            <YoutubeEmbed url="https://youtube.com/shorts/m4_e7uKBQRg?si=2GA2bfGYiGKG5BE-"/>
             <ProductFaq />
             {(related && related.length > 0) && <RelatedProducts related={related}/>}
           </div>
