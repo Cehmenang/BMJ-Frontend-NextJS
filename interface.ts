@@ -26,6 +26,7 @@ export interface IProduct {
   description: string;
   spesifikasi: string[];
   fitur: string[];
+  video: string;
   featured: boolean;
   url: string;
   // images sudah dalam bentuk array karena sudah kita transform di Laravel
