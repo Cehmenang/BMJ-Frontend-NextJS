@@ -569,14 +569,15 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
                 </Field>
               </div>
 
-              <div className="grid grid-cols-1 gap-4">
-              <Field label="Video" error={errors.name}>
+              <div className="grid grid-cols-1">
+                <h1>VIDEOOO</h1>
+                <Field label="Video" error={errors.name}>
                 <input
                   {...register("video")}
                   placeholder="Link Video"
                   className={inputCls(!!errors.name)}
                 />
-              </Field>
+                </Field>
               </div>
 
             </div>
