@@ -438,23 +438,23 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
     formData.append("video", data.video ? data.video : "")
     formData.append("featured", String(data.featured ? 1 : 0))
 
-    // ─── PROSES SMART SPLIT PER BARIS ENTER ───
     const spesifikasiClean = String(data.spesifikasi || "")
       .split('\n')
-      .map(s => s.trim())
+      .map(s => s.trim().replace(/^-\s*/, "")) // Menghapus tanda "-" di depan jika ada
       .filter(v => v !== "");
 
     const fiturClean = String(data.fitur || "")
       .split('\n')
-      .map(f => f.trim())
+      .map(f => f.trim().replace(/^-\s*/, "")) // Menghapus tanda "-" di depan jika ada
       .filter(v => v !== "");
 
-    // Memasukkan data array string ke dalam FormData secara sekuensial
-    spesifikasiClean.forEach((item, i) => {
-      formData.append(`spesifikasi[${i}]`, item)
+    // Cukup append dengan nama key[] saja, tidak perlu pakai indeks [i]
+    spesifikasiClean.forEach((item) => {
+      formData.append("spesifikasi[]", item)
     })
-    fiturClean.forEach((item, i) => {
-      formData.append(`fitur[${i}]`, item)
+
+    fiturClean.forEach((item) => {
+      formData.append("fitur[]", item)
     })
 
     images.forEach(img=>{
