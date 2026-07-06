@@ -75,7 +75,6 @@ export default function ProductsLayout({
 
   useEffect(() => {
     setLocalProducts(products);
-    console.log('aDMINNN', role)
   }, [products]);
 
   const handleDelete = (url: string) => {

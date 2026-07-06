@@ -1,8 +1,8 @@
 "use server"
 
-import { getBrands } from "@/action/brand";
 import { getProducts, getProductsBySearch } from "@/action/product";
 import ProductsLayout from "@/components/product/ProductsLayout";
+import { cookies } from "next/headers";
 
 export default async function Products({ searchParams }: { 
     searchParams: {
@@ -13,6 +13,8 @@ export default async function Products({ searchParams }: {
         stock?: string
     }
 }){
+    const cookieStore = await cookies()
+    const role = cookieStore.get('role')?.value
     const { page, q, sort, kategori, stock } = await searchParams
     const pageValue = Number(page) || 1
     const result = q && q.trim() !== "" ? await getProductsBySearch(pageValue, q) : await getProducts(pageValue)
