@@ -32,6 +32,7 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
 
   useEffect(() => {
     setMounted(true);
+    console.log(items, 'WISHLIST')
   }, []);
 
   // Lock body scroll
@@ -60,6 +61,7 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
   };
 
   const removeItem = (id: string) => {
+
     setItems((prev) => prev.filter((item) => item.id !== id));
   };
 
