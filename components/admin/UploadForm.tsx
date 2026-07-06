@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useRef, useCallback, ReactNode } from "react";
-import { useForm, Controller, FieldError, useFieldArray } from "react-hook-form";
+import { useForm, Controller, FieldError } from "react-hook-form";
 import { LucideIcon } from "lucide-react";
 import {
   Package, Tag, Ruler, ImagePlus, X, Upload,
   ChevronDown, Percent, Truck, Wrench, Receipt,
   CheckCircle2, AlertCircle, Star, Plus, ListChecks, Sparkles, Toolbox,
 } from "lucide-react";
-import { FormValues, IBrand, ICategory, IOption } from "@/interface";
+import { IBrand, ICategory, IOption } from "@/interface";
 import { uploadProduct } from "@/action/product";
 import { useRouter } from "next/navigation";
 import VariantOptions from "./VariantOption";
@@ -62,7 +62,7 @@ interface FieldProps {
   label: string;
   required?: boolean;
   hint?: string;
-  error?: FieldError;
+  error?: any;
   children: ReactNode;
   className?: string;
 }
@@ -86,7 +86,7 @@ const Field = ({ label, required, hint, error, children, className = "" }: Field
 interface SelectFieldProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   options: string[];
   placeholder: string;
-  error?: FieldError;
+  error?: any;
 }
 const SelectField = ({ options, placeholder, error, ...props }: SelectFieldProps) => (
   <div className="relative">
@@ -111,7 +111,7 @@ interface PriceInputProps {
   value: string;
   onChange: (val: string) => void;
   placeholder?: string;
-  error?: FieldError;
+  error?: any;
 }
 const PriceInput = ({ value, onChange, placeholder, error }: PriceInputProps) => (
   <div className="relative">
@@ -128,25 +128,10 @@ const PriceInput = ({ value, onChange, placeholder, error }: PriceInputProps) =>
   </div>
 );
 
-const DiscInput = ({ value, onChange, placeholder, error }: PriceInputProps) => (
-  <div className="relative">
-    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-[#f9ad52]/70 select-none">
-      Disc
-    </span>
-    <input
-      type="text"
-      value={value}
-      onChange={(e) => onChange(rawNumber(e.target.value))}
-      placeholder={placeholder}
-      className={`${inputCls(!!error)} pl-10`}
-    />
-  </div>
-);
-
 // ─── UNIT INPUT ────────────────────────────────────────────────────────────────
 interface UnitInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   unit: string;
-  error?: FieldError;
+  error?: any;
 }
 const UnitInput = ({ unit, error, ...props }: UnitInputProps) => (
   <div className="relative">
@@ -181,57 +166,6 @@ const Toggle = ({ checked, onChange }: ToggleProps) => (
       }`}
     />
   </button>
-);
-
-// ─── ARRAY FIELD INPUT (Spesifikasi/Fitur) ────────────────────────────────────
-interface ArrayFieldInputProps {
-  label: string;
-  fields: Record<"id", string>[];
-  register: any;
-  name: "spesifikasi" | "fitur";
-  append: (value: { value: string }) => void;
-  remove: (index: number) => void;
-  placeholder?: string;
-}
-const ArrayFieldInput = ({ label, fields, register, name, append, remove, placeholder }: ArrayFieldInputProps) => (
-  <div className="flex flex-col gap-2.5">
-    <div className="flex items-center justify-between">
-      <p className="text-xs font-semibold text-[#eeeeee]/70">{label}</p>
-      <button
-        type="button"
-        onClick={() => append({ value: "" })}
-        className="flex items-center gap-1 text-[11px] font-semibold text-[#f9ad52] hover:text-[#f9ad52]/70 transition-colors"
-      >
-        <Plus size={12} />
-        Tambah
-      </button>
-    </div>
-
-    {fields.length === 0 && (
-      <p className="text-[11px] text-[#eeeeee]/20 italic py-2">
-        Belum ada {label.toLowerCase()}. Klik "Tambah" buat nambahin.
-      </p>
-    )}
-
-    <div className="flex flex-col gap-2">
-      {fields.map((field, index) => (
-        <div key={field.id} className="flex items-center gap-2">
-          <input
-            {...register(`${name}.${index}.value` as const)}
-            placeholder={placeholder}
-            className={inputCls(false)}
-          />
-          <button
-            type="button"
-            onClick={() => remove(index)}
-            className="w-9 h-9 flex-shrink-0 rounded-xl flex items-center justify-center text-[#eeeeee]/20 hover:text-red-400 hover:bg-red-500/10 transition-colors"
-          >
-            <X size={14} />
-          </button>
-        </div>
-      ))}
-    </div>
-  </div>
 );
 
 // ─── IMAGE UPLOADER ────────────────────────────────────────────────────────────
@@ -427,6 +361,7 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
   const [addVariant, setAddVariant] = useState(false)
   const [options, setOptions] = useState<[]|IOption[]>([])
 
+  // Menggunakan tipe any pada useForm untuk fleksibilitas perpindahan format tipe data spesifikasi & fitur
   const {
     register,
     handleSubmit,
@@ -434,8 +369,7 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
     reset,
     formState: { errors, isSubmitting },
     watch,
-    setValue
-  } = useForm<FormValues>({
+  } = useForm<any>({
     defaultValues: {
       name: "",
       description: "",
@@ -461,22 +395,10 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
       tautan: "",
       video: "",
       featured: false,
-      spesifikasi: [],
-      fitur: [],
+      spesifikasi: "", // Diubah jadi String kosong agar bisa membaca input dari Textarea
+      fitur: "",       // Diubah jadi String kosong agar bisa membaca input dari Textarea
     },
   });
-
-  const {
-    fields: spesifikasiFields,
-    append: appendSpesifikasi,
-    remove: removeSpesifikasi,
-  } = useFieldArray({ control, name: "spesifikasi" });
-
-  const {
-    fields: fiturFields,
-    append: appendFitur,
-    remove: removeFitur,
-  } = useFieldArray({ control, name: "fitur" });
 
   const router = useRouter()
 
@@ -484,7 +406,7 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
     return formatRupiah(Math.round(pricelist - (pricelist * disc / 100)).toLocaleString())
   }
 
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit = async (data: any) => {
 
     if (images.length === 0) {
       setImageError("Minimal 1 foto produk wajib diupload");
@@ -516,9 +438,18 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
     formData.append("video", data.video ? data.video : "")
     formData.append("featured", String(data.featured ? 1 : 0))
 
-    const spesifikasiClean = data.spesifikasi.map(s => s.value).filter(v => v.trim() !== "")
-    const fiturClean = data.fitur.map(f => f.value).filter(v => v.trim() !== "")
+    // ─── PROSES SMART SPLIT PER BARIS ENTER ───
+    const spesifikasiClean = String(data.spesifikasi || "")
+      .split('\n')
+      .map(s => s.trim())
+      .filter(v => v !== "");
 
+    const fiturClean = String(data.fitur || "")
+      .split('\n')
+      .map(f => f.trim())
+      .filter(v => v !== "");
+
+    // Memasukkan data array string ke dalam FormData secara sekuensial
     spesifikasiClean.forEach((item, i) => {
       formData.append(`spesifikasi[${i}]`, item)
     })
@@ -542,7 +473,7 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
       });
     }
 
-    const response = await uploadProduct(formData)
+    await uploadProduct(formData)
     setSubmitted(true);
     router.refresh()
   };
@@ -656,27 +587,32 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
             </div>
           </SectionCard>
 
-          {/* ── SPESIFIKASI & FITUR ── */}
-          <SectionCard icon={ListChecks} title="Spesifikasi & Fitur" subtitle="Detail teknis dan keunggulan produk (opsional)">
-            <div className="flex flex-col gap-6 px-5 py-5">
-              <ArrayFieldInput
-                label="Spesifikasi"
-                fields={spesifikasiFields}
-                register={register}
-                name="spesifikasi"
-                append={appendSpesifikasi}
-                remove={removeSpesifikasi}
-                placeholder="Misal: Bahan Maple, Diameter 14 inch"
-              />
-              <ArrayFieldInput
-                label="Fitur"
-                fields={fiturFields}
-                register={register}
-                name="fitur"
-                append={appendFitur}
-                remove={removeFitur}
-                placeholder="Misal: Tahan lama, Suara jernih"
-              />
+          {/* ── SPESIFIKASI & FITUR (MODIFIED: SMART TEXTAREA) ── */}
+          <SectionCard icon={ListChecks} title="Spesifikasi & Fitur" subtitle="Gunakan tombol ENTER untuk memisahkan setiap poin list">
+            <div className="flex flex-col gap-5 px-5 py-5">
+              
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-[#eeeeee]/70">Spesifikasi Produk</label>
+                <textarea
+                  {...register("spesifikasi")}
+                  rows={6}
+                  placeholder="Contoh (Pisahkan dengan Enter):&#10;Bahan body Mahogany&#10;Fretboard Rosewood&#10;24 X-Jumbo frets"
+                  className={`${inputCls(false)} resize-y leading-relaxed font-mono text-xs`}
+                />
+                <span className="text-[10px] text-[#eeeeee]/30">Tiap baris teks otomatis dihitung sebagai 1 poin spesifikasi di sistem.</span>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-[#eeeeee]/70">Fitur Utama</label>
+                <textarea
+                  {...register("fitur")}
+                  rows={6}
+                  placeholder="Contoh (Pisahkan dengan Enter):&#10;Suara jernih dan artikulasi tajam&#10;Konstruksi Neck-through kokoh&#10;Include Hardcase Premium"
+                  className={`${inputCls(false)} resize-y leading-relaxed font-mono text-xs`}
+                />
+                <span className="text-[10px] text-[#eeeeee]/30">Tiap baris teks otomatis dihitung sebagai 1 poin fitur utama di sistem.</span>
+              </div>
+
             </div>
           </SectionCard>
 
@@ -731,7 +667,6 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
                   </Field>
               }
               </div>
-
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Field label="Harga Offline">
