@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useRef, useCallback, ReactNode } from "react";
-import { useForm, Controller, FieldError } from "react-hook-form";
-import { LucideIcon, Toolbox } from "lucide-react";
+import { useForm, Controller, FieldError, useFieldArray } from "react-hook-form";
+import { LucideIcon } from "lucide-react";
 import {
   Package, Tag, Ruler, ImagePlus, X, Upload,
   ChevronDown, Percent, Truck, Wrench, Receipt,
-  CheckCircle2, AlertCircle, Star,
+  CheckCircle2, AlertCircle, Star, Plus, ListChecks, Sparkles, Toolbox,
 } from "lucide-react";
 import { FormValues, IBrand, ICategory, IOption } from "@/interface";
 import { uploadProduct } from "@/action/product";
@@ -183,6 +183,57 @@ const Toggle = ({ checked, onChange }: ToggleProps) => (
   </button>
 );
 
+// ─── ARRAY FIELD INPUT (Spesifikasi/Fitur) ────────────────────────────────────
+interface ArrayFieldInputProps {
+  label: string;
+  fields: Record<"id", string>[];
+  register: any;
+  name: "spesifikasi" | "fitur";
+  append: (value: { value: string }) => void;
+  remove: (index: number) => void;
+  placeholder?: string;
+}
+const ArrayFieldInput = ({ label, fields, register, name, append, remove, placeholder }: ArrayFieldInputProps) => (
+  <div className="flex flex-col gap-2.5">
+    <div className="flex items-center justify-between">
+      <p className="text-xs font-semibold text-[#eeeeee]/70">{label}</p>
+      <button
+        type="button"
+        onClick={() => append({ value: "" })}
+        className="flex items-center gap-1 text-[11px] font-semibold text-[#f9ad52] hover:text-[#f9ad52]/70 transition-colors"
+      >
+        <Plus size={12} />
+        Tambah
+      </button>
+    </div>
+
+    {fields.length === 0 && (
+      <p className="text-[11px] text-[#eeeeee]/20 italic py-2">
+        Belum ada {label.toLowerCase()}. Klik "Tambah" buat nambahin.
+      </p>
+    )}
+
+    <div className="flex flex-col gap-2">
+      {fields.map((field, index) => (
+        <div key={field.id} className="flex items-center gap-2">
+          <input
+            {...register(`${name}.${index}.value` as const)}
+            placeholder={placeholder}
+            className={inputCls(false)}
+          />
+          <button
+            type="button"
+            onClick={() => remove(index)}
+            className="w-9 h-9 flex-shrink-0 rounded-xl flex items-center justify-center text-[#eeeeee]/20 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+          >
+            <X size={14} />
+          </button>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
 // ─── IMAGE UPLOADER ────────────────────────────────────────────────────────────
 interface ImageUploaderProps {
   images: ImageItem[];
@@ -224,7 +275,6 @@ const ImageUploader = ({ images, setImages, error }: ImageUploaderProps) => {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Drop Zone */}
       <div
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
@@ -269,7 +319,6 @@ const ImageUploader = ({ images, setImages, error }: ImageUploaderProps) => {
         </span>
       )}
 
-      {/* Preview Grid */}
       {images.length > 0 && (
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-2.5">
           {images.map((img, idx) => (
@@ -409,9 +458,25 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
       variant: "",
       options: [],
       discount: "",
-      tautan: ""
+      tautan: "",
+      video: "",
+      featured: false,
+      spesifikasi: [],
+      fitur: [],
     },
   });
+
+  const {
+    fields: spesifikasiFields,
+    append: appendSpesifikasi,
+    remove: removeSpesifikasi,
+  } = useFieldArray({ control, name: "spesifikasi" });
+
+  const {
+    fields: fiturFields,
+    append: appendFitur,
+    remove: removeFitur,
+  } = useFieldArray({ control, name: "fitur" });
 
   const router = useRouter()
 
@@ -420,16 +485,15 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
   }
 
   const onSubmit = async (data: FormValues) => {
-   
+
     if (images.length === 0) {
       setImageError("Minimal 1 foto produk wajib diupload");
       return;
     }
     setImageError("");
     const url = watch("name").toLocaleLowerCase().split(' ').join('-').trim().replace(/[^a-zA-Z0-9-]/g, "")
-    // Simulate API call — replace with your actual fetch/axios here
     const formData = new FormData()
-    
+
     formData.append("name", data.name)
     formData.append("url", url)
     formData.append("brand", data.brandId)
@@ -450,7 +514,18 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
     formData.append("tinggi", data.tinggi)
     formData.append("tautan", data.tautan ? data.tautan : "")
     formData.append("video", data.video ? data.video : "")
-    
+    formData.append("featured", String(data.featured ? 1 : 0))
+
+    const spesifikasiClean = data.spesifikasi.map(s => s.value).filter(v => v.trim() !== "")
+    const fiturClean = data.fitur.map(f => f.value).filter(v => v.trim() !== "")
+
+    spesifikasiClean.forEach((item, i) => {
+      formData.append(`spesifikasi[${i}]`, item)
+    })
+    fiturClean.forEach((item, i) => {
+      formData.append(`fitur[${i}]`, item)
+    })
+
     images.forEach(img=>{
       formData.append("images[]", img.file)
     })
@@ -460,13 +535,13 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
       options.forEach((option, index) => {
         formData.append(`options[${index}][name]`, option.name);
         formData.append(`options[${index}][harga]`, option.harga);
-    
+
         if (option.image) {
           formData.append(`options[${index}][image]`, option.image);
         }
       });
     }
-    
+
     const response = await uploadProduct(formData)
     setSubmitted(true);
     router.refresh()
@@ -484,7 +559,6 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
   return (
     <div className="min-h-screen bg-primary">
 
-      {/* ── BODY ── */}
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-5 pt-24">
 
@@ -582,6 +656,30 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
             </div>
           </SectionCard>
 
+          {/* ── SPESIFIKASI & FITUR ── */}
+          <SectionCard icon={ListChecks} title="Spesifikasi & Fitur" subtitle="Detail teknis dan keunggulan produk (opsional)">
+            <div className="flex flex-col gap-6 px-5 py-5">
+              <ArrayFieldInput
+                label="Spesifikasi"
+                fields={spesifikasiFields}
+                register={register}
+                name="spesifikasi"
+                append={appendSpesifikasi}
+                remove={removeSpesifikasi}
+                placeholder="Misal: Bahan Maple, Diameter 14 inch"
+              />
+              <ArrayFieldInput
+                label="Fitur"
+                fields={fiturFields}
+                register={register}
+                name="fitur"
+                append={appendFitur}
+                remove={removeFitur}
+                placeholder="Misal: Tahan lama, Suara jernih"
+              />
+            </div>
+          </SectionCard>
+
           {/* ── HARGA ── */}
           <SectionCard icon={Tag} title="Harga" subtitle="Atur harga pricelist, offline, dan online">
             <div className="flex flex-col gap-4">
@@ -625,15 +723,15 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
                 />
               </Field>
 
-              {watch('discount') && watch('discount').trim() !== "" && 
-                  <Field 
+              {watch('discount') && watch('discount').trim() !== "" &&
+                  <Field
                     label="Harga Diskon"
                     hint="Harga diskon pricelist">
                     <p className="px-2 py-1 rounded-md border border-third">{countDiscount(parseInt(watch('pricelist')), parseInt(watch('discount')))}</p>
                   </Field>
               }
               </div>
-              
+
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Field label="Harga Offline">
@@ -645,7 +743,7 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
                     )}
                   />
                 </Field>
-                
+
                 <Field label="Harga Online" error={errors.onlinePrice}>
                   <Controller
                     name="onlinePrice"
@@ -691,24 +789,24 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
             </div>
           </SectionCard>
 
-                    <Controller
-                name="variant"
-                control={control}
-                render={({ field }) => (
-                  <ServiceRow
-                    icon={Toolbox}
-                    label="Gunakan Varian"
-                    desc="Produk bisa dikirim ke lokasi pembeli"
-                    checked={addVariant}
-                    onChange={()=>{
-                      addVariant ? setAddVariant(false) : setAddVariant(true)
-                    }}
-                  />
-                )}
+          <Controller
+            name="variant"
+            control={control}
+            render={({ field }) => (
+              <ServiceRow
+                icon={Toolbox}
+                label="Gunakan Varian"
+                desc="Produk bisa dikirim ke lokasi pembeli"
+                checked={addVariant}
+                onChange={()=>{
+                  addVariant ? setAddVariant(false) : setAddVariant(true)
+                }}
               />
-          
+            )}
+          />
+
           {/* VARIANT SECTION */}
-          {addVariant && 
+          {addVariant &&
           <div>
           <SectionCard  icon={Toolbox} title="Varian" subtitle="Variasi berupa warna, ukuran, dsb">
               <Field label="Nama Produk" required error={errors.name}>
@@ -719,7 +817,7 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
                 />
               </Field>
           </SectionCard>
-          {watch("variant") !== "" && 
+          {watch("variant") !== "" &&
              <VariantOptions options={options} setOptions={setOptions}/>
           }
           </div>}
@@ -788,6 +886,19 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
                     icon={Wrench}
                     label="Layanan pemasangan tersedia"
                     desc="Tersedia teknisi untuk instalasi produk"
+                    checked={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
+              <Controller
+                name="featured"
+                control={control}
+                render={({ field }) => (
+                  <ServiceRow
+                    icon={Sparkles}
+                    label="Tandai sebagai Produk Unggulan"
+                    desc="Produk akan ditampilkan di section featured/unggulan"
                     checked={field.value}
                     onChange={field.onChange}
                   />

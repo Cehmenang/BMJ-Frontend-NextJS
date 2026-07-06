@@ -92,6 +92,9 @@ export interface FormValues {
   discount: string,
   tautan: string;
   video: string;
+  featured: boolean;
+  spesifikasi: { value: string }[];
+  fitur: { value: string }[];
 }
 
 export interface IOption {
