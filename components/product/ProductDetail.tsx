@@ -193,8 +193,7 @@ export default function ProductDetail({ product }: { product?: any }) {
   const allVariantsSelected =
     variants.length === 0 || variants.every((v) => selectedOptions[v.id]);
 
-  // Contoh URL: "https://youtube.com/shorts/m4_e7uKBQRg?si=2GA2bfGYiGKG5BE-"
-  const videoId = getYoutubeId("https://youtube.com/shorts/m4_e7uKBQRg?si=KQBIk5All2TazR8J")
+  const videoId = product.video ? getYoutubeId(product.video) : null;
 
   const currentSrc = activeImgSrc
     ? `${process.env.NEXT_PUBLIC_SERVER_API}/storage/${activeImgSrc}`
