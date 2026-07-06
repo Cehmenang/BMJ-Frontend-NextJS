@@ -551,7 +551,7 @@ export default function ProductsLayout({
                 // ── List view: 1 produk per baris, horizontal layout ──
                 <div className="flex flex-col gap-3">
                   {products.map((product) => (
-                    <ProductCard key={product.id} product={product} listView isAdmin={role == "admin" && true}/>
+                    <ProductCard key={product.id} product={product} listView isAdmin={role?.toLocaleLowerCase() == "admin" && true}/>
                   ))}
                 </div>
               )}

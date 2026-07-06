@@ -34,6 +34,9 @@ export default function ProductCard({
     setTimeout(() => setToast({ msg: "", show: false }), 2500);
   };
 
+  console.log(isAdmin)
+  console.log(product.created_at, 'KREATED ET')
+
   const createDate = new Date(product.created_at);
   const nowadays = new Date();
   const weekDays = 7 * 24 * 60 * 60 * 1000;
