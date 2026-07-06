@@ -23,12 +23,12 @@ const STATIC_TABS = [
     key: "kategori",
     label: "Kategori",
     items: [
-      { label: "Gitar & Bass", href: "/kategori/gitar-bass" },
-      { label: "Drum & Perkusi", href: "/kategori/drum" },
-      { label: "Keyboard & Piano", href: "/kategori/keyboard" },
-      { label: "Brass & Woodwind", href: "/kategori/brass" },
-      { label: "Studio & Recording", href: "/kategori/studio" },
-      { label: "Aksesori", href: "/kategori/aksesori" },
+      { label: "Gitar Elektrik", href: "/kategori/Gitar Elektrik" },
+      { label: "Drum Elektrik", href: "/kategori/Drum Elektrik" },
+      { label: "Keyboard", href: "/kategori/Keyboard" },
+      { label: "Case and Bag", href: "/kategori/Case and Bag" },
+      { label: "Sound System", href: "/kategori/Active Speaker" },
+      { label: "Recording", href: "/kategori/Audio Interface" },
     ],
   },
   {
@@ -40,7 +40,7 @@ const STATIC_TABS = [
       { label: "Yamaha", href: "/brand/yamaha" },
       { label: "Roland", href: "/brand/roland" },
       { label: "Pearl", href: "/brand/pearl" },
-      { label: "Kawai", href: "/brand/kawai" },
+      { label: "Akai", href: "/brand/akai" },
       { label: "Taylor", href: "/brand/taylor" },
       { label: "Zildjian", href: "/brand/zildjian" },
       { label: "Tama", href: "/brand/tama" },
@@ -520,7 +520,7 @@ export default function MainNav({ token, username, wishlist }: { token: string |
                 </div>
                 <div className="w-px bg-gray-100 flex-shrink-0" />
                 <div className="flex-1 overflow-y-auto">
-                  <h1>{activeTab == "kategori" ? "Kategori Teratas" : "Paling dicari"}</h1>
+                  <h1 className="font-bold italic">{activeTab == "kategori" ? "Kategori Teratas" : "Paling dicari"}</h1>
                   <div className="grid grid-cols-3 gap-1">
                     {activeTabData.items.map((item) => (
                       <Link
