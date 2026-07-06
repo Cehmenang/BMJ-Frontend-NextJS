@@ -637,7 +637,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                 <div className="flex gap-x-2 items-start text-third/50 mt-1">
                   <Megaphone size={16} className="flex-shrink-0 mt-0.5" />
                   <p className="text-[11px] md:text-[12px] font-light italic leading-snug">
-                    Harap Tanya Ketersediaan Barang melalui Whatsapp Sebelum Melakukan Pemesanan.
+                    Harap Tanya Ketersediaan Barang melalui Whatsapp Before Melakukan Pemesanan.
                   </p>
                 </div>
               </div>
@@ -646,7 +646,7 @@ export default function ProductDetail({ product }: { product?: any }) {
               <div className="grid grid-cols-3 gap-2 md:flex md:gap-4 mt-2 md:mt-4 border-t border-third/8 pt-4">
                 {[
                   { Icon: Truck, title: "Pengiriman Cepat", sub: "Pengiriman barang cepat dan aman" },
-                  { Icon: ShieldCheck, title: "Garansi 1 Tahun", sub: "Perlindungan sejak tanggal pembelian" },
+                  { Icon: ShieldCheck, title: "Garansi 1 Year", sub: "Perlindungan sejak tanggal pembelian" },
                   { Icon: PiggyBank, title: "Best Price", sub: "Kualitas dengan harga terbaik" },
                 ].map(({ Icon, title, sub }) => (
                   <div key={title} className="flex flex-col md:flex-row items-center md:items-start gap-1 md:gap-2 text-center md:text-left md:border-r last:border-r-0 border-third/50 md:pr-4 last:pr-0">
@@ -682,24 +682,36 @@ export default function ProductDetail({ product }: { product?: any }) {
               </div>
               <div className="text-[13px] md:text-[14px] leading-relaxed text-third/70 text-justify">
                 {tab === "description" && <p>{product.description}</p>}
+                
+                {/* ── PERUBAHAN DI SINI: MAPPING FITUR (ARRAY OF STRING) ── */}
                 {tab === "features" && (
                   <ul className="flex flex-col gap-2 md:gap-2.5 list-none">
-                    {product.fitur?.map((f: string, i: number) => (
-                      <li key={i} className="flex items-start gap-3">
-                        <span className="w-1.5 h-1.5 rounded-full bg-second mt-2 flex-shrink-0" />
-                        {f}
-                      </li>
-                    ))}
+                    {product.fitur && product.fitur.length > 0 ? (
+                      product.fitur.map((f: string, i: number) => (
+                        <li key={i} className="flex items-start gap-3">
+                          <span className="w-1.5 h-1.5 rounded-full bg-second mt-2 flex-shrink-0" />
+                          {f}
+                        </li>
+                      ))
+                    ) : (
+                      <p className="text-third/40 italic text-sm">Tidak ada informasi fitur.</p>
+                    )}
                   </ul>
                 )}
+                
+                {/* ── PERUBAHAN DI SINI: MAPPING SPESIFIKASI (ARRAY OF STRING) ── */}
                 {tab === "specifications" && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-0">
-                    {product.spesifikasi?.map((s: string, i: number) => (
-                      <div key={i} className="flex items-start gap-2 py-2 md:py-2.5 border-b border-third/6">
-                        <span className="w-1.5 h-1.5 rounded-full bg-second mt-2 flex-shrink-0" />
-                        <span className="text-third text-[12px] md:text-[13px]">{s}</span>
-                      </div>
-                    ))}
+                    {product.spesifikasi && product.spesifikasi.length > 0 ? (
+                      product.spesifikasi.map((s: string, i: number) => (
+                        <div key={i} className="flex items-start gap-2 py-2 md:py-2.5 border-b border-third/6">
+                          <span className="w-1.5 h-1.5 rounded-full bg-second mt-2 flex-shrink-0" />
+                          <span className="text-third text-[12px] md:text-[13px]">{s}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-third/40 italic text-sm col-span-2">Tidak ada informasi spesifikasi.</p>
+                    )}
                   </div>
                 )}
               </div>
