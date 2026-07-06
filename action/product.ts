@@ -68,7 +68,6 @@ export async function getProductByCategory(kategoriName: string, pagination: num
 export async function uploadProduct(formData: FormData){
     try{
         const response = await fetch(`${process.env.SERVER_API}/api/tambah/produk`, { method: 'POST', body: formData, headers: { 'Accept': 'application/json' } })
-        console.log(response, 'RESPONSENYAAA')
         return await response.json()
     }catch(err){ console.log(err) }
 }

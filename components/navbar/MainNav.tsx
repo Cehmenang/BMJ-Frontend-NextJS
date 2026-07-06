@@ -365,7 +365,7 @@ export default function MainNav({ token, username, wishlist }: { token: string |
                       onClick={() => setActiveTab(tab.key)}
                       className={`flex-1 py-2 rounded-lg text-[13px] font-poppins font-medium transition-colors duration-150 border ${activeTab === tab.key ? "bg-second text-third border-second" : "text-gray-500 border-gray-200 hover:border-gray-300 hover:text-gray-700"}`}
                     >
-                      {tab.label}
+                      {tab.label}apadah
                     </button>
                   ))}
                 </div>
@@ -378,7 +378,7 @@ export default function MainNav({ token, username, wishlist }: { token: string |
                       className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-[13px] font-poppins text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-150 group"
                     >
                       <span className="w-1.5 h-1.5 rounded-full bg-second/60 group-hover:bg-second flex-shrink-0 transition-colors" />
-                      {item.label}
+                      {item.label}INI JUGA COBA
                     </Link>
                   ))}
                 </div>
