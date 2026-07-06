@@ -31,6 +31,7 @@ export default async function Products({ searchParams }: {
                     initialBrand="Semua"
                     initialQuery={q!}
                     initialStock={stock === "1"}
+                    role={role}
             />}
         </div>
     )
