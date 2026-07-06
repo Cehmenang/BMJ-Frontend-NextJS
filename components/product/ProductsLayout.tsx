@@ -544,7 +544,7 @@ export default function ProductsLayout({
                 // ── Grid view: 3 kolom ──
                 <div className="grid gap-x-2 gap-y-6 md:gap-x-5 md:gap-y-10 grid-cols-2 md:grid-cols-4">
                   {products.map((product) => (
-                    <ProductCard key={product.id} product={product} isAdmin={role == "admin" && true}/>
+                    <ProductCard key={product.id} product={product} isAdmin={role?.toLocaleLowerCase() == "admin" && true}/>
                   ))}
                 </div>
               ) : (
