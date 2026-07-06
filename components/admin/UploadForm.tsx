@@ -570,7 +570,6 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
               </div>
 
               <div className="grid grid-cols-1">
-                <h1>VIDEOOO</h1>
                 <Field label="Video" error={errors.name}>
                 <input
                   {...register("video")}
