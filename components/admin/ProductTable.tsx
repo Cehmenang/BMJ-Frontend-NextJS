@@ -7,7 +7,7 @@ export default function ProductTable({
 }: { 
   products: IProduct[], 
   onSave: (product: IProduct) => void, 
-  onDelete: (url: string) => void,  // ← tambah
+  onDelete: (url: string) => void,
   kategori: ICategory[] 
 }) {
   return (
@@ -23,6 +23,7 @@ export default function ProductTable({
             <th className="px-3 py-3 w-[130px] bg-amber-50">Promo</th>
             <th className="px-3 py-3 w-[180px]">Set promo</th>
             <th className="px-3 py-3 w-[160px] bg-green-50">Kategori</th>
+            <th className="px-3 py-3 w-[180px] bg-red-50">Video</th>
             <th className="px-3 py-3 w-[100px]"></th>
           </tr>
         </thead>
@@ -32,7 +33,7 @@ export default function ProductTable({
               key={p.id} 
               product={p} 
               onSave={onSave} 
-              onDelete={onDelete}  // ← tambah
+              onDelete={onDelete}
               kategori={kategori} 
             />
           ))}

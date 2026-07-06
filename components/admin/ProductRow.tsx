@@ -5,17 +5,14 @@ import { useEffect, useState } from "react"
 
 function PriceInput({ value, onChange }: { value: any, onChange: (raw: string) => void }) {
   const [display, setDisplay] = useState("")
-
   useEffect(() => {
     setDisplay(value ? Number(value).toLocaleString("id-ID") : "")
   }, [value])
-
   const handleChange = (e: any) => {
     const raw = e.target.value.replace(/\D/g, "")
     setDisplay(raw ? Number(raw).toLocaleString("id-ID") : "")
     onChange(raw)
   }
-
   return (
     <div className="flex items-center gap-1">
       <span className="font-poppins text-[10px] text-third/35 flex-shrink-0">Rp</span>
@@ -52,7 +49,6 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
   }
 
   const selectedKat = kategori.find(k => k.title === row.kategoriId)
-
   const filteredKat = katSearch
     ? kategori.filter(k => k.title.toLowerCase().includes(katSearch.toLowerCase()))
     : kategori
@@ -70,6 +66,7 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
           stock:        String(row.stock ?? ""),
           namaPromo:    String(row.namaPromo ?? ""),
           kategoriId:   row.kategoriId ?? "",
+          video:        row.video ?? "",
         }),
         headers: { "Accept": "application/json", "Content-Type": "application/json" }
       })
@@ -130,7 +127,6 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
 
   return (
     <tr className={`border-b border-third/8 align-top transition-colors ${isDirty ? "bg-second/5" : "hover:bg-third/[0.02]"}`}>
-
       {/* Produk */}
       <td className="px-4 py-3">
         <div className="flex items-center gap-2.5">
@@ -216,7 +212,6 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
               {promoOn ? "Aktif" : "Nonaktif"}
             </span>
           </label>
-
           {promoOn && (
             <select
               value={row.namaPromo ?? ""}
@@ -249,7 +244,6 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
               <path d="M6 9l6 6 6-6" />
             </svg>
           </button>
-
           {katOpen && (
             <div className="absolute top-[calc(100%+4px)] left-0 z-50 w-48 bg-white border border-third/10 rounded-xl shadow-lg overflow-hidden">
               <div className="p-2 border-b border-third/8">
@@ -262,7 +256,6 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
                   className="w-full font-poppins text-[11px] px-2 py-1.5 rounded-lg border border-third/10 bg-third/4 text-third outline-none focus:border-second transition-colors placeholder:text-third/30"
                 />
               </div>
-
               <div className="max-h-48 overflow-y-auto">
                 <button
                   onClick={() => { update("kategoriId", ""); setKatOpen(false); setKatSearch("") }}
@@ -270,7 +263,6 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
                 >
                   Tanpa kategori
                 </button>
-
                 {filteredKat.length > 0 ? filteredKat.map(k => (
                   <button
                     key={k.id}
@@ -301,11 +293,31 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
             </div>
           )}
         </div>
-
         {selectedKat && (
           <span className="mt-1.5 block font-poppins text-[10px] px-2 py-0.5 rounded-full bg-green-50 text-green-700 text-center truncate">
             {selectedKat.title}
           </span>
+        )}
+      </td>
+
+      {/* Video */}
+      <td className="px-3 py-3 bg-red-50/30">
+        <input
+          type="text"
+          value={row.video ?? ""}
+          onChange={(e) => update("video", e.target.value)}
+          placeholder="Link YouTube..."
+          className="font-poppins text-[11px] w-full border border-third/10 rounded-lg px-2 py-1.5 bg-third/4 text-third outline-none focus:border-second focus:bg-white transition-colors"
+        />
+        {row.video && (
+          <a
+            href={row.video}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-1.5 block font-poppins text-[10px] text-red-500 hover:text-red-600 truncate"
+          >
+            ▶ Lihat video
+          </a>
         )}
       </td>
 
@@ -325,7 +337,6 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
           >
             {loading ? "Menyimpan..." : saved ? "✓ Tersimpan" : "Simpan"}
           </button>
-
           {isDirty && (
             <button
               onClick={handleReset}
@@ -334,8 +345,6 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
               Reset
             </button>
           )}
-
-          {/* Delete */}
           {!confirmDelete ? (
             <button
               onClick={() => setConfirmDelete(true)}
@@ -368,7 +377,6 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
           )}
         </div>
       </td>
-
     </tr>
   )
 }
