@@ -184,8 +184,6 @@ export default function ProductDetail({ product }: { product?: any }) {
   const mainImgRef = useRef<HTMLImageElement>(null);
   const imgWrapRef = useRef<HTMLDivElement>(null);
 
-  console.log(product.spesifikasi, product.fitur, 'COBAINN')
-
   const imageList: string[] =
     typeof product.images === "string"
       ? JSON.parse(product.images)

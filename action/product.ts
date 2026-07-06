@@ -5,6 +5,7 @@ import axios from "axios"
 export async function getProductByUrl(url: string){
     try{
         const response = await axios.get(`${process.env.SERVER_API}/api/produk/url/${url}`)
+        console.log(response.data, 'PRODUKKK COBA')
         if(response.data) return response.data
     }catch(err){ console.log(err) }
 }
