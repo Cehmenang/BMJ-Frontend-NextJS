@@ -90,7 +90,8 @@ export interface FormValues {
   variant: string;
   options: [] | {id: number, name: string, image: string, harga: string}[],
   discount: string,
-  tautan: string
+  tautan: string;
+  video: string;
 }
 
 export interface IOption {

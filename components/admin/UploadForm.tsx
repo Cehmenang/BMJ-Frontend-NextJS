@@ -449,6 +449,7 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
     formData.append("lebar", data.lebar)
     formData.append("tinggi", data.tinggi)
     formData.append("tautan", data.tautan ? data.tautan : "")
+    formData.append("video", data.video ? data.video : "")
     
     images.forEach(img=>{
       formData.append("images[]", img.file)
@@ -556,6 +557,7 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
                     })}
                   />
                 </Field>
+
                 <Field label="URL / SKU">
                   <input
                     {...register("url")}
@@ -566,6 +568,17 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
                   />
                 </Field>
               </div>
+
+              <div className="grid grid-cols-1 gap-4">
+              <Field label="Video" error={errors.name}>
+                <input
+                  {...register("video")}
+                  placeholder="Link Video"
+                  className={inputCls(!!errors.name)}
+                />
+              </Field>
+              </div>
+
             </div>
           </SectionCard>
 
@@ -632,6 +645,7 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
                     )}
                   />
                 </Field>
+                
                 <Field label="Harga Online" error={errors.onlinePrice}>
                   <Controller
                     name="onlinePrice"
