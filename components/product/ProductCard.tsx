@@ -294,8 +294,8 @@ export default function ProductCard({
             {isAdmin && 
               <p className="text-gray-400 text-[12px]">
                 {new Date(product.created_at).toLocaleString("id-ID", {
-                  dateStyle: "medium", // Hasil: 6 Jul 2026
-                  timeStyle: "short",  // Hasil: 18.30
+                  dateStyle: "medium", 
+                  timeStyle: "short", 
                 })}
               </p>
             }
