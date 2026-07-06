@@ -272,7 +272,7 @@ export default function ProductsLayout({
     </div>
   );
 
-  if (role && role?.toLowerCase() == "admin") {
+  if ((role && role?.toLowerCase() == "admin") && pathname.includes("/dashboard")) {
     return (
       <div>
         <div className="top-filter-admin pt-8 py-3">
@@ -544,14 +544,14 @@ export default function ProductsLayout({
                 // ── Grid view: 3 kolom ──
                 <div className="grid gap-x-2 gap-y-6 md:gap-x-5 md:gap-y-10 grid-cols-2 md:grid-cols-4">
                   {products.map((product) => (
-                    <ProductCard key={product.id} product={product} />
+                    <ProductCard key={product.id} product={product} isAdmin={role == "admin" && true}/>
                   ))}
                 </div>
               ) : (
                 // ── List view: 1 produk per baris, horizontal layout ──
                 <div className="flex flex-col gap-3">
                   {products.map((product) => (
-                    <ProductCard key={product.id} product={product} listView />
+                    <ProductCard key={product.id} product={product} listView isAdmin={role == "admin" && true}/>
                   ))}
                 </div>
               )}

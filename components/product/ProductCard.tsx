@@ -18,9 +18,11 @@ function formatPrice(price: number) {
 export default function ProductCard({
   product,
   listView = false,
+  isAdmin
 }: {
   product: IProduct;
   listView?: boolean;
+  isAdmin?: boolean;
 }) {
   const [toast, setToast] = useState<{ msg: string; show: boolean }>({
     msg: "",
@@ -289,6 +291,14 @@ export default function ProductCard({
                 <span>Pricelist: {formatPrice(pricelist)}</span>
               </div>
             )}
+            {isAdmin && 
+              <p className="text-gray-400 text-[12px]">
+                {new Date(product.created_at).toLocaleString("id-ID", {
+                  dateStyle: "medium", // Hasil: 6 Jul 2026
+                  timeStyle: "short",  // Hasil: 18.30
+                })}
+              </p>
+            }
           </div>
         </div>
       </div>
