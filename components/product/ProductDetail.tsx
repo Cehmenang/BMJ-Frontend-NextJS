@@ -24,6 +24,7 @@ import { getRelated } from "@/action/product";
 import { IProduct } from "@/interface";
 import RelatedProducts from "./RelatedProducts";
 import CekOngkir from "./CekOngkir";
+import { useRouter } from "next/navigation";
 
 type Tab = "description" | "features" | "specifications";
 type VariantOption = {
@@ -183,6 +184,7 @@ export default function ProductDetail({ product }: { product?: any }) {
   const [cekOngkir, setCekOngkir] = useState<boolean>(false);
   const mainImgRef = useRef<HTMLImageElement>(null);
   const imgWrapRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const imageList: string[] =
     typeof product.images === "string"
@@ -605,7 +607,11 @@ export default function ProductDetail({ product }: { product?: any }) {
                     disabled={!allVariantsSelected}
                     className="flex-1 py-2.5 px-4 bg-second text-third border-2 border-third rounded-md font-bold text-[16px] md:text-[18px] flex items-center justify-center gap-2 transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed drop-shadow-[4px_4px_0px_rgba(62,63,32,1)] md:drop-shadow-[6px_6px_0px_rgba(62,63,32,1)]"
                     onClick={async () =>{ 
-                      await createWishlist(product.id, qty)
+                      try {
+                        await createWishlist(product.id, qty);
+                        router.refresh(); 
+                        alert("Produk berhasil ditambahkan ke keranjang!");
+                      } catch (err) { console.error("Gagal menambah barang:", err); }
                     }}
                   >
                     <ShoppingCart strokeWidth={3} className="w-5 h-5 md:w-6 md:h-6" />

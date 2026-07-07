@@ -205,7 +205,6 @@ export default function RootLayout({
           }}
         />
         <LayoutNav/>
-        {/* <AdminNav/> */}
         <div className="wrap">
           {children}
         </div>
