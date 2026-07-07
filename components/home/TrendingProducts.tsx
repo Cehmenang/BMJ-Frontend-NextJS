@@ -6,7 +6,6 @@ async function getTrending() {
   const res = await fetch(`${process.env.SERVER_API}/api/produk/trending`, { 
     cache: 'no-store' 
   });
-  console.log(res, 'RESSSPON')
   if (!res.ok) return [];
   const result = await res.json();
   return result.data;
@@ -14,7 +13,6 @@ async function getTrending() {
 
 export default async function TrendingProducts() {
   const products = await getTrending();
-
   if (products.length === 0) return null;
 
   return (
@@ -23,7 +21,7 @@ export default async function TrendingProducts() {
         🔥 PALING BANYAK DICARI MINGGU INI
       </h2>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        {products.map((product: any) => (
+        {(products && products.length > 0) && products.map((product: any) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
