@@ -167,9 +167,9 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <p className="font-poppins text-[11px] text-third/40 mb-0.5">{item.produk.brandId}</p>
-                    <p className="font-poppins text-[13px] font-semibold text-third leading-snug truncate">
+                    <Link href={`/produk/${item.produk.url}`} className="font-poppins text-[13px] font-semibold text-third leading-snug truncate underline">
                       {item.produk.name}
-                    </p>
+                    </Link>
                     <p className="font-poppins text-[13px] font-bold text-second mt-1">
                       {formatRp(parseInt(item.produk.offlinePrice))}
                     </p>
