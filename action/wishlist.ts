@@ -32,3 +32,14 @@ export async function removeWishlist(id: string){
         if(response.ok) return true
     }catch(err){ console.log(err) }
 }
+
+export async function updateQtyWishlist(id: string, newQty: string | number){
+    try{
+        const cookieStore = await cookies()
+        const response = await fetch(`${process.env.SERVER_API}/api/wishlist/update/${id}?quantity=${newQty}`, { method: 'GET', 
+            headers: { 
+                Accept: "application/json", Authorization: `Bearer ${cookieStore.get('access_token')!.value}`
+            } })
+        if(response.ok) return true
+    }catch(err){ console.log(err) }
+}

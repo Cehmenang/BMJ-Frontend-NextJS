@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { createPortal } from "react-dom";
 import { IProduct } from "@/interface";
-import { removeWishlist } from "@/action/wishlist";
+import { removeWishlist, updateQtyWishlist } from "@/action/wishlist";
 
 type CartItem = {
   id: string;
@@ -51,15 +51,14 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
   }, [onClose]);
 
   const updateQty = (id: string, delta: number) => {
-    console.log(delta, 'DELTA')
+    const targetItem = items.find(item => item.id === id);
+    if (!targetItem) return;
+    const newQty = Math.max(1, targetItem.quantity + delta);
+    updateQtyWishlist(id, newQty); 
     setItems((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-          : item
-      )
+      prev.map((item) => item.id === id ? { ...item, quantity: newQty } : item)
     );
-  };
+    };
 
   const removeItem = async(id: string) => {
     await removeWishlist(id)
