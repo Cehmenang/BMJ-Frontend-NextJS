@@ -5,7 +5,7 @@ import Link from "next/link";
 import { createPortal } from "react-dom";
 import { IProduct } from "@/interface";
 import { removeWishlist, updateQtyWishlist } from "@/action/wishlist";
-import { useRouter } from "next/navigation"; // 1. IMPORT USEROUTER
+import { useRouter } from "next/navigation"; 
 
 type CartItem = {
   id: string;
@@ -31,13 +31,12 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
   const [isLoading, setIsLoading] = useState(false);
   const backdropRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
-  const router = useRouter(); // 2. INISIALISASI ROUTER
+  const router = useRouter(); 
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // 3. SYNC STATE LOKAL JIKA PROPS WISHLIST DARI SERVER BERUBAH
   useEffect(() => {
     setItems(wishlist);
   }, [wishlist]);
@@ -62,25 +61,20 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
     if (!targetItem) return;
     const newQty = Math.max(1, targetItem.quantity + delta);
     
-    // Update local UI dulu biar berasa cepat (Optimistic Update)
     setItems((prev) =>
       prev.map((item) => item.id === id ? { ...item, quantity: newQty } : item)
     );
     
-    // Kirim perubahan ke database Laravel
     await updateQtyWishlist(id, newQty); 
-    router.refresh(); // Refresh data server agar subtotal dll sinkron di tempat lain
+    router.refresh(); 
   };
 
   const removeItem = async (id: string) => {
-    // 4. JALANKAN PROSES HAPUS
     setIsLoading(true);
     const success = await removeWishlist(id);
     
     if (success) {
-      // Hapus dari UI lokal saat ini juga
       setItems((prev) => prev.filter((item) => item.id !== id));
-      // Paksa Next.js ambil data ulang dari server Laravel agar jumlah lencana di MainNav ikut berubah!
       router.refresh(); 
     }
     setIsLoading(false);
@@ -130,7 +124,6 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
         {/* Cart items */}
         <div className="flex-1 overflow-y-auto">
           {items.length === 0 ? (
-            /* Empty state */
             <div className="flex flex-col items-center justify-center h-full px-6 text-center">
               <div className="w-16 h-16 rounded-2xl bg-third/6 border border-third/10 flex items-center justify-center mb-4">
                 <svg className="w-7 h-7 text-third/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -152,24 +145,30 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
             </div>
           ) : (
             <div className="px-6 py-4 space-y-4">
-              {items.map((item) =>{
+              {items.map((item) => {
                 return (
                 <div key={item.id} className="flex gap-4 opacity-100 data-[loading=true]:opacity-50 transition-opacity">
                   {/* Image */}
                   <div className="w-20 h-20 rounded-xl overflow-hidden bg-third/5 border border-third/8 flex-shrink-0">
                     <img
-                      src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${item.produk.images[0][0]}`}
+                      src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${item.produk.images[0]}`} // ── FIX: bersihin index array gambar ──
                       alt={item.produk.name}
                       className="w-full h-full object-cover"
                     />
                   </div>
 
                   {/* Info */}
-                  <div className="flex-1 min-w-0">
+                  <div className="min-w-0 flex-1"> {/* min-w-0 penting di flex-child agar text-clamping bekerja sempurna */}
                     <p className="font-poppins text-[11px] text-third/40 mb-0.5">{item.produk.brandId}</p>
-                    <Link href={`/produk/${item.produk.url}`} className="font-poppins text-[13px] font-semibold text-third leading-snug truncate underline">
+                    
+                    {/* ── REVISI UTAMA: Ganti truncate ke line-clamp-2 biar turun 2 baris lalu titik-titik ── */}
+                    <Link 
+                      href={`/produk/${item.produk.url}`} 
+                      className="font-poppins text-[13px] font-semibold text-third leading-snug line-clamp-2 underline block"
+                    >
                       {item.produk.name}
                     </Link>
+                    
                     <p className="font-poppins text-[13px] font-bold text-second mt-1">
                       {formatRp(parseInt(item.produk.offlinePrice))}
                     </p>
@@ -226,7 +225,6 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
         {/* Footer — subtotal + checkout */}
         {items.length > 0 && (
           <div className="flex-shrink-0 border-t border-third/10 px-6 py-5 space-y-4 bg-primary">
-            {/* Subtotal */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="font-poppins text-[12px] text-third/50">
@@ -241,7 +239,6 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
               </p>
             </div>
 
-            {/* Buttons */}
             <div className="space-y-2">
               <Link
                 href="/checkout"
