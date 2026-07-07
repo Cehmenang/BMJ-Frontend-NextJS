@@ -57,8 +57,8 @@ export async function updateQtyWishlist(id: string, newQty: string | number){
         const cookieStore = await cookies()
         const token = cookieStore.get('access_token')?.value
         const guestId = cookieStore.get('guest_id')?.value
-        const url = token ? `${process.env.SERVER_API}/api/wishlist/update/${id}?quantity=${newQty}` : `${process.env.SERVER_API}/api/wishlist/update/${id}?quantity=${newQty}&guest_id=${guestId}`
-        const response = await fetch(url, { method: 'GET', 
+        
+        const response = await fetch(`${process.env.SERVER_API}/api/wishlist/update/${id}?quantity=${newQty}`, { method: 'GET', 
             headers: { 
                 Accept: "application/json",
                 ...(token && { Authorization: `Bearer ${token}` })
