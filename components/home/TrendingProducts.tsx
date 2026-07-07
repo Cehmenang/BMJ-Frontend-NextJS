@@ -4,8 +4,9 @@ import ProductCard from "../product/ProductCard";
 
 async function getTrending() {
   const res = await fetch(`${process.env.SERVER_API}/api/produk/trending`, { 
-    cache: 'no-store' // Biar datanya selalu fresh di-update server
+    cache: 'no-store' 
   });
+  console.log(res, 'RESSSPON')
   if (!res.ok) return [];
   const result = await res.json();
   return result.data;
