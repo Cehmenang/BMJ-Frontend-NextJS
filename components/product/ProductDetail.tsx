@@ -172,7 +172,8 @@ function FullscreenViewer({
 export default function ProductDetail({ product }: { product?: any }) {
   const [activeImg, setActiveImg] = useState(0);
   const [qty, setQty] = useState(1);
-  const [toast, setToast] = useState<{ show: boolean; message: string } | null>(null);
+  const [toast, setToast] = useState({ show: false, message: "" }); // State toast simpel
+  const toastRef = useRef<HTMLDivElement>(null); // Ref untuk target animasi GSAP
   const [tab, setTab] = useState<Tab>("description");
   const [fsOpen, setFsOpen] = useState(false);
   const [showingVideo, setShowingVideo] = useState(true);
@@ -186,6 +187,50 @@ export default function ProductDetail({ product }: { product?: any }) {
   const mainImgRef = useRef<HTMLImageElement>(null);
   const imgWrapRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  
+  // ── EFek Animasi Toast Menggunakan GSAP ──
+useEffect(() => {
+  if (toast.show && toastRef.current) {
+    import("gsap").then((mod) => {
+      const gsap = mod.gsap ?? mod.default;
+
+      // 1. Animasi MASUK (Smooth fade-in + slide down + bounce back khas GSAP)
+      gsap.fromTo(
+        toastRef.current,
+        { y: -40, opacity: 0, scale: 0.9 },
+        { y: 0, opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.5)" }
+      );
+
+      // 2. Animasi KELUAR Otomatis (Berjalan setelah delay 3 detik)
+      gsap.to(toastRef.current, {
+        y: -30,
+        opacity: 0,
+        scale: 0.95,
+        delay: 3, // Standby selama 3 detik
+        duration: 0.3,
+        ease: "power2.in",
+        onComplete: () => setToast({ show: false, message: "" }), // Hapus dari DOM pas kelar
+      });
+    });
+  }
+}, [toast.show]);
+
+// Fungsi khusus kalau user nge-klik tombol silang (X) sebelum 3 detik
+const handleCloseToast = () => {
+  if (!toastRef.current) return;
+  import("gsap").then((mod) => {
+    const gsap = mod.gsap ?? mod.default;
+    gsap.killTweensOf(toastRef.current); // Hentikan auto-dismiss yang sedang berjalan
+    gsap.to(toastRef.current, {
+      y: -30,
+      opacity: 0,
+      scale: 0.95,
+      duration: 0.3,
+      ease: "power2.in",
+      onComplete: () => setToast({ show: false, message: "" }),
+    });
+  });
+};
 
   const imageList: string[] =
     typeof product.images === "string"
@@ -279,21 +324,29 @@ export default function ProductDetail({ product }: { product?: any }) {
 
   return (
     <>
-      {toast?.show && (
-      <div className="fixed top-20 right-4 z-50 animate-fade-in-down flex items-center gap-3 bg-slate-900 border border-second/30 text-white px-5 py-3.5 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.15)] max-w-sm">
+      {toast.show && (
+      <div 
+        ref={toastRef} // 🎯 WAJIB: Biar GSAP bisa mendeteksi elemen ini
+        className="fixed top-20 right-4 z-50 flex items-center gap-3 bg-slate-900 border border-second/30 text-white px-5 py-3.5 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] max-w-sm will-change-transform"
+      >
         {/* Icon Sukses */}
         <div className="w-6 h-6 rounded-full bg-second flex items-center justify-center flex-shrink-0">
           <svg className="w-3.5 h-3.5 text-third" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="20 6 9 17 4 12" />
           </svg>
         </div>
+        
         {/* Pesan */}
         <div className="flex flex-col">
           <p className="text-[13px] font-poppins font-semibold tracking-wide leading-tight">Berhasil!</p>
           <p className="text-[11px] font-poppins text-gray-400 mt-0.5 leading-snug">{toast.message}</p>
         </div>
+        
         {/* Tombol Close Manual */}
-        <button onClick={() => setToast(null)} className="ml-2 text-gray-500 hover:text-white transition-colors">
+        <button 
+          onClick={handleCloseToast} 
+          className="ml-2 text-gray-500 hover:text-white transition-colors"
+        >
           <X size={14} />
         </button>
       </div>
@@ -634,7 +687,6 @@ export default function ProductDetail({ product }: { product?: any }) {
                           show: true,
                           message: "Produk berhasil ditambahkan ke keranjang!"
                         });
-                        setTimeout(() => setToast(null), 3000);
                       } catch (err) { console.error("Gagal menambah barang:", err); }
                     }}
                   >
