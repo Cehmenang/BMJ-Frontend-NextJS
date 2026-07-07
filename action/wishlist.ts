@@ -21,3 +21,9 @@ export async function getWishlists(token: string){
     })
     if(response.ok) return await response.json()
 }
+
+export async function removeWishlist(id: string){
+    const response = await fetch(`${process.env.SERVER_API}/api/wishlist/hapus/${id}`, { method: 'GET', headers: { "Content-Type": "application/json" } })
+    console.log(response)
+    if(response.ok) return true
+}

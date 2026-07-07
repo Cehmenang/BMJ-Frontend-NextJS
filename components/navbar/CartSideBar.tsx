@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { createPortal } from "react-dom";
 import { IProduct } from "@/interface";
+import { removeWishlist } from "@/action/wishlist";
 
 type CartItem = {
   id: string;
@@ -32,7 +33,6 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
 
   useEffect(() => {
     setMounted(true);
-    console.log(items, 'WISHLIST')
   }, []);
 
   // Lock body scroll
@@ -60,8 +60,8 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
     );
   };
 
-  const removeItem = (id: string) => {
-
+  const removeItem = async(id: string) => {
+    await removeWishlist(id)
     setItems((prev) => prev.filter((item) => item.id !== id));
   };
 

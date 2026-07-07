@@ -288,7 +288,7 @@ export default function ProductDetail({ product }: { product?: any }) {
         <div className="px-4 md:px-28 lg:px-48 pt-5 md:pt-8 flex items-center gap-1.5 text-[11px] md:text-[13px] text-third/45 overflow-x-auto whitespace-nowrap pb-1" style={{ scrollbarWidth: "none" }}>
           <Link href="/" className="hover:text-third transition-colors flex-shrink-0">Beranda</Link>
           <span>/</span>
-          <Link href={`/category/${product.kategoriId}`} className="hover:text-third transition-colors flex-shrink-0">{product.kategoriId}</Link>
+          <Link href={`/kategori/${product.kategoriId}`} className="hover:text-third transition-colors flex-shrink-0">{product.kategoriId}</Link>
           <span>/</span>
           <Link href={`/brand/${product.brandId}`} className="hover:text-third transition-colors flex-shrink-0">{product.brandId}</Link>
           <span>/</span>
