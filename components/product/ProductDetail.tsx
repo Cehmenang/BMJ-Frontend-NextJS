@@ -189,6 +189,41 @@ export default function ProductDetail({ product }: { product?: any }) {
   const imgWrapRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
+  // ── AMBIL LOG VIEW PRODUK SECARA OTOMATIS (CLIENT-SIDE) ──
+useEffect(() => {
+  if (product?.id) {
+    // Helper instan untuk membaca cookie langsung di browser client
+    const getClientCookie = (name: string) => {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop()?.split(";").shift();
+      return null;
+    };
+
+    const token = getClientCookie("access_token");
+    const guestId = getClientCookie("guest_id");
+
+    // Tembak API hit view ke endpoint Laravel Queue yang baru kita bikin
+    fetch(`${process.env.NEXT_PUBLIC_SERVER_API}/api/produk/${product.id}/view`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        ...(token && { "Authorization": `Bearer ${token}` }), // Kirim bearer token kalau user sudah login
+      },
+      body: JSON.stringify({
+        guest_id: token ? null : guestId, // Kirim guest_id hanya jika dia berstatus Guest
+      }),
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      // Opsional: lu bisa console.log buat mastiin statusnya beneran "View queued"
+      console.log("Log View Tracker:", data.message);
+    })
+    .catch((err) => console.error("Gagal mendaftarkan data view:", err));
+  }
+}, [product?.id]); // Otomatis nge-hit ulang kalau user pindah ke halaman produk lain
+
   useEffect(() => {
   if (tabContentRef.current) {
     import("gsap").then((mod) => {
@@ -549,6 +584,13 @@ const handleCloseToast = () => {
                 <h1 className="font-display text-[22px] md:text-[28px] font-black text-third leading-snug">
                   {product.name.toUpperCase()}
                 </h1>
+                <div className="flex items-center gap-1 mt-1 text-[11px] text-third/40">
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  <span>Dilihat {product.views_count ?? 0} kali</span>
+                </div>
               </div>
 
               <div className="h-px bg-third/8" />
