@@ -19,6 +19,7 @@ export async function createWishlist(id: string, qty: number){
             Accept: 'application/json', 'Content-Type': 'application/json'
         }
     })
+    console.log(response, 'FEEDBACK!')
     if(response.ok) return true
 }
 
