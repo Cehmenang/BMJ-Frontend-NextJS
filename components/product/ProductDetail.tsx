@@ -607,6 +607,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                     className="flex-1 py-2.5 px-4 bg-second text-third border-2 border-third rounded-md font-bold text-[16px] md:text-[18px] flex items-center justify-center gap-2 transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed drop-shadow-[4px_4px_0px_rgba(62,63,32,1)] md:drop-shadow-[6px_6px_0px_rgba(62,63,32,1)]"
                     onClick={async () =>{ 
                       const error = await createWishlist(product.id, qty)
+                      console.log(error, 'error')
                       error && setUnauthorized(true)
                     }}
                   >
