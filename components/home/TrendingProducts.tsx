@@ -16,8 +16,8 @@ export default async function TrendingProducts() {
   if (products.length === 0) return null;
 
   return (
-    <section className="px-4 md:px-14 py-10 pt-4 bg-bg-site">
-      <h2 className="font-display text-[36px] font-black text-third mb-6">
+    <section className="px-4 md:px-14 py-10 pt-16 bg-bg-site">
+      <h2 className="font-display text-[36px] text-third mb-6">
         Paling Banyak Dicari
       </h2>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-6">
