@@ -4,17 +4,22 @@ import { cookies } from "next/headers"
 
 export async function createWishlist(id: string, qty: number){
     const cookieStore = await cookies()
-    if(!cookieStore.get('access_token')){ return true }
-    else{
-        const response = await fetch(`${process.env.SERVER_API}/api/wishlist`, {
-            method: 'POST',
-            body: JSON.stringify({ product_id: id, quantity: qty }),
-            headers: { 
-                Authorization: `Bearer ${cookieStore.get('access_token')!.value}`, Accept: 'application/json', 'Content-Type': 'application/json'
-             }
-        })
-        if(response.ok) return false
-    }
+    const token = cookieStore.get('access_token')?.value
+    const guestId = cookieStore.get('guest_id')?.value
+
+    const response = await fetch(`${process.env.SERVER_API}/api/wishlist`, {
+        method: 'POST',
+        body: JSON.stringify({ 
+            product_id: id,
+            quantity: qty,
+            guest_id: token ? null : guestId
+        }),
+        headers: { 
+            ...(token && { Authorization: `Bearer ${token}` }),
+            Accept: 'application/json', 'Content-Type': 'application/json'
+        }
+    })
+    if(response.ok) return true
 }
 
 export async function getWishlists(token: string){
