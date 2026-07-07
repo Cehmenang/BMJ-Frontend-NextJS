@@ -15,17 +15,23 @@ export async function createWishlist(id: string, qty: number){
             guest_id: token ? null : guestId
         }),
         headers: { 
-            Authorization: `Bearer ${token}`,
+            ...(token && { Authorization: `Bearer ${token}` }),
             Accept: 'application/json', 'Content-Type': 'application/json'
         }
     })
     if(response.ok) return true
 }
 
-export async function getWishlists(token: string){
-    const response = await fetch(`${process.env.SERVER_API}/api/wishlist`, { 
+export async function getWishlists(){
+    const cookieStore = await cookies()
+    const token = cookieStore.get('access_token')?.value
+    const guestId = cookieStore.get('guest_id')?.value
+    const url = token ? `${process.env.SERVER_API}/api/wishlist` : `${process.env.SERVER_API}/api/wishlist?guest_id=${guestId}`
+    
+    const response = await fetch(url, { 
             method: 'GET',
-            headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' }
+            headers: { ...(token && { Authorization: `Bearer ${token}` }),
+            Accept: 'application/json' }
     })
     if(response.ok) return await response.json()
 }

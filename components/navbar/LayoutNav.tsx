@@ -9,7 +9,7 @@ export default async function LayoutNav() {
   const token = cookieStore.get('access_token')?.value as string | null
   const username = cookieStore.get('username')?.value as string | null
 
-  const response = await getWishlists(token!)
+  const response = await getWishlists()
 
   return <MainNav token={token} username={username} wishlist={response ? response.wishlist : null}/>
 }
