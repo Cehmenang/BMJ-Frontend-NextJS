@@ -51,6 +51,7 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
   }, [onClose]);
 
   const updateQty = (id: string, delta: number) => {
+    console.log(delta, 'DELTA')
     setItems((prev) =>
       prev.map((item) =>
         item.id === id

@@ -25,12 +25,10 @@ export async function getWishlists(token: string){
 export async function removeWishlist(id: string){
     try{
         const cookieStore = await cookies()
-        console.log(cookieStore.get('access_token')?.value, 'cekk')
         const response = await fetch(`${process.env.SERVER_API}/api/wishlist/hapus/${id}`, { method: 'GET', 
             headers: { 
                 Accept: "application/json", Authorization: `Bearer ${cookieStore.get('access_token')!.value}`
             } })
-        console.log(response)
         if(response.ok) return true
     }catch(err){ console.log(err) }
 }
