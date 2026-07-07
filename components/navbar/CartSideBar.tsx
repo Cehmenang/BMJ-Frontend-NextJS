@@ -164,7 +164,7 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
                     {/* ── REVISI UTAMA: Ganti truncate ke line-clamp-2 biar turun 2 baris lalu titik-titik ── */}
                     <Link 
                       href={`/produk/${item.produk.url}`} 
-                      className="font-poppins text-[11px] font-semibold text-third hover:text-gray-700 transition leading-snug line-clamp-2 block"
+                      className="font-poppins text-[11px] font-semibold text-third opacity-70 hover:opacity-100 transition leading-snug line-clamp-2 block"
                     >
                       {item.produk.name}
                     </Link>
