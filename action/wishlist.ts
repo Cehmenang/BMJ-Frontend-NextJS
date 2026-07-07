@@ -4,14 +4,8 @@ import { cookies } from "next/headers"
 
 export async function createWishlist(id: string, qty: number){
     const cookieStore = await cookies()
-    if(!cookieStore.get('access_token')!.value){ 
-    console.log('CIUYYY LEWAT')
-
-        return true
-    }
+    if(!cookieStore.get('access_token')){ return true }
     else{
-    console.log('CIUYYY BERAK')
-
         const response = await fetch(`${process.env.SERVER_API}/api/wishlist`, {
             method: 'POST',
             body: JSON.stringify({ product_id: id, quantity: qty }),
