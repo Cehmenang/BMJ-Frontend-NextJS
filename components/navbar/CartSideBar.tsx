@@ -5,6 +5,7 @@ import Link from "next/link";
 import { createPortal } from "react-dom";
 import { IProduct } from "@/interface";
 import { removeWishlist, updateQtyWishlist } from "@/action/wishlist";
+import { useRouter } from "next/navigation"; // 1. IMPORT USEROUTER
 
 type CartItem = {
   id: string;
@@ -30,10 +31,16 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
   const [isLoading, setIsLoading] = useState(false);
   const backdropRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
+  const router = useRouter(); // 2. INISIALISASI ROUTER
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // 3. SYNC STATE LOKAL JIKA PROPS WISHLIST DARI SERVER BERUBAH
+  useEffect(() => {
+    setItems(wishlist);
+  }, [wishlist]);
 
   // Lock body scroll
   useEffect(() => {
@@ -50,19 +57,33 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
     return () => document.removeEventListener("mousedown", handler);
   }, [onClose]);
 
-  const updateQty = (id: string, delta: number) => {
+  const updateQty = async (id: string, delta: number) => {
     const targetItem = items.find(item => item.id === id);
     if (!targetItem) return;
     const newQty = Math.max(1, targetItem.quantity + delta);
-    updateQtyWishlist(id, newQty); 
+    
+    // Update local UI dulu biar berasa cepat (Optimistic Update)
     setItems((prev) =>
       prev.map((item) => item.id === id ? { ...item, quantity: newQty } : item)
     );
-    };
+    
+    // Kirim perubahan ke database Laravel
+    await updateQtyWishlist(id, newQty); 
+    router.refresh(); // Refresh data server agar subtotal dll sinkron di tempat lain
+  };
 
-  const removeItem = async(id: string) => {
-    await removeWishlist(id)
-    setItems((prev) => prev.filter((item) => item.id !== id));
+  const removeItem = async (id: string) => {
+    // 4. JALANKAN PROSES HAPUS
+    setIsLoading(true);
+    const success = await removeWishlist(id);
+    
+    if (success) {
+      // Hapus dari UI lokal saat ini juga
+      setItems((prev) => prev.filter((item) => item.id !== id));
+      // Paksa Next.js ambil data ulang dari server Laravel agar jumlah lencana di MainNav ikut berubah!
+      router.refresh(); 
+    }
+    setIsLoading(false);
   };
 
   const subtotal = items.reduce((sum, item) => sum + parseInt(item.produk.offlinePrice) * item.quantity, 0);
@@ -133,7 +154,7 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
             <div className="px-6 py-4 space-y-4">
               {items.map((item) =>{
                 return (
-                <div key={item.id} className="flex gap-4">
+                <div key={item.id} className="flex gap-4 opacity-100 data-[loading=true]:opacity-50 transition-opacity">
                   {/* Image */}
                   <div className="w-20 h-20 rounded-xl overflow-hidden bg-third/5 border border-third/8 flex-shrink-0">
                     <img
@@ -159,7 +180,7 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
                       <div className="flex items-center gap-0 border border-third/12 rounded-lg overflow-hidden">
                         <button
                           onClick={() => updateQty(item.id, -1)}
-                          disabled={item.quantity <= 1}
+                          disabled={item.quantity <= 1 || isLoading}
                           className="w-7 h-7 flex items-center justify-center text-third/60 hover:text-third hover:bg-third/6 transition-colors disabled:opacity-30 disabled:cursor-default"
                         >
                           <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -171,6 +192,7 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
                         </span>
                         <button
                           onClick={() => updateQty(item.id, 1)}
+                          disabled={isLoading}
                           className="w-7 h-7 flex items-center justify-center text-third/60 hover:text-third hover:bg-third/6 transition-colors"
                         >
                           <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -182,7 +204,8 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
                       {/* Remove */}
                       <button
                         onClick={() => removeItem(item.id)}
-                        className="flex items-center gap-1 text-[11px] font-poppins text-third/35 hover:text-red-400 transition-colors"
+                        disabled={isLoading}
+                        className="flex items-center gap-1 text-[11px] font-poppins text-third/35 hover:text-red-400 transition-colors disabled:opacity-40"
                       >
                         <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="3 6 5 6 21 6" />
@@ -190,7 +213,7 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
                           <path d="M10 11v6M14 11v6" />
                           <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
                         </svg>
-                        Hapus
+                        {isLoading ? "Menghapus..." : "Hapus"}
                       </button>
                     </div>
                   </div>
