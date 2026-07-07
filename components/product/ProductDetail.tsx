@@ -184,9 +184,36 @@ export default function ProductDetail({ product }: { product?: any }) {
   const [activeImgSrc, setActiveImgSrc] = useState<string | null>(null);
   const [related, setRelated] = useState<IProduct[] | []>([]);
   const [cekOngkir, setCekOngkir] = useState<boolean>(false);
+  const tabContentRef = useRef<HTMLDivElement>(null);
   const mainImgRef = useRef<HTMLImageElement>(null);
   const imgWrapRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  useEffect(() => {
+  if (tabContentRef.current) {
+    import("gsap").then((mod) => {
+      const gsap = mod.gsap ?? mod.default;
+
+      // Reset & matikan dulu animasi sebelumnya kalau user nge-klik tab terlalu cepat
+      gsap.killTweensOf(tabContentRef.current);
+
+      // Mainkan gerakan Slide Up + Fade In lembut
+      gsap.fromTo(
+        tabContentRef.current,
+        { 
+          y: 15,          // Mulai dari 15 piksel agak ke bawah
+          opacity: 0,     // Mulai dari transparan
+        },
+        { 
+          y: 0,           // Naik ke posisi asli
+          opacity: 1,     // Memadat sempurna
+          duration: 0.4,  // Kecepatan transisi 0.4 detik
+          ease: "power2.out" // Karakter pergerakan halus di akhir
+        }
+      );
+    });
+  }
+}, [tab]);
   
   // ── EFek Animasi Toast Menggunakan GSAP ──
 useEffect(() => {
@@ -747,82 +774,87 @@ const handleCloseToast = () => {
 
           {/* ── Bottom: Tabs + Meta ── */}
           <div className="border-t border-third/8 pt-8 md:pt-10 flex flex-col gap-8 md:gap-10 px-4 md:px-0">
-            {/* Tabs */}
-            <div>
-              <div className="flex border-b border-third/8 mb-5 md:mb-6 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
-                {(["description", "features", "specifications"] as Tab[]).map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => setTab(t)}
-                    className={`text-[12px] md:text-[13px] font-medium px-4 md:px-5 py-2.5 border-b-2 -mb-px transition-all duration-150 whitespace-nowrap flex-shrink-0 ${
-                      tab === t
-                        ? "border-second text-third"
-                        : "border-transparent text-third/45 hover:text-third/70"
-                    }`}
-                  >
-                    {t === "description" ? "Deskripsi" : t === "features" ? "Fitur" : "Spesifikasi"}
-                  </button>
-                ))}
-              </div>
-              <div className="text-[13px] md:text-[14px] leading-relaxed text-third/70 text-justify">
-                {tab === "description" && <p>{product.description}</p>}
-                
-                {/* ── PERUBAHAN DI SINI: MAPPING FITUR (ARRAY OF STRING) ── */}
-                {tab === "features" && (
-                  <ul className="flex flex-col gap-2 md:gap-2.5 list-none">
-                    {product.fitur && product.fitur.length > 0 ? (
-                      product.fitur.map((f: string, i: number) => (
-                        <li key={i} className="flex items-start gap-3">
-                          <span className="w-1.5 h-1.5 rounded-full bg-second mt-2 flex-shrink-0" />
-                          {f}
-                        </li>
-                      ))
-                    ) : (
-                      <p className="text-third/40 italic text-sm">Tidak ada informasi fitur.</p>
-                    )}
-                  </ul>
-                )}
-                
-                {/* ── PERUBAHAN DI SINI: MAPPING SPESIFIKASI (ARRAY OF STRING) ── */}
-                {tab === "specifications" && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-0">
-                    {product.spesifikasi && product.spesifikasi.length > 0 ? (
-                      product.spesifikasi.map((s: string, i: number) => (
-                        <div key={i} className="flex items-start gap-2 py-2 md:py-2.5 border-b border-third/6">
-                          <span className="w-1.5 h-1.5 rounded-full bg-second mt-2 flex-shrink-0" />
-                          <span className="text-third text-[12px] md:text-[13px]">{s}</span>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-third/40 italic text-sm col-span-2">Tidak ada informasi spesifikasi.</p>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
+  {/* Tabs */}
+  <div>
+    <div className="flex border-b border-third/8 mb-5 md:mb-6 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
+      {(["description", "features", "specifications"] as Tab[]).map((t) => (
+        <button
+          key={t}
+          onClick={() => setTab(t)}
+          className={`text-[12px] md:text-[13px] font-medium px-4 md:px-5 py-2.5 border-b-2 -mb-px transition-all duration-150 whitespace-nowrap flex-shrink-0 ${
+            tab === t
+              ? "border-second text-third"
+              : "border-transparent text-third/45 hover:text-third/70"
+          }`}
+        >
+          {t === "description" ? "Deskripsi" : t === "features" ? "Fitur" : "Spesifikasi"}
+        </button>
+      ))}
+    </div>
 
-            {/* Meta info */}
-            <div>
-              <p className="text-[10px] font-semibold tracking-[0.15em] uppercase text-third/40 mb-3 md:mb-4">
-                Informasi Produk
-              </p>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:flex md:gap-10">
-                {[
-                  { label: "Berat", value: product.weight },
-                  { label: "SKU", value: product.sku },
-                  { label: "Garansi", value: product.warranty },
-                  { label: "Stok", value: `${product.stock} unit` },
-                ].map((m) => (
-                  <div key={m.label} className="flex flex-col gap-1">
-                    <span className="text-[10px] font-semibold tracking-[0.12em] uppercase text-third/35">
-                      {m.label}
-                    </span>
-                    <span className="text-[13px] md:text-[14px] font-medium text-third">{m.value}</span>
-                  </div>
-                ))}
+    {/* ── REVISI DI SINI: Tambah ref={tabContentRef} dan class will-change-transform ── */}
+    <div 
+      ref={tabContentRef} 
+      className="text-[13px] md:text-[14px] leading-relaxed text-third/70 text-justify will-change-transform"
+    >
+      {tab === "description" && <p>{product.description}</p>}
+      
+      {/* ── MAPPING FITUR ── */}
+      {tab === "features" && (
+        <ul className="flex flex-col gap-2 md:gap-2.5 list-none">
+          {product.fitur && product.fitur.length > 0 ? (
+            product.fitur.map((f: string, i: number) => (
+              <li key={i} className="flex items-start gap-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-second mt-2 flex-shrink-0" />
+                {f}
+              </li>
+            ))
+          ) : (
+            <p className="text-third/40 italic text-sm">Tidak ada informasi fitur.</p>
+          )}
+        </ul>
+      )}
+      
+      {/* ── MAPPING SPESIFIKASI ── */}
+      {tab === "specifications" && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-0">
+          {product.spesifikasi && product.spesifikasi.length > 0 ? (
+            product.spesifikasi.map((s: string, i: number) => (
+              <div key={i} className="flex items-start gap-2 py-2 md:py-2.5 border-b border-third/6">
+                <span className="w-1.5 h-1.5 rounded-full bg-second mt-2 flex-shrink-0" />
+                <span className="text-third text-[12px] md:text-[13px]">{s}</span>
               </div>
-            </div>
-          </div>
+            ))
+          ) : (
+            <p className="text-third/40 italic text-sm col-span-2">Tidak ada informasi spesifikasi.</p>
+          )}
+        </div>
+      )}
+    </div>
+  </div>
+
+  {/* Meta info */}
+  <div>
+    <p className="text-[10px] font-semibold tracking-[0.15em] uppercase text-third/40 mb-3 md:mb-4">
+      Informasi Produk
+    </p>
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:flex md:gap-10">
+      {[
+        { label: "Berat", value: product.weight },
+        { label: "SKU", value: product.sku },
+        { label: "Garansi", value: product.warranty },
+        { label: "Stok", value: `${product.stock} unit` },
+      ].map((m) => (
+        <div key={m.label} className="flex flex-col gap-1">
+          <span className="text-[10px] font-semibold tracking-[0.12em] uppercase text-third/35">
+            {m.label}
+          </span>
+          <span className="text-[13px] md:text-[14px] font-medium text-third">{m.value}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
 
           <div className="px-4 md:px-0 mt-10">
             <ProductFaq />
