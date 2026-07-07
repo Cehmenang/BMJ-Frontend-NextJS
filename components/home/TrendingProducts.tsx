@@ -16,9 +16,9 @@ export default async function TrendingProducts() {
   if (products.length === 0) return null;
 
   return (
-    <section className="px-4 md:px-14 py-10 pt-16 bg-bg-site">
+    <section className="px-4 md:px-14 py-10 pt-20 bg-bg-site">
       <h2 className="font-display text-[36px] text-third mb-6">
-        Paling Banyak Dicari
+        <span className="text-second">Trending</span> Minggu Ini
       </h2>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-6">
         {(products && products.length > 0) && products.map((product: any) => (
