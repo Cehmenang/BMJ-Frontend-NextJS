@@ -30,8 +30,10 @@ export async function getWishlists(){
     
     const response = await fetch(url, { 
             method: 'GET',
-            headers: { ...(token && { Authorization: `Bearer ${token}` }),
-            Accept: 'application/json' }
+            headers: { 
+                ...(token && { Authorization: `Bearer ${token}` }),
+                Accept: 'application/json'
+            }
     })
     if(response.ok) return await response.json()
 }
@@ -39,9 +41,12 @@ export async function getWishlists(){
 export async function removeWishlist(id: string){
     try{
         const cookieStore = await cookies()
+        const token = cookieStore.get('access_token')?.value
+        const guestId = cookieStore.get('guest_id')?.value
         const response = await fetch(`${process.env.SERVER_API}/api/wishlist/hapus/${id}`, { method: 'GET', 
             headers: { 
-                Accept: "application/json", Authorization: `Bearer ${cookieStore.get('access_token')!.value}`
+                Accept: "application/json",
+                ...(token && { Authorization: `Bearer ${token}` })
             } })
         if(response.ok) return true
     }catch(err){ console.log(err) }
