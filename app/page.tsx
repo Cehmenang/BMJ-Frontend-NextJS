@@ -5,6 +5,7 @@ import BrandShowcase from "@/components/home/BrandShowcase";
 import TiktokShowcase from "@/components/home/TiktokShowcase";
 import KategoriShowcase from "@/components/home/KategoriShowcase";
 import MilestoneSection from "@/components/home/MilestoneSection";
+import TrendingProducts from "@/components/home/TrendingProducts";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <Carousel/>
       <div className="content px-16">
           <TrustBadges/>
+          <TrendingProducts/>
           <LatestProducts/>
           <KategoriShowcase/>
           <BrandShowcase/>
