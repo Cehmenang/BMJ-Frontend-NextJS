@@ -15,7 +15,7 @@ export async function createWishlist(id: string, qty: number){
             guest_id: token ? null : guestId
         }),
         headers: { 
-            ...(token && { Authorization: `Bearer ${token}` }),
+            Authorization: `Bearer ${token}`,
             Accept: 'application/json', 'Content-Type': 'application/json'
         }
     })
