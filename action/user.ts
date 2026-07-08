@@ -42,6 +42,22 @@ export async function login(data: { username: string, password: string }){
     }catch(err){ return err }
 }
 
+export async function register(formData: any) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_API}/api/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(formData),
+  });
+
+  if (!res.ok) return null;
+  const result = await res.json();
+
+  if (result.token) {
+    return { token: result.token, role: result.user.role }; 
+  }
+  return null;
+}
+
 export async function logOut(){
     try{
         const cookieStore = await cookies()
