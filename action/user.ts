@@ -90,7 +90,7 @@ export async function register(formData: any) {
         }
         return null;
     } catch (err: any) {
-        console.log(err)
+        console.log("❌ ERROR PAS REGISTER:", err.response?.data || err.message);
         return null;
     }
 }
