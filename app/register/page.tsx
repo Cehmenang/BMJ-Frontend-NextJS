@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function RegisterPage() {
-  return <MainAuth initialMode="register" />;
+  return <MainAuth mode="register" />; // 🎯 Kirim mode login
 }
