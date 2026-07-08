@@ -48,6 +48,7 @@ export async function register(formData: any) {
     try {
         const response = await axiosClient.post('api/register', formData)
         
+        console.log(response.data, 'DATAANYA')
         if (response.data) {
             const cookieStore = await cookies()
             
@@ -89,11 +90,7 @@ export async function register(formData: any) {
         }
         return null;
     } catch (err: any) {
-        if (err.response?.data) {
-                console.log("❌ DETAIL BANTAHAN LARAVEL:", JSON.stringify(err.response.data, null, 2));
-        } else {
-            console.log("❌ AXIOS ERROR:", err.message);
-        }
+        console.log(err)
         return null;
     }
 }
