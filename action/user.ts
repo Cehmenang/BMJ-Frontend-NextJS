@@ -48,6 +48,8 @@ export async function register(formData: any) {
     try {
         // 🎯 SINKRON: Pake axiosClient juga biar seragam fungsinya
         const response = await axiosClient.post('api/register', formData)
+        console.log(response, 'RESPONNNN REGISTER')
+        console.log(formData, 'formmmnya')
         
         if (response.data) {
             const cookieStore = await cookies()
