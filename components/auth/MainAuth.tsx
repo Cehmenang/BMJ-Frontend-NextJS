@@ -49,6 +49,7 @@ export default function MainAuth({ initialMode = "login" }: AuthComponentProps) 
         }
       } else {
         // ── ALUR REGISTER + AUTO LOGIN INSTAN ──
+        console.log(data, 'DATABNYAA')
         const res = await registerAction({
           username: data.username,
           email: data.email,
