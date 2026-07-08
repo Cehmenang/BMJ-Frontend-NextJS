@@ -46,10 +46,7 @@ export async function login(data: { username: string, password: string }){
 
 export async function register(formData: any) {
     try {
-        // 🎯 SINKRON: Pake axiosClient juga biar seragam fungsinya
         const response = await axiosClient.post('api/register', formData)
-        console.log(response, 'RESPONNNN REGISTER')
-        console.log(formData, 'formmmnya')
         
         if (response.data) {
             const cookieStore = await cookies()
@@ -91,8 +88,12 @@ export async function register(formData: any) {
             }
         }
         return null;
-    } catch (err) {
-        console.error("Register Action Error:", err);
+    } catch (err: any) {
+        if (err.response?.data) {
+                console.log("❌ DETAIL BANTAHAN LARAVEL:", JSON.stringify(err.response.data, null, 2));
+        } else {
+            console.log("❌ AXIOS ERROR:", err.message);
+        }
         return null;
     }
 }

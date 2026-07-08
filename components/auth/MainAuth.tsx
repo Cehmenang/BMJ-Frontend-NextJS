@@ -31,7 +31,6 @@ export default function MainAuth({ initialMode = "login" }: AuthComponentProps) 
     formState: { errors },
   } = useForm<AuthForm>();
 
-  // Memantau input password utama untuk validasi kecocokan di konfirmasi password
   const passwordValue = watch("password");
 
   const onSubmit = async (data: AuthForm) => {
