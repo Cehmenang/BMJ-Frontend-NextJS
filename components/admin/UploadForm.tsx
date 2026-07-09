@@ -551,6 +551,35 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
                 />
               </Field>
 
+                {/* ── SPESIFIKASI & FITUR (MODIFIED: SMART TEXTAREA) ── */}
+          <SectionCard icon={ListChecks} title="Spesifikasi & Fitur" subtitle="Gunakan tombol ENTER untuk memisahkan setiap poin list">
+            <div className="flex flex-col gap-5 px-5 py-5">
+              
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-[#eeeeee]/70">Spesifikasi Produk</label>
+                <textarea
+                  {...register("spesifikasi")}
+                  rows={6}
+                  placeholder="Contoh (Pisahkan dengan Enter):&#10;Bahan body Mahogany&#10;Fretboard Rosewood&#10;24 X-Jumbo frets"
+                  className={`${inputCls(false)} resize-y leading-relaxed font-mono text-xs`}
+                />
+                <span className="text-[10px] text-[#eeeeee]/30">Tiap baris teks otomatis dihitung sebagai 1 poin spesifikasi di sistem.</span>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-[#eeeeee]/70">Fitur Utama</label>
+                <textarea
+                  {...register("fitur")}
+                  rows={6}
+                  placeholder="Contoh (Pisahkan dengan Enter):&#10;Suara jernih dan artikulasi tajam&#10;Konstruksi Neck-through kokoh&#10;Include Hardcase Premium"
+                  className={`${inputCls(false)} resize-y leading-relaxed font-mono text-xs`}
+                />
+                <span className="text-[10px] text-[#eeeeee]/30">Tiap baris teks otomatis dihitung sebagai 1 poin fitur utama di sistem.</span>
+              </div>
+
+            </div>
+          </SectionCard>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Field label="Stok" required error={errors.stock}>
                   <UnitInput
@@ -582,35 +611,6 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
                   className={inputCls(!!errors.name)}
                 />
                 </Field>
-              </div>
-
-            </div>
-          </SectionCard>
-
-          {/* ── SPESIFIKASI & FITUR (MODIFIED: SMART TEXTAREA) ── */}
-          <SectionCard icon={ListChecks} title="Spesifikasi & Fitur" subtitle="Gunakan tombol ENTER untuk memisahkan setiap poin list">
-            <div className="flex flex-col gap-5 px-5 py-5">
-              
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-[#eeeeee]/70">Spesifikasi Produk</label>
-                <textarea
-                  {...register("spesifikasi")}
-                  rows={6}
-                  placeholder="Contoh (Pisahkan dengan Enter):&#10;Bahan body Mahogany&#10;Fretboard Rosewood&#10;24 X-Jumbo frets"
-                  className={`${inputCls(false)} resize-y leading-relaxed font-mono text-xs`}
-                />
-                <span className="text-[10px] text-[#eeeeee]/30">Tiap baris teks otomatis dihitung sebagai 1 poin spesifikasi di sistem.</span>
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-[#eeeeee]/70">Fitur Utama</label>
-                <textarea
-                  {...register("fitur")}
-                  rows={6}
-                  placeholder="Contoh (Pisahkan dengan Enter):&#10;Suara jernih dan artikulasi tajam&#10;Konstruksi Neck-through kokoh&#10;Include Hardcase Premium"
-                  className={`${inputCls(false)} resize-y leading-relaxed font-mono text-xs`}
-                />
-                <span className="text-[10px] text-[#eeeeee]/30">Tiap baris teks otomatis dihitung sebagai 1 poin fitur utama di sistem.</span>
               </div>
 
             </div>
