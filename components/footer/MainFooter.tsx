@@ -41,15 +41,7 @@ function MarqueeStrip() {
   );
 }
 
-const companyLinks = [{ label: "Contact Us", href: "/contact" }];
-
-const shopLinks = [
-  { label: "All Products", href: "/products" },
-  { label: "Pakaian", href: "/pakaian" },
-  { label: "Aksesoris", href: "/aksesoris" },
-  { label: "Koleksi Baru", href: "/new" },
-  { label: "Sale", href: "/sale" },
-];
+const companyLinks = [{ label: "About Us", href: "/about" }];
 
 const legalLinks = [
   { label: "Cookie Policy", href: "/cookie-policy" },
@@ -91,7 +83,7 @@ const socialLinks = [
   },
 ];
 
-export default function Footer() {
+export default function MainFooter({ promos }: { promos: { namaPromo: string }[] }) {
   return (
     <footer className="bg-third mt-24">
       {/* Marquee */}
@@ -153,19 +145,19 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Shop Links */}
+          {/* Promo Links */}
           <div>
             <h3 className="mb-5 text-xs font-bold uppercase tracking-widest text-primary">
               Shop
             </h3>
             <ul className="flex flex-col gap-3">
-              {shopLinks.map((link) => (
-                <li key={link.label}>
+              {promos.map((promo, index: number) => (
+                <li key={index}>
                   <Link
-                    href={link.href}
+                    href={`/promo?page=1&promo=${promo.namaPromo}`}
                     className="text-sm text-primary/50 hover:text-primary transition"
                   >
-                    {link.label}
+                    {promo.namaPromo}
                   </Link>
                 </li>
               ))}

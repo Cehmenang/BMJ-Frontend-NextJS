@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import LayoutNav from "@/components/navbar/LayoutNav";
-import Footer from "@/components/footer/MainFooter";
 import QuickAction from "@/components/quick/QuickAction";
+import LayoutFooter from "@/components/footer/LayoutFooter";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -209,7 +209,7 @@ export default function RootLayout({
           {children}
         </div>
         <QuickAction/>
-        <Footer/>
+        <LayoutFooter/>
       </body>
     </html>
   );
