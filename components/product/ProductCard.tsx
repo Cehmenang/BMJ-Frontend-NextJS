@@ -1,7 +1,6 @@
 "use client"
 
 import { IProduct } from "@/interface";
-import { section } from "framer-motion/client";
 import { InfoIcon, Navigation, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -55,6 +54,15 @@ export default function ProductCard({
       ? Math.round(((pricelist - offlinePrice) / pricelist) * 100)
       : null;
 
+  // ── Promo price handling ──────────────────────────────────
+  const promoPrice = product.promo ? parseInt(product.promo) : null;
+  // harga acuan yang dicoret: pakai offlinePrice kalau ada, kalau ga pakai pricelist
+  const promoBasePrice = offlinePrice ?? pricelist;
+  const promoDiscount =
+    promoPrice && promoBasePrice && promoBasePrice > promoPrice
+      ? Math.round(((promoBasePrice - promoPrice) / promoBasePrice) * 100)
+      : null;
+
   // ── LIST VIEW ──────────────────────────────────────────────
   if (listView) {
     return (
@@ -67,6 +75,11 @@ export default function ProductCard({
           {isNew && (
             <span className="absolute bg-red-600 text-white z-[15] top-2 left-2 text-[10px] font-bold px-2 py-[2px] rounded-sm">
               Baru
+            </span>
+          )}
+          {product.promo && (
+            <span className="absolute bg-amber-600 text-white z-[15] top-2 right-2 text-[9px] font-bold px-2 py-[2px] rounded-sm shadow-sm">
+              PROMO
             </span>
           )}
           <Image
@@ -117,22 +130,49 @@ export default function ProductCard({
           {/* Price */}
           <div className="flex items-end justify-between mt-2 gap-2">
             <div className="flex flex-col gap-1">
-              {offlinePrice && (
-                <span className="font-bold text-[15px] md:text-[17px] text-red-500 leading-none">
-                  {formatPrice(offlinePrice)}
-                </span>
-              )}
-              {pricelist && (
-                <div className="flex gap-1.5 items-center flex-wrap">
-                  {discount && (
-                    <span className="text-[11px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">
-                      -{discount}%
+              {promoPrice ? (
+                <>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="font-bold text-[15px] md:text-[17px] text-amber-700 leading-none">
+                      {formatPrice(promoPrice)}
+                    </span>
+                    {promoDiscount && (
+                      <span className="text-[10px] bg-amber-100 border border-amber-600 text-third px-1.5 py-[1px] rounded-sm font-bold">
+                        -{promoDiscount}%
+                      </span>
+                    )}
+                  </div>
+                  {promoBasePrice && (
+                    <span className="text-[10px] text-third/40 line-through leading-none">
+                      {formatPrice(promoBasePrice)}
                     </span>
                   )}
-                  <span className="font-semibold text-[10px] text-third/50 italic tracking-tighter leading-none">
-                    Pricelist: {formatPrice(pricelist)}
-                  </span>
-                </div>
+                  {product.namaPromo && (
+                    <span className="text-[10px] text-amber-700 font-semibold italic leading-none">
+                      {product.namaPromo}
+                    </span>
+                  )}
+                </>
+              ) : (
+                <>
+                  {offlinePrice && (
+                    <span className="font-bold text-[15px] md:text-[17px] text-red-500 leading-none">
+                      {formatPrice(offlinePrice)}
+                    </span>
+                  )}
+                  {pricelist && (
+                    <div className="flex gap-1.5 items-center flex-wrap">
+                      {discount && (
+                        <span className="text-[11px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">
+                          -{discount}%
+                        </span>
+                      )}
+                      <span className="font-semibold text-[10px] text-third/50 italic tracking-tighter leading-none">
+                        Pricelist: {formatPrice(pricelist)}
+                      </span>
+                    </div>
+                  )}
+                </>
               )}
             </div>
 
@@ -180,7 +220,7 @@ export default function ProductCard({
     );
   }
 
-  // ── GRID VIEW (original) ───────────────────────────────────
+  // ── GRID VIEW ───────────────────────────────────
   return (
     <Link href={`/produk/${product.url}`} className="flex flex-shrink-0 w-auto md:w-[200px] group flex-col gap-y-4 relative">
       {isNew && (
@@ -189,10 +229,13 @@ export default function ProductCard({
         </span>
       )}
       <div className="md:w-[100%] transition group relative overflow-hidden rounded-2xl border-1 border-slate-200 hover:border-slate-300 hover:bg-gray-200 transition">
-        { product.promo && <div className="promo-section absolute bottom-[16px] left-[6px] z-10 flex flex-col">
-            <h1 className="text-[10px] border border-red-700 bg-red-200 rounded-t-md px-2 py-1">{product.namaPromo ? product.namaPromo : 'Promo'}</h1>
-            <h1 className="text-[12px] text-primary font-bold bg-red-700 rounded-b-md px-4 py-1">{formatPrice(parseInt(product.promo))}</h1>
-        </div> }
+
+        {/* Badge promo — pojok kanan atas, kecil, ga nutupin gambar */}
+        {product.promo && (
+          <span className="absolute top-[10px] right-[10px] z-[15] bg-amber-600 text-white text-[11px] font-bold px-3 py-[2px] rounded-sm shadow-md">
+            {product.namaPromo ? product.namaPromo : "Promo"}
+          </span>
+        )}
 
         <Image
           width={500}
@@ -278,18 +321,40 @@ export default function ProductCard({
 
         <div className="bott-card-product flex justify-between">
           <div className="flex flex-col gap-y-2">
-            <span className="font-bold text-[15px] text-red-500 leading-none">
-              {offlinePrice && formatPrice(offlinePrice)}
-            </span>
-            {pricelist && (
-              <div className="font-semibold text-[10px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center">
-                {discount && (
-                  <span className="text-[11px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">
-                    -{discount}%
+            {promoPrice ? (
+              <>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="font-bold text-[15px] text-amber-700 leading-none">
+                    {formatPrice(promoPrice)}
+                  </span>
+                  {promoDiscount && (
+                    <span className="text-[11px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">
+                      -{promoDiscount}%
+                    </span>
+                  )}
+                </div>
+                {promoBasePrice && (
+                  <span className="text-[11px] text-third/40 line-through leading-none">
+                    {formatPrice(promoBasePrice)}
                   </span>
                 )}
-                <span>Pricelist: {formatPrice(pricelist)}</span>
-              </div>
+              </>
+            ) : (
+              <>
+                <span className="font-bold text-[15px] text-red-500 leading-none">
+                  {offlinePrice && formatPrice(offlinePrice)}
+                </span>
+                {pricelist && (
+                  <div className="font-semibold text-[10px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center">
+                    {discount && (
+                      <span className="text-[11px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">
+                        -{discount}%
+                      </span>
+                    )}
+                    <span>Pricelist: {formatPrice(pricelist)}</span>
+                  </div>
+                )}
+              </>
             )}
             {isAdmin && 
               <p className="text-gray-400 text-[12px]">
