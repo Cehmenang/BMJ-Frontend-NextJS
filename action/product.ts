@@ -65,6 +65,13 @@ export async function getProductByCategory(kategoriName: string, pagination: num
     }catch(err){ console.log(err) }
 }
 
+export async function getPromosName(){
+    try{
+        const response = await fetch(`${process.env.SERVER_API}/api/promo/selected`, { method: 'GET', headers: { 'Accept': 'application/json' } })
+        if(response.ok) return await response.json()
+    }catch(err){ console.log(err) }
+}
+
 export async function uploadProduct(formData: FormData){
     try{
         const response = await fetch(`${process.env.SERVER_API}/api/tambah/produk`, { method: 'POST', body: formData, headers: { 'Accept': 'application/json' } })

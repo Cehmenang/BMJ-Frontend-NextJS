@@ -1,6 +1,6 @@
 "use server"
 
-import { getAllProductsByPromo } from "@/action/product"
+import { getAllProductsByPromo, getPromosName } from "@/action/product"
 import ProductsLayout from "@/components/product/ProductsLayout"
 
 export default async function Promo({ searchParams }: {
@@ -14,6 +14,7 @@ export default async function Promo({ searchParams }: {
 }){
     const { page, q, sort, kategori, stock } = await searchParams as any
     const pageValue = Number(page) || 1
+    const promos = await getPromosName()
     const result = await getAllProductsByPromo(pageValue)
 
     return (
