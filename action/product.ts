@@ -129,11 +129,18 @@ export async function getDestinationOption(location: string) {
   } catch (err) { return err }
 }
 
-export async function getAllProductsByPromo(pagination: number){
+export async function getAllProductsByPromo(pagination: number, query: { promo?: string }){
     try{
-        const res = await fetch(`${process.env.SERVER_API}/api/produk/promo?page=${pagination}`, {
-            method: "GET", headers: { "Content-Type": "application/json", "Accept": "application/json" }
-        })
+        let res
+        if(query.promo){
+            res = await fetch(`${process.env.SERVER_API}/api/produk/promo?page=${pagination}&promo=${query.promo && query.promo}`, {
+                method: "GET", headers: { "Content-Type": "application/json", "Accept": "application/json" }
+            })
+        }else {
+            res = await fetch(`${process.env.SERVER_API}/api/produk/promo?page=${pagination}`, {
+                method: "GET", headers: { "Content-Type": "application/json", "Accept": "application/json" }
+            })
+        }
         const result = await res.json()
         if(res.ok) return await result.produk
     }catch(err){ console.log(err) }

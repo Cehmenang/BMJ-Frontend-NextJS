@@ -10,12 +10,13 @@ export default async function Promo({ searchParams }: {
         sort?: string
         kategori?: string
         stock?: string
+        promo?: string
     }
 }){
-    const { page, q, sort, kategori, stock } = await searchParams as any
+    const { page, q, sort, kategori, stock, promo } = await searchParams as any
     const pageValue = Number(page) || 1
     const promos = await getPromosName()
-    const result = await getAllProductsByPromo(pageValue)
+    const result = await getAllProductsByPromo(pageValue, { promo }) 
 
     return (
         <div className="main-promo mt-16">
