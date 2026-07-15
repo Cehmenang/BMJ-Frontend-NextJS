@@ -34,7 +34,8 @@ type Props = {
   role?: string,
   kategori?: ICategory[],
   brands?: { name: string, image: string, produk_count: string | number }[],
-  categories?: { title: string }[]
+  categories?: { title: string }[],
+  promos?: { namaPromo: string }[]
 };
 
 export default function ProductsLayout({
@@ -51,7 +52,8 @@ export default function ProductsLayout({
   role,
   kategori,
   brands,
-  categories
+  categories,
+  promos
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
@@ -64,8 +66,10 @@ export default function ProductsLayout({
   const [filterOpen, setFilterOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState(initialKategori || "Semua");
   const [activeBrand, setActiveBrand] = useState(initialBrand || "Semua");
+  const [activePromo, setActivePromo] = useState("Semua");
   const [searchInput, setSearchInput] = useState(initialQuery);
   const [categoryOpen, setCategoryOpen] = useState(true);
+  const [promoOpen, setPromoOpen] = useState(true);
   const [brandOpen, setBrandOpen] = useState(true);
   const [availabilityOpen, setAvailabilityOpen] = useState(false);
   const [onlyInStock, setOnlyInStock] = useState(initialStock);
@@ -194,6 +198,38 @@ export default function ProductsLayout({
           </label>
         </div>
       </div>
+
+      {/* Promos */}
+       {promos && <div className="border-b border-third/8">
+        <button
+          onClick={() => setPromoOpen(v => !v)}
+          className="w-full flex items-center justify-between py-3 font-poppins text-[11px] font-semibold tracking-[0.1em] uppercase text-third/55 hover:text-third transition-colors"
+        >
+          Promo
+          <ChevronDown className={`w-3.5 h-3.5 flex-shrink-0 transition-transform duration-200 ${promoOpen ? "rotate-180" : ""}`} />
+        </button>
+        <div className={`overflow-hidden transition-all duration-200 ${promoOpen ? "max-h-72 pb-3" : "max-h-0"}`}>
+          <div className="space-y-0.5">
+            {promos!.map((pro, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  const newPromo = activePromo=== pro.namaPromo ? "" : pro.namaPromo;
+                  setActivePromo(pro.namaPromo)
+                  updateURL({promo: newPromo, page: "1"})
+                }}
+                className={`w-full text-left font-poppins text-[12px] px-2 py-1.5 rounded-lg transition-colors ${
+                  activePromo === pro.namaPromo
+                    ? "text-third font-semibold bg-third/6"
+                    : "text-third/50 hover:text-third hover:bg-third/4"
+                }`}
+              >
+                {pro.namaPromo}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>}
 
       {/* Category */}
       {categories && <div className="border-b border-third/8">

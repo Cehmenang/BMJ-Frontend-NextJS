@@ -15,7 +15,6 @@ export default async function Promo({ searchParams }: {
     const { page, q, sort, kategori, stock } = await searchParams as any
     const pageValue = Number(page) || 1
     const promos = await getPromosName()
-    console.log(promos, 'PROMONYAAA')
     const result = await getAllProductsByPromo(pageValue)
 
     return (
@@ -30,6 +29,7 @@ export default async function Promo({ searchParams }: {
                             initialBrand="Semua"
                             initialQuery={q!}
                             initialStock={stock === "1"}
+                            promos={promos}
                     />}
         </div>
     )
