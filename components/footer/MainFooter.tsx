@@ -148,7 +148,7 @@ export default function MainFooter({ promos }: { promos: { namaPromo: string }[]
           {/* Promo Links */}
           <div>
             <h3 className="mb-5 text-xs font-bold uppercase tracking-widest text-primary">
-              Shop
+              Promo Tersedia
             </h3>
             <ul className="flex flex-col gap-3">
               {promos.map((promo, index: number) => (
