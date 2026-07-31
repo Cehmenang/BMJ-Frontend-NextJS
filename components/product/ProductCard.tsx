@@ -1,372 +1,172 @@
-"use client"
-
-import { IProduct } from "@/interface";
-import { InfoIcon, Navigation, ShoppingCart } from "lucide-react";
+import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
+import {
+  MapPin,
+  Navigation,
+  MessageCircle,
+  Instagram,
+  Music2,
+  Clock,
+} from "lucide-react";
 
-function formatPrice(price: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0,
-  }).format(price);
-}
+// =====================================================================
+// GANTI DATA DI SINI SAJA — semua konten halaman diatur dari sini
+// =====================================================================
+const STORE = {
+  name: "Bandar Musik Jakarta",
+  address: "Jl. Kebon Jeruk Raya No. 45, Kebon Jeruk, Jakarta Barat 11530",
+  note: "Parkir tersedia di depan toko. Bisa langsung coba alat sebelum beli.",
+  // Ganti dengan link "Share" dari tombol Share di Google Maps
+  gmapsLink: "https://maps.app.goo.gl/GANTI-DENGAN-LINK-SHARE-ANDA",
+  // Ganti dengan embed src dari Google Maps: Share > Sematkan peta > copy src iframe
+  gmapsEmbedSrc:
+    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d!2d106.7891!3d-6.1934!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMTEnMzYuMiJTIDEwNsKwNDcnMjAuOSJF!5e0!3m2!1sid!2sid",
+  photo:
+    "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=1200&auto=format&fit=crop", // foto ngasal — ganti dengan foto toko asli
+  whatsapp: "6281234567890", // format 62xxxx tanpa tanda +
+  instagram: "bandarmusikjakarta",
+  tiktok: "bandarmusikjakarta",
+  hours: [
+    { day: "Senin", time: "09.00 – 18.00" },
+    { day: "Selasa", time: "09.00 – 18.00" },
+    { day: "Rabu", time: "09.00 – 18.00" },
+    { day: "Kamis", time: "09.00 – 18.00" },
+    { day: "Jumat", time: "09.00 – 18.00" },
+    { day: "Sabtu", time: "09.00 – 17.00" },
+  ],
+};
+// =====================================================================
 
-export default function ProductCard({
-  product,
-  listView = false,
-  isAdmin
-}: {
-  product: IProduct;
-  listView?: boolean;
-  isAdmin?: boolean;
-}) {
-  const [toast, setToast] = useState<{ msg: string; show: boolean }>({
-    msg: "",
-    show: false,
-  });
+const SITE_URL = "https://bandarmusikjakarta.com/lokasi";
 
-  const showToast = (msg: string) => {
-    setToast({ msg, show: true });
-    setTimeout(() => setToast({ msg: "", show: false }), 2500);
-  };
+export const metadata: Metadata = {
+  title: `${STORE.name} — Lokasi Toko`,
+  description: `${STORE.address}. ${STORE.note}`,
+  openGraph: {
+    title: `${STORE.name} — Lokasi Toko`,
+    description: STORE.address,
+    images: [{ url: STORE.photo }],
+    url: SITE_URL,
+    type: "website",
+  },
+};
 
-  const createDate = new Date(product.created_at);
-  const nowadays = new Date();
-  const weekDays = 7 * 24 * 60 * 60 * 1000;
-  createDate.setHours(0, 0, 0, 0);
-  nowadays.setHours(0, 0, 0, 0);
-  const diff = nowadays.getTime() - createDate.getTime();
-  const isNew = diff >= 0 && diff <= weekDays;
+export default function LokasiPage() {
+  const waLink = `https://wa.me/${STORE.whatsapp}`;
+  const igLink = `https://instagram.com/${STORE.instagram}`;
+  const ttLink = `https://tiktok.com/@${STORE.tiktok}`;
 
-  const offlinePrice = product.offlinePrice
-    ? parseInt(product.offlinePrice.includes(" ") ? product.offlinePrice.split(" ")[0].trim() : product.offlinePrice.trim())
-    : null;
-
-  const pricelist = product.pricelist
-    ? parseInt(product.pricelist.includes(" ") ? product.pricelist.split(" ")[0].trim() : product.pricelist.trim())
-    : null;
-
-  const discount =
-    offlinePrice && pricelist && pricelist > offlinePrice
-      ? Math.round(((pricelist - offlinePrice) / pricelist) * 100)
-      : null;
-
-  // ── Promo price handling ──────────────────────────────────
-  const promoPrice = product.promo ? parseInt(product.promo) : null;
-  // harga acuan yang dicoret: pakai offlinePrice kalau ada, kalau ga pakai pricelist
-  const promoBasePrice = offlinePrice ?? pricelist;
-  const promoDiscount =
-    promoPrice && promoBasePrice && promoBasePrice > promoPrice
-      ? Math.round(((promoBasePrice - promoPrice) / promoBasePrice) * 100)
-      : null;
-
-  // ── LIST VIEW ──────────────────────────────────────────────
-  if (listView) {
-    return (
-      <Link
-        href={`/produk/${product.url}`}
-        className="group flex gap-4 p-3 rounded-2xl border border-slate-200 hover:border-slate-300 hover:bg-gray-50 transition-all duration-200 relative"
-      >
-        {/* Image */}
-        <div className="relative w-28 h-28 md:w-36 md:h-36 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100">
-          {isNew && (
-            <span className="absolute bg-red-600 text-white z-[15] top-2 left-2 text-[10px] font-bold px-2 py-[2px] rounded-sm">
-              Baru
-            </span>
-          )}
-          {product.promo && (
-            <span className="absolute bg-amber-600 text-white z-[15] top-2 right-2 text-[9px] font-bold px-2 py-[2px] rounded-sm shadow-sm">
-              PROMO
-            </span>
-          )}
-          <Image
-            width={200}
-            height={200}
-            alt={product.name}
-            src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0]}`}
-            className={`w-full h-full object-cover translate-y-0 opacity-100 ${
-              product.images.length > 1 && "group-hover:opacity-0"
-            } transition duration-500`}
-            loading="lazy"
-          />
-          {product.images.length > 1 && (
-            <Image
-              width={200}
-              height={200}
-              alt={product.name}
-              src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[1]}`}
-              className="w-full h-full object-cover opacity-0 group-hover:opacity-100 transition duration-500 absolute inset-0"
-              loading="lazy"
-            />
-          )}
-        </div>
-
-        {/* Info */}
-        <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
-          <div>
-            {/* Category + stock */}
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-[11px] text-third/50 font-medium">
-                {product.kategoriId}
-              </span>
-              <span
-                className={`text-[10px] font-bold ${
-                  product.stock == 0 ? "text-red-500" : "text-gray-400"
-                }`}
-              >
-                {product.stock == 0 ? "On-Stock" : "Out-Stock"}
-              </span>
-            </div>
-
-            {/* Name */}
-            <p className="text-[13px] md:text-[15px] font-extrabold text-third leading-snug line-clamp-2 font-inter">
-              {product.name.toUpperCase()}
-            </p>
-          </div>
-
-          {/* Price */}
-          <div className="flex items-end justify-between mt-2 gap-2">
-            <div className="flex flex-col gap-1">
-              {promoPrice ? (
-                <>
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="font-bold text-[15px] md:text-[17px] text-amber-700 leading-none">
-                      {formatPrice(promoPrice)}
-                    </span>
-                    {promoDiscount && (
-                      <span className="text-[10px] bg-amber-100 border border-amber-600 text-third px-1.5 py-[1px] rounded-sm font-bold">
-                        -{promoDiscount}%
-                      </span>
-                    )}
-                  </div>
-                  {promoBasePrice && (
-                    <span className="text-[10px] text-third/40 line-through leading-none">
-                      {formatPrice(promoBasePrice)}
-                    </span>
-                  )}
-                  {product.namaPromo && (
-                    <span className="text-[10px] text-amber-700 font-semibold italic leading-none">
-                      {product.namaPromo}
-                    </span>
-                  )}
-                </>
-              ) : (
-                <>
-                  {offlinePrice && (
-                    <span className="font-bold text-[15px] md:text-[17px] text-red-500 leading-none">
-                      {formatPrice(offlinePrice)}
-                    </span>
-                  )}
-                  {pricelist && (
-                    <div className="flex gap-1.5 items-center flex-wrap">
-                      {discount && (
-                        <span className="text-[11px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">
-                          -{discount}%
-                        </span>
-                      )}
-                      <span className="font-semibold text-[10px] text-third/50 italic tracking-tighter leading-none">
-                        Pricelist: {formatPrice(pricelist)}
-                      </span>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-
-            {/* Action buttons — always visible on list view */}
-            <div className="flex gap-2 flex-shrink-0">
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigator.clipboard.writeText(
-                    `${window.location.origin}/produk/${product.url}`
-                  );
-                  showToast("Berhasil disalin!");
-                }}
-                className="w-8 h-8 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center text-gray-400 hover:text-third transition-colors duration-150 cursor-pointer"
-                title="Salin tautan produk"
-              >
-                <Navigation className="w-3.5 h-3.5" />
-              </button>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  showToast("Masuk dikeranjang!");
-                }}
-                className="w-8 h-8 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center text-gray-400 hover:text-second transition-colors duration-150 cursor-pointer"
-                title="Tambah ke keranjang"
-              >
-                <ShoppingCart className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Toast */}
-        <div
-          className={`absolute top-3 left-1/2 -translate-x-1/2 z-20 transition-all duration-300 whitespace-nowrap ${
-            toast.show ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
-          }`}
-        >
-          <div className="bg-amber-800/60 text-white text-[11px] font-medium px-2 py-1 rounded-full shadow-lg flex items-center gap-2 italic">
-            <InfoIcon className="w-3.5 h-3.5 text-second flex-shrink-0" />
-            {toast.msg}
-          </div>
-        </div>
-      </Link>
-    );
-  }
-
-  // ── GRID VIEW ───────────────────────────────────
   return (
-    <Link href={`/produk/${product.url}`} className="flex flex-shrink-0 w-auto md:w-[200px] group flex-col gap-y-4 relative">
-      {isNew && (
-        <span className="absolute bg-red-600 text-white z-[15] top-[10px] left-[10px] text-[11px] font-bold px-3 py-[2px] rounded-sm">
-          Baru
-        </span>
-      )}
-      <div className="md:w-[100%] transition group relative overflow-hidden rounded-2xl border-1 border-slate-200 hover:border-slate-300 hover:bg-gray-200 transition">
-
-        {/* Badge promo — pojok kanan atas, kecil, ga nutupin gambar */}
-        {product.promo && (
-          <span className="absolute top-[10px] right-[10px] z-[15] bg-amber-600 text-white text-[11px] font-bold px-3 py-[2px] rounded-sm shadow-md">
-            {product.namaPromo ? product.namaPromo : "Promo"}
-          </span>
-        )}
-
-        <Image
-          width={500}
-          height={500}
-          alt={product.name}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0]}`}
-          className={`translate-y-0 opacity-100 ${product.images.length > 1 && "group-hover:translate-y-[280px] group-hover:opacity-0"} transition duration-700`}
-          loading="lazy"
-        />
-        <Image
-          width={500}
-          height={500}
-          alt={product.name}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          src={
-            product.images.length > 1
-              ? `${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[1]}`
-              : `${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0]}`
-          }
-          loading="lazy"
-          className={`translate-y-[-280px] opacity-0 ${product.images.length > 1 && "group-hover:translate-y-0 group-hover:opacity-100"} transition duration-700 absolute top-0`}
-        />
-
-        {/* Toast popup */}
-        <div
-          className={`absolute top-3 left-1/2 -translate-x-1/2 z-20 transition-all duration-300 whitespace-nowrap ${
-            toast.show ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
-          }`}
-        >
-          <div className="bg-amber-800/60 text-white text-[11px] font-medium px-2 py-1 rounded-full shadow-lg flex items-center gap-2 italic">
-            <InfoIcon className="w-3.5 h-3.5 text-second flex-shrink-0" />
-            {toast.msg}
-          </div>
-        </div>
-
-        {/* Action buttons */}
-        <div className="absolute bottom-3 right-3 flex flex-col gap-2 translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out z-10">
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              navigator.clipboard.writeText(
-                `${window.location.origin}/produk/${product.url}`
-              );
-              showToast("Berhasil disalin!");
-            }}
-            className="w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center text-gray-400 hover:text-third transition-colors duration-150 cursor-pointer"
-            title="Salin tautan produk"
-          >
-            <Navigation className="w-4 h-4" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              showToast("Masuk dikeranjang!");
-            }}
-            className="w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center text-gray-400 hover:text-second transition-colors duration-150 cursor-pointer"
-            title="Tambah ke keranjang"
-          >
-            <ShoppingCart className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* Info */}
-      <div className="px-0.5">
-        <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[11px] text-third/50 font-medium">
-            {product.kategoriId}
-          </span>
-          <span
-            className={`text-[10px] font-bold ${
-              product.stock == 0 ? "text-red-500" : "text-gray-400"
-            }`}
-          >
-            {product.stock == 0 ? "On-Stock" : "Out-Stock"}
+    <main className="min-h-screen bg-gray-50 font-inter">
+      <div className="max-w-xl mx-auto px-4 py-10">
+        {/* Header */}
+        <div className="flex items-center justify-center gap-1.5 mb-2">
+          <MapPin className="w-4 h-4 text-amber-600" />
+          <span className="text-[11px] font-bold tracking-widest uppercase text-amber-600">
+            Lokasi Toko
           </span>
         </div>
-
-        <p className="text-[14px] font-extrabold text-third leading-snug mb-3 line-clamp-2 min-h-[40px] font-inter">
-          {product.name.toUpperCase()}
+        <h1 className="text-2xl md:text-3xl font-extrabold text-third text-center mb-2">
+          {STORE.name}
+        </h1>
+        <p className="text-[13px] text-third/50 text-center max-w-sm mx-auto mb-8 leading-relaxed">
+          {STORE.address}
         </p>
 
-        <div className="bott-card-product flex justify-between">
-          <div className="flex flex-col gap-y-2">
-            {promoPrice ? (
-              <>
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="font-bold text-[15px] text-amber-700 leading-none">
-                    {formatPrice(promoPrice)}
-                  </span>
-                  {promoDiscount && (
-                    <span className="text-[11px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">
-                      -{promoDiscount}%
-                    </span>
-                  )}
-                </div>
-                {promoBasePrice && (
-                  <span className="text-[11px] text-third/40 line-through leading-none">
-                    {formatPrice(promoBasePrice)}
-                  </span>
-                )}
-              </>
-            ) : (
-              <>
-                <span className="font-bold text-[15px] text-red-500 leading-none">
-                  {offlinePrice && formatPrice(offlinePrice)}
-                </span>
-                {pricelist && (
-                  <div className="font-semibold text-[10px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center">
-                    {discount && (
-                      <span className="text-[11px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">
-                        -{discount}%
-                      </span>
-                    )}
-                    <span>Pricelist: {formatPrice(pricelist)}</span>
-                  </div>
-                )}
-              </>
-            )}
-            {isAdmin && 
-              <p className="text-gray-400 text-[12px]">
-                {new Date(product.created_at).toLocaleString("id-ID", {
-                  dateStyle: "medium", 
-                  timeStyle: "short", 
-                })}
-              </p>
-            }
+        {/* Photo + Map + CTA card */}
+        <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden mb-6">
+          <div className="relative w-full aspect-[16/9] bg-gray-100">
+            <Image
+              src={STORE.photo}
+              alt={`Tampak depan ${STORE.name}`}
+              fill
+              sizes="(max-width: 768px) 100vw, 640px"
+              className="object-cover"
+            />
+          </div>
+
+          <iframe
+            src={STORE.gmapsEmbedSrc}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Peta lokasi toko"
+            className="w-full aspect-[16/9] border-t border-slate-200"
+          />
+
+          <div className="p-4 md:p-5">
+            <p className="text-[13px] text-third/50 mb-3 leading-relaxed">
+              {STORE.note}
+            </p>
+            <a
+              href={STORE.gmapsLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center justify-center gap-2 w-full bg-third text-white font-bold text-[14px] px-4 py-3 rounded-xl hover:bg-third/90 transition-colors duration-150"
+            >
+              <Navigation className="w-4 h-4 text-second group-hover:translate-x-0.5 transition-transform" />
+              Buka di Google Maps
+            </a>
           </div>
         </div>
+
+        {/* Contact */}
+        <p className="text-[11px] font-bold tracking-widest uppercase text-amber-600 mb-3 px-1">
+          Hubungi Kami
+        </p>
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          <a
+            href={waLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-col items-center gap-2 rounded-2xl border border-slate-200 bg-white py-4 hover:border-amber-600 hover:bg-amber-50/40 transition-colors duration-150"
+          >
+            <MessageCircle className="w-5 h-5 text-third" />
+            <span className="text-[11px] font-semibold text-third/60">WhatsApp</span>
+          </a>
+          <a
+            href={igLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-col items-center gap-2 rounded-2xl border border-slate-200 bg-white py-4 hover:border-amber-600 hover:bg-amber-50/40 transition-colors duration-150"
+          >
+            <Instagram className="w-5 h-5 text-third" />
+            <span className="text-[11px] font-semibold text-third/60">Instagram</span>
+          </a>
+          <a
+            href={ttLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-col items-center gap-2 rounded-2xl border border-slate-200 bg-white py-4 hover:border-amber-600 hover:bg-amber-50/40 transition-colors duration-150"
+          >
+            <Music2 className="w-5 h-5 text-third" />
+            <span className="text-[11px] font-semibold text-third/60">TikTok</span>
+          </a>
+        </div>
+
+        {/* Hours */}
+        <p className="text-[11px] font-bold tracking-widest uppercase text-amber-600 mb-3 px-1">
+          Jam Operasional
+        </p>
+        <div className="rounded-2xl border border-slate-200 bg-white px-4 md:px-5 py-1">
+          {STORE.hours.map((h, i) => (
+            <div
+              key={h.day}
+              className={`flex items-center justify-between py-3 ${
+                i !== STORE.hours.length - 1 ? "border-b border-slate-100" : ""
+              }`}
+            >
+              <span className="text-[13px] font-semibold text-third">{h.day}</span>
+              <span className="text-[13px] font-bold text-amber-700 tabular-nums">
+                {h.time}
+              </span>
+            </div>
+          ))}
+        </div>
+        <div className="flex items-center justify-center gap-1.5 mt-3">
+          <Clock className="w-3.5 h-3.5 text-third/40" />
+          <span className="text-[12px] text-third/40">Tutup hari Minggu</span>
+        </div>
       </div>
-    </Link>
+    </main>
   );
 }

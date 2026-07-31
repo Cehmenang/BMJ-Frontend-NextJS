@@ -18,7 +18,6 @@ export default function Brands() {
   useEffect(() => {
     (async function () {
       const result = await getBrands()
-      console.log(result, "hasil brandnyaa cuyy!!!!")
       setBrands(result)
     })()
   }, [])
