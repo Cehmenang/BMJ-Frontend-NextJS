@@ -22,7 +22,7 @@ const STORE = {
   gmapsEmbedSrc:
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.880746792241!2d106.837824!3d-6.1467152!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f52291955f13%3A0xa50788e55fe5c9e9!2sBandar%20Musik%20Jakarta%20BMJ!5e0!3m2!1sen!2sid!4v1785543043776!5m2!1sen!2sid",
   photo:
-    "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=1200&auto=format&fit=crop", // foto ngasal — ganti dengan foto toko asli
+    "lokasi.webp", // foto ngasal — ganti dengan foto toko asli
   whatsapp: "6281234567890", // format 62xxxx tanpa tanda +
   instagram: "bandarmusikjakarta_bmj",
   tiktok: "bandarmusikjakarta_bmj",
