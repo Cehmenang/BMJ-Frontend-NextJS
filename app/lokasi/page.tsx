@@ -14,25 +14,25 @@ import {
 // =====================================================================
 const STORE = {
   name: "Bandar Musik Jakarta",
-  address: "Jl. Kebon Jeruk Raya No. 45, Kebon Jeruk, Jakarta Barat 11530",
-  note: "Parkir tersedia di depan toko. Bisa langsung coba alat sebelum beli.",
+  address: "Jl. Rajawali Selatan I No.26A, RT.3/RW.2, Kecamatan Sawah Besar, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10720",
+  note: "No. 26A, Pagar Hitam. Seberang Toko Rajawali Pancing.",
   // Ganti dengan link "Share" dari tombol Share di Google Maps
-  gmapsLink: "https://maps.app.goo.gl/GANTI-DENGAN-LINK-SHARE-ANDA",
+  gmapsLink: "https://maps.app.goo.gl/bbpcbr9VtMfuSM4FA",
   // Ganti dengan embed src dari Google Maps: Share > Sematkan peta > copy src iframe
   gmapsEmbedSrc:
-    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d!2d106.7891!3d-6.1934!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMTEnMzYuMiJTIDEwNsKwNDcnMjAuOSJF!5e0!3m2!1sid!2sid",
+    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.880746792241!2d106.837824!3d-6.1467152!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f52291955f13%3A0xa50788e55fe5c9e9!2sBandar%20Musik%20Jakarta%20BMJ!5e0!3m2!1sen!2sid!4v1785543043776!5m2!1sen!2sid",
   photo:
     "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=1200&auto=format&fit=crop", // foto ngasal — ganti dengan foto toko asli
   whatsapp: "6281234567890", // format 62xxxx tanpa tanda +
-  instagram: "bandarmusikjakarta",
-  tiktok: "bandarmusikjakarta",
+  instagram: "bandarmusikjakarta_bmj",
+  tiktok: "bandarmusikjakarta_bmj",
   hours: [
-    { day: "Senin", time: "09.00 – 18.00" },
-    { day: "Selasa", time: "09.00 – 18.00" },
-    { day: "Rabu", time: "09.00 – 18.00" },
-    { day: "Kamis", time: "09.00 – 18.00" },
-    { day: "Jumat", time: "09.00 – 18.00" },
-    { day: "Sabtu", time: "09.00 – 17.00" },
+    { day: "Senin", time: "10.00 – 20.00" },
+    { day: "Selasa", time: "10.00 – 20.00" },
+    { day: "Rabu", time: "10.00 – 20.00" },
+    { day: "Kamis", time: "10.00 – 20.00" },
+    { day: "Jumat", time: "10.00 – 20.00" },
+    { day: "Sabtu", time: "10.00 – 20.00" },
   ],
 };
 // =====================================================================
@@ -58,7 +58,7 @@ export default function LokasiPage() {
 
   return (
     <main className="min-h-screen bg-gray-50 font-inter">
-      <div className="max-w-xl mx-auto px-4 py-10">
+      <div className="max-w-xl mx-auto px-4 py-10 pt-20">
         {/* Header */}
         <div className="flex items-center justify-center gap-1.5 mb-2">
           <MapPin className="w-4 h-4 text-amber-600" />
