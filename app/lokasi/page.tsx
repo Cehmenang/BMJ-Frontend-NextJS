@@ -23,7 +23,7 @@ const STORE = {
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.880746792241!2d106.837824!3d-6.1467152!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f52291955f13%3A0xa50788e55fe5c9e9!2sBandar%20Musik%20Jakarta%20BMJ!5e0!3m2!1sen!2sid!4v1785543043776!5m2!1sen!2sid",
   photo:
     "lokasi.webp", // foto ngasal — ganti dengan foto toko asli
-  whatsapp: "6281234567890", // format 62xxxx tanpa tanda +
+  whatsapp: "6281929290560", // format 62xxxx tanpa tanda +
   instagram: "bandarmusikjakarta_bmj",
   tiktok: "bandarmusikjakarta_bmj",
   hours: [
@@ -77,7 +77,7 @@ export default function LokasiPage() {
         <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden mb-6">
           <div className="relative w-full aspect-[16/9] bg-gray-100">
             <Image
-              src={STORE.photo}
+              src={'/lokasi.webp'}
               alt={`Tampak depan ${STORE.name}`}
               fill
               sizes="(max-width: 768px) 100vw, 640px"
