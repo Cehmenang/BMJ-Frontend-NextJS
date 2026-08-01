@@ -27,12 +27,12 @@ const STORE = {
   instagram: "bandarmusikjakarta_bmj",
   tiktok: "bandarmusikjakarta_bmj",
   hours: [
-    { day: "Senin", time: "10.00 – 20.00" },
-    { day: "Selasa", time: "10.00 – 20.00" },
-    { day: "Rabu", time: "10.00 – 20.00" },
-    { day: "Kamis", time: "10.00 – 20.00" },
-    { day: "Jumat", time: "10.00 – 20.00" },
-    { day: "Sabtu", time: "10.00 – 20.00" },
+    { day: "Senin", time: "10.00 – 19.30" },
+    { day: "Selasa", time: "10.00 – 19.30" },
+    { day: "Rabu", time: "10.00 – 19.30" },
+    { day: "Kamis", time: "10.00 – 19.30" },
+    { day: "Jumat", time: "10.00 – 19.30" },
+    { day: "Sabtu", time: "10.00 – 18.00" },
   ],
 };
 // =====================================================================
