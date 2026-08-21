@@ -33,6 +33,10 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
   const [mounted, setMounted] = useState(false);
   const router = useRouter(); 
 
+  useEffect(()=>{
+    console.log(document.cookie)
+  }, [])
+
   useEffect(() => {
     setMounted(true);
   }, []);
