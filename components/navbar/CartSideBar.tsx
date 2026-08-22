@@ -34,7 +34,7 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
   const router = useRouter(); 
 
   useEffect(()=>{
-    console.log(document.cookie)
+    console.log(document.cookie.split(';'))
   }, [])
 
   useEffect(() => {
