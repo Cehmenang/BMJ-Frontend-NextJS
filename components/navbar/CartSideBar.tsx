@@ -36,7 +36,9 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
   useEffect(()=>{
     const cookies = document.cookie.split(';')
     console.log(cookies, 'kukis')
-    const username = cookies.includes("username")
+    const username = cookies.map(cookie=>{
+      return cookie.includes("username")
+    })
     console.log(username)
   }, [])
 
