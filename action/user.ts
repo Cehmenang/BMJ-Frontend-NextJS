@@ -21,14 +21,14 @@ export async function login(data: { username: string, password: string }){
             })
         
             cookieStore.set('username', response.data.user.username, {
-                httpOnly: true,
+                httpOnly: false,
                 maxAge: 3600 * 24,
                 secure: true,
                 sameSite: 'lax'
             })
 
             cookieStore.set('role', roleResult.data.role, {
-                httpOnly: true,
+                httpOnly: false,
                 maxAge: 3600 * 24,
                 secure: true,
                 sameSite: "lax"
