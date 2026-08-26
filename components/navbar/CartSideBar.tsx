@@ -31,13 +31,14 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
   const [isLoading, setIsLoading] = useState(false);
   const backdropRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
+  const [isLogin, setIsLogin] = useState(false)
+  // const [redirectLogin, setRedirectLogin] = useState
   const router = useRouter(); 
 
   useEffect(()=>{
     const cookies = document.cookie.split(';')
-    console.log(cookies, 'kukis')
-    const isLogin = cookies.filter(cookie=>cookie.includes("username"))
-    console.log(isLogin)
+    const username = cookies.filter(cookie=>cookie.includes("username"))[0]
+    setIsLogin(username ? true : false)
   }, [])
 
   useEffect(() => {
@@ -259,13 +260,16 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
                 Checkout Sekarang
               </Link>
               <Link
-                href="/keranjang"
+                href={`${isLogin ? "/keranjang" : ""}`}
                 onClick={onClose}
                 className="w-full py-2.5 rounded-xl border border-third/15 text-third font-poppins text-[12.5px] font-medium flex items-center justify-center hover:bg-third/4 transition-colors"
               >
                 Lihat Keranjang
               </Link>
             </div>
+
+            {}
+
           </div>
         )}
       </div>
