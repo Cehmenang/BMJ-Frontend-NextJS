@@ -746,8 +746,11 @@ const handleCloseToast = () => {
                     </button>
                   </div>
                   <button
-                    disabled={!allVariantsSelected || product.stock == 0}
-                    className="flex-1 py-2.5 px-4 bg-second text-third border-2 border-third rounded-md font-bold text-[16px] md:text-[18px] flex items-center justify-center gap-2 transition-all duration-150 disabled:bg-slate-400 disabled:text-slate-200 disabled:cursor-not-allowed drop-shadow-[4px_4px_0px_rgba(62,63,32,1)] md:drop-shadow-[6px_6px_0px_rgba(62,63,32,1)]"
+                    disabled={
+                        !allVariantsSelected
+                      //  || product.stock == 0
+                    }
+                    className="flex-1 py-2.5 px-4 bg-second text-third border-2 border-third rounded-md font-bold text-[16px] md:text-[18px] flex items-center justify-center gap-2 transition-all duration-150 disabled:bg-slate-200 disabled:cursor-not-allowed drop-shadow-[4px_4px_0px_rgba(62,63,32,1)] md:drop-shadow-[6px_6px_0px_rgba(62,63,32,1)]"
                     onClick={async () =>{ 
                       try {
                         await createWishlist(product.id, qty);
@@ -760,7 +763,7 @@ const handleCloseToast = () => {
                     }}
                   >
                     <ShoppingCart strokeWidth={3} className="w-5 h-5 md:w-6 md:h-6" />
-                    <span>{product.stock == 0 ? "Pre-Order" : "Keranjang"}</span>
+                    <span>{product.stock < 0 ? "Pre-Order" : "Keranjang"}</span>
                   </button>
                   <Link href={`${product.tautan || "https://www.tokopedia.com/bandarmusikjakarta"}`}
                     target="_blank"

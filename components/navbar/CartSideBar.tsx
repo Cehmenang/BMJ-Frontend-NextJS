@@ -5,7 +5,7 @@ import Link from "next/link";
 import { createPortal } from "react-dom";
 import { IProduct } from "@/interface";
 import { removeWishlist, updateQtyWishlist } from "@/action/wishlist";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 
 type CartItem = {
   id: string;
@@ -33,7 +33,7 @@ export default function CartSidebar({ open, onClose, wishlist, setNeedLogin }: C
   const backdropRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   const [isLogin, setIsLogin] = useState(false)
-  const router = useRouter(); 
+  const router = useRouter();
 
   useEffect(()=>{
     const cookies = document.cookie.split(';')
@@ -68,27 +68,28 @@ export default function CartSidebar({ open, onClose, wishlist, setNeedLogin }: C
     const targetItem = items.find(item => item.id === id);
     if (!targetItem) return;
     const newQty = Math.max(1, targetItem.quantity + delta);
-    
+
     setItems((prev) =>
       prev.map((item) => item.id === id ? { ...item, quantity: newQty } : item)
     );
-    
-    await updateQtyWishlist(id, newQty); 
-    router.refresh(); 
+
+    await updateQtyWishlist(id, newQty);
+    router.refresh();
   };
 
   const removeItem = async (id: string) => {
     setIsLoading(true);
     const success = await removeWishlist(id);
-    
+
     if (success) {
       setItems((prev) => prev.filter((item) => item.id !== id));
-      router.refresh(); 
+      router.refresh();
     }
     setIsLoading(false);
   };
 
   const subtotal = items.reduce((sum, item) => sum + parseInt(item.produk.offlinePrice) * item.quantity, 0);
+  const totalQty = items.reduce((s, i) => s + i.quantity, 0);
 
   if (!mounted) return null;
   return createPortal(
@@ -103,25 +104,18 @@ export default function CartSidebar({ open, onClose, wishlist, setNeedLogin }: C
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-[420px] z-50 bg-primary flex flex-col transition-transform duration-350 ease-in-out ${
+        className={`fixed top-0 right-0 h-full w-full sm:w-[440px] z-50 bg-primary flex flex-col transition-transform duration-350 ease-in-out ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        {/* Header */}
+        {/* Header — "X ITEMS IN YOUR BAG" style */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-third/10 flex-shrink-0">
-          <div className="flex items-center gap-3">
-            <h2 className="text-[20px] font-extrabold text-third tracking-tight">
-              Keranjang
-            </h2>
-            {items.length > 0 && (
-              <span className="w-5 h-5 rounded-full bg-second text-third text-[10px] font-bold font-poppins flex items-center justify-center">
-                {items.length}
-              </span>
-            )}
-          </div>
+          <h2 className="font-poppins text-[15px] font-extrabold text-third uppercase tracking-[0.06em]">
+            {items.length} {items.length === 1 ? "Item" : "Items"} di Keranjang
+          </h2>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-lg bg-third/7 border border-third/10 flex items-center justify-center text-third/60 hover:text-third hover:bg-third/12 transition-colors"
+            className="w-8 h-8 rounded-full border border-third/15 flex items-center justify-center text-third/60 hover:text-third hover:bg-third/8 transition-colors"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
@@ -152,77 +146,71 @@ export default function CartSidebar({ open, onClose, wishlist, setNeedLogin }: C
               </button>
             </div>
           ) : (
-            <div className="px-6 py-4 space-y-4">
+            <div className="px-6 py-5 space-y-6">
               {items.map((item) => {
                 return (
                 <div key={item.id} className="flex gap-4 opacity-100 data-[loading=true]:opacity-50 transition-opacity">
                   {/* Image */}
-                  <div className="w-20 h-20 rounded-xl overflow-hidden bg-third/5 border border-third/8 flex-shrink-0">
+                  <div className="w-24 h-24 rounded-2xl overflow-hidden bg-third/5 border border-third/8 flex-shrink-0">
                     <img
-                      src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${item.produk.images[0]}`} // ── FIX: bersihin index array gambar ──
+                      src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${item.produk.images[0]}`}
                       alt={item.produk.name}
                       className="w-full h-full object-cover"
                     />
                   </div>
 
                   {/* Info */}
-                  <div className="min-w-0 flex-1"> {/* min-w-0 penting di flex-child agar text-clamping bekerja sempurna */}
-                    <p className="font-poppins text-[11px] text-third/40 mb-0.5">{item.produk.brandId}</p>
-                    
-                    {/* ── REVISI UTAMA: Ganti truncate ke line-clamp-2 biar turun 2 baris lalu titik-titik ── */}
-                    <Link 
-                      href={`/produk/${item.produk.url}`} 
-                      className="font-poppins text-[11px] font-semibold text-third opacity-70 hover:opacity-100 transition leading-snug line-clamp-2 block"
-                    >
-                      {item.produk.name}
-                    </Link>
-                    
-                    <p className="font-poppins text-[13px] font-bold text-second mt-1">
-                      {formatRp(parseInt(item.produk.offlinePrice))}
+                  <div className="min-w-0 flex-1 flex flex-col">
+                    {/* Nama + harga sejajar seperti contoh */}
+                    <div className="flex items-start justify-between gap-3">
+                      <Link
+                        href={`/produk/${item.produk.url}`}
+                        className="font-poppins text-[13px] font-extrabold text-third uppercase leading-snug line-clamp-2 hover:opacity-70 transition"
+                      >
+                        {item.produk.name}
+                      </Link>
+                      <p className="font-poppins text-[13px] font-bold text-third whitespace-nowrap">
+                        {formatRp(parseInt(item.produk.offlinePrice))}
+                      </p>
+                    </div>
+
+                    <p className="font-poppins text-[10.5px] text-third/40 mt-0.5">
+                      {item.produk.brandId}
                     </p>
 
-                    {/* Qty + Remove */}
-                    <div className="flex items-center justify-between mt-2.5">
-                      {/* Qty controls */}
-                      <div className="flex items-center gap-0 border border-third/12 rounded-lg overflow-hidden">
-                        <button
-                          onClick={() => updateQty(item.id, -1)}
-                          disabled={item.quantity <= 1 || isLoading}
-                          className="w-7 h-7 flex items-center justify-center text-third/60 hover:text-third hover:bg-third/6 transition-colors disabled:opacity-30 disabled:cursor-default"
-                        >
-                          <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                            <line x1="5" y1="12" x2="19" y2="12" />
-                          </svg>
-                        </button>
-                        <span className="w-8 text-center font-poppins text-[12px] font-semibold text-third border-x border-third/12">
-                          {item.quantity}
-                        </span>
-                        <button
-                          onClick={() => updateQty(item.id, 1)}
-                          disabled={isLoading}
-                          className="w-7 h-7 flex items-center justify-center text-third/60 hover:text-third hover:bg-third/6 transition-colors"
-                        >
-                          <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                            <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
-                          </svg>
-                        </button>
-                      </div>
-
-                      {/* Remove */}
+                    {/* Qty stepper */}
+                    <div className="flex items-center gap-0 border border-third/15 rounded-full overflow-hidden mt-2.5 w-fit">
                       <button
-                        onClick={() => removeItem(item.id)}
-                        disabled={isLoading}
-                        className="flex items-center gap-1 text-[11px] font-poppins text-third/35 hover:text-red-400 transition-colors disabled:opacity-40"
+                        onClick={() => updateQty(item.id, -1)}
+                        disabled={item.quantity <= 1 || isLoading}
+                        className="w-7 h-7 flex items-center justify-center text-third/60 hover:text-third hover:bg-third/6 transition-colors disabled:opacity-30 disabled:cursor-default"
                       >
-                        <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="3 6 5 6 21 6" />
-                          <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
-                          <path d="M10 11v6M14 11v6" />
-                          <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
+                        <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                          <line x1="5" y1="12" x2="19" y2="12" />
                         </svg>
-                        {isLoading ? "Menghapus..." : "Hapus"}
+                      </button>
+                      <span className="w-8 text-center font-poppins text-[12px] font-semibold text-third border-x border-third/15">
+                        {item.quantity}
+                      </span>
+                      <button
+                        onClick={() => updateQty(item.id, 1)}
+                        disabled={isLoading}
+                        className="w-7 h-7 flex items-center justify-center text-third/60 hover:text-third hover:bg-third/6 transition-colors"
+                      >
+                        <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                          <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
                       </button>
                     </div>
+
+                    {/* Remove — uppercase text link seperti "REMOVE" */}
+                    <button
+                      onClick={() => removeItem(item.id)}
+                      disabled={isLoading}
+                      className="mt-2.5 self-start font-poppins text-[10.5px] font-bold uppercase tracking-[0.04em] text-third/40 hover:text-red-400 transition-colors disabled:opacity-40"
+                    >
+                      {isLoading ? "Menghapus..." : "Hapus"}
+                    </button>
                   </div>
                 </div>
                 )})}
@@ -230,33 +218,34 @@ export default function CartSidebar({ open, onClose, wishlist, setNeedLogin }: C
           )}
         </div>
 
-        {/* Footer — subtotal + checkout */}
+        {/* Footer — subtotal + shipping + 2 tombol terpisah */}
         {items.length > 0 && (
           <div className="flex-shrink-0 border-t border-third/10 px-6 py-5 space-y-4 bg-primary">
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <span className="font-poppins text-[12px] text-third/50">
-                  Subtotal ({items.reduce((s, i) => s + i.quantity, 0)} item)
+                <span className="font-poppins text-[12px] font-semibold text-third/60 uppercase tracking-[0.03em]">
+                  Subtotal ({totalQty} item)
                 </span>
-                <span className="font-poppins text-[14px] font-bold text-third">
+                <span className="font-poppins text-[14px] font-extrabold text-third">
                   {formatRp(subtotal)}
                 </span>
               </div>
-              <p className="font-poppins text-[11px] text-third/35 leading-relaxed">
-                Belum termasuk ongkos kirim & pajak. Dihitung saat checkout.
-              </p>
+              <div className="flex items-center justify-between">
+                <span className="font-poppins text-[12px] font-semibold text-third/60 uppercase tracking-[0.03em]">
+                  Ongkos Kirim
+                </span>
+                <span className="font-poppins text-[11.5px] text-third/45">
+                  Dihitung saat checkout
+                </span>
+              </div>
             </div>
 
             <div className="space-y-2">
               <Link
                 href="/checkout"
                 onClick={onClose}
-                className="w-full py-3 rounded-xl bg-third text-primary font-poppins text-[13px] font-semibold tracking-[0.02em] flex items-center justify-center gap-2 hover:bg-third-dark transition-colors"
+                className="w-full py-3.5 rounded-xl bg-third text-primary font-poppins text-[13px] font-bold uppercase tracking-[0.03em] flex items-center justify-center gap-2 hover:bg-third-dark transition-colors"
               >
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                  <path d="M7 11V7a5 5 0 0110 0v4" />
-                </svg>
                 Checkout Sekarang
               </Link>
               <Link
@@ -267,9 +256,6 @@ export default function CartSidebar({ open, onClose, wishlist, setNeedLogin }: C
                 Lihat Keranjang
               </Link>
             </div>
-
-            {}
-
           </div>
         )}
       </div>
