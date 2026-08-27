@@ -43,6 +43,7 @@ export default function CartSidebar({ open, onClose, wishlist, setNeedLogin }: C
 
   useEffect(() => {
     setMounted(true);
+    console.log(wishlist, 'wishlist')
   }, []);
 
   useEffect(() => {
@@ -242,8 +243,8 @@ export default function CartSidebar({ open, onClose, wishlist, setNeedLogin }: C
 
             <div className="space-y-2">
               <Link
-                href="/checkout"
-                onClick={onClose}
+                href={`${isLogin ? `/checkout/${wishlist}` : ""}`}
+                onClick={isLogin ? onClose : ()=>setNeedLogin(true)}
                 className="w-full py-3.5 rounded-xl bg-second text-primary font-poppins text-[13px] font-bold uppercase tracking-[0.03em] flex items-center justify-center gap-2 hover:bg-third-dark transition-colors"
               >
                 Checkout Sekarang
