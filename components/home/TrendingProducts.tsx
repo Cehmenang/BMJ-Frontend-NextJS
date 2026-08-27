@@ -18,8 +18,7 @@ export default async function TrendingProducts() {
   if (!products || products.length === 0) return null;
 
   return (
-    <section className="sm:py-16 md:mx-28 bg-bg-site overflow-hidden">
-      {/* Header — disamain sama LatestProducts */}
+    <section className="py-10 sm:py-16 pt-20 bg-bg-site overflow-hidden">
       <div className="px-4 sm:px-8 md:px-14 mb-6 sm:mb-8 flex items-end justify-between">
         <div>
           <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-third-light mb-2">

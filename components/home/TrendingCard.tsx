@@ -46,7 +46,7 @@ export default function TrendingCard({
           : "bg-white",
       ].join(" ")}
     >
-      <div className="relative w-[450px] h-[450px] mb-6">
+      <div className="relative w-[400px] h-[400px] mb-6">
         <Image
           src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${image}`}
           alt={name}
