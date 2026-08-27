@@ -46,13 +46,11 @@ export default function TrendingCard({
           : "bg-white",
       ].join(" ")}
     >
-      <div className="relative mb-6">
+      <div className="relative w-[450px] h-[450px] mb-6">
         <Image
           src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${image}`}
           alt={name}
           fill
-          width={400}
-          height={400}
           className="object-contain drop-shadow-md"
         />
       </div>
