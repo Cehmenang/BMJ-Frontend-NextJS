@@ -138,7 +138,7 @@ export default function LatestProducts() {
       {/* Scroll container — arrow-driven, drag dimatikan */}
       <div
         ref={scrollRef}
-        className="flex gap-3 sm:gap-5 overflow-x-auto px-4 sm:px-8 md:px-14 pb-4 select-none scroll-smooth"
+        className="flex gap-3 sm:gap-5 overflow-x-auto pb-4 select-none scroll-smooth"
         style={{ scrollbarWidth: "none" }}
       >
         {products.length > 0 &&
