@@ -6,9 +6,10 @@ import gsap from "gsap";
 
 interface LoginWindowProps {
   setNeedLogin: Dispatch<SetStateAction<boolean>>;
+  setCartOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function LoginWindow({ setNeedLogin }: LoginWindowProps) {
+export default function LoginWindow({ setNeedLogin, setCartOpen }: LoginWindowProps) {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -52,6 +53,7 @@ export default function LoginWindow({ setNeedLogin }: LoginWindowProps) {
   const handleClose = () => {
     if (isClosing) return;
     setIsClosing(true);
+    setCartOpen(false)
 
     const tl = gsap.timeline({
       onComplete: () => setNeedLogin(false),

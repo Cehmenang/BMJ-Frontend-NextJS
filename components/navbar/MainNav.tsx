@@ -138,7 +138,7 @@ export default function MainNav({ token, username, wishlist }: { token: string |
 
   return (
     <>
-      { needLogin && <LoginWindow setNeedLogin={setNeedLogin}/> }
+      { needLogin && <LoginWindow setNeedLogin={setNeedLogin} setCartOpen={setCartOpen}/> }
 
 
       <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-400 ${navBg}`}>
