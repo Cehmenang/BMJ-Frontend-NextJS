@@ -23,16 +23,16 @@ const formatRp = (n: number) =>
 type CartSidebarProps = {
   open: boolean;
   onClose: () => void;
-  wishlist: any[]
+  wishlist: any[],
+  setNeedLogin: React.SetStateAction<any>
 };
 
-export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProps) {
+export default function CartSidebar({ open, onClose, wishlist, setNeedLogin }: CartSidebarProps) {
   const [items, setItems] = useState<CartItem[]>(wishlist);
   const [isLoading, setIsLoading] = useState(false);
   const backdropRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   const [isLogin, setIsLogin] = useState(false)
-  // const [redirectLogin, setRedirectLogin] = useState
   const router = useRouter(); 
 
   useEffect(()=>{
@@ -261,7 +261,7 @@ export default function CartSidebar({ open, onClose, wishlist }: CartSidebarProp
               </Link>
               <Link
                 href={`${isLogin ? "/keranjang" : ""}`}
-                onClick={onClose}
+                onClick={isLogin ? onClose : ()=>setNeedLogin(true)}
                 className="w-full py-2.5 rounded-xl border border-third/15 text-third font-poppins text-[12.5px] font-medium flex items-center justify-center hover:bg-third/4 transition-colors"
               >
                 Lihat Keranjang

@@ -7,6 +7,7 @@ import CartSidebar from "./CartSideBar";
 import { useRouter } from "next/navigation";
 import { logOut } from "@/action/user";
 import Image from "next/image";
+import LoginWindow from "./LoginWindow";
 
 const NAV_LINKS = [
   { label: "Beranda", href: "/" },
@@ -71,6 +72,7 @@ export default function MainNav({ token, username, wishlist }: { token: string |
   const overlayRef = useRef<HTMLDivElement>(null);
   const [cartOpen, setCartOpen] = useState(false)
   const router = useRouter()
+  const [needLogin, setNeedLogin] = useState(false)
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
@@ -136,6 +138,9 @@ export default function MainNav({ token, username, wishlist }: { token: string |
 
   return (
     <>
+      { needLogin && <LoginWindow setNeedLogin={setNeedLogin}/> }
+
+
       <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-400 ${navBg}`}>
         <div className="flex items-center justify-between px-4 md:px-14 h-[60px] md:h-[66px]">
 
@@ -236,7 +241,7 @@ export default function MainNav({ token, username, wishlist }: { token: string |
             </button>
           </div>
         </div>
-        {wishlist && <CartSidebar open={cartOpen} onClose={() => setCartOpen(false)} wishlist={wishlist}/>}
+        {wishlist && <CartSidebar open={cartOpen} onClose={() => setCartOpen(false)} wishlist={wishlist} setNeedLogin={setNeedLogin}/>}
       </nav>
 
 
