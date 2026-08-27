@@ -25,7 +25,6 @@ export default function TrendingCard({
   const isHighlight = variant === "highlight";
 
   const handleAddToCart = () => {
-    // TODO: sambungkan ke cart context / API kamu
     console.log("add to cart", { id: product.id, qty });
   };
 
@@ -34,11 +33,10 @@ export default function TrendingCard({
       className={[
         "flex flex-col items-center rounded-3xl px-5 pb-6 pt-8 transition-transform duration-300",
         isHighlight
-          ? "bg-second shadow-[0_20px_45px_-15px_rgba(62,63,32,0.45)] scale-[1.06] z-10"
-          : "bg-transparent",
+          ? "bg-second scale-[1.06] z-10"
+          : "bg-white",
       ].join(" ")}
     >
-      {/* Gambar produk */}
       <div className="relative mb-6 h-[220px] w-[130px] sm:h-[260px] sm:w-[150px]">
         <Image
           src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${image}`}
@@ -49,7 +47,6 @@ export default function TrendingCard({
         />
       </div>
 
-      {/* Nama */}
       <h3
         className={[
           "text-center font-display text-lg sm:text-xl font-bold",
@@ -59,7 +56,6 @@ export default function TrendingCard({
         {name}
       </h3>
 
-      {/* Deskripsi */}
       <p
         className={[
           "mt-2 line-clamp-2 text-center text-xs sm:text-sm leading-relaxed",
@@ -69,7 +65,6 @@ export default function TrendingCard({
         {description}
       </p>
 
-      {/* Harga */}
       <p
         className={[
           "mt-4 text-xl sm:text-2xl font-bold",
@@ -79,7 +74,6 @@ export default function TrendingCard({
         $ {price.toFixed(2)}
       </p>
 
-      {/* Qty + Add to cart */}
       <div className="mt-5 flex w-full items-center justify-between gap-2">
         <div
           className={[
