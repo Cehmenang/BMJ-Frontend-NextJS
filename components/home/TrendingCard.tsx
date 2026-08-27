@@ -4,7 +4,7 @@ import { IProduct } from "@/interface";
 import Image from "next/image";
 import { useState } from "react";
 
-interface ProductCardProps {
+interface TrendingCardProps {
   product: IProduct;
   variant?: "normal" | "highlight";
 }
@@ -12,16 +12,15 @@ interface ProductCardProps {
 export default function TrendingCard({
   product,
   variant = "normal",
-}: ProductCardProps) {
+}: TrendingCardProps) {
   const [qty, setQty] = useState(1);
 
-  const name = product.name ?? product.name ?? "Nama Produk";
+  const name = product.name ?? "Nama Produk";
   const description =
-    product.description ??
     product.description ??
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor";
   const price = product.offlinePrice ? parseInt(product.offlinePrice) : 0;
-  const image = product.images ? product.images[0][0] : "/placeholder-product.png" as string
+  const image = product.images?.[0]?.[0] ?? "/placeholder-product.png";
 
   const isHighlight = variant === "highlight";
 
@@ -40,12 +39,12 @@ export default function TrendingCard({
       ].join(" ")}
     >
       {/* Gambar produk */}
-      <div className="relative mb-6 h-[160px] w-[90px] sm:h-[190px] sm:w-[105px]">
+      <div className="relative mb-6 h-[220px] w-[130px] sm:h-[260px] sm:w-[150px]">
         <Image
           src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${image}`}
           alt={name}
           fill
-          sizes="120px"
+          sizes="(max-width: 640px) 130px, 150px"
           className="object-contain drop-shadow-md"
         />
       </div>

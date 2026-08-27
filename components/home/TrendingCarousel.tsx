@@ -1,10 +1,9 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import ProductCard from "../product/ProductCard";
-import TrendingCard from "./TrendingCard";
 import { IProduct } from "@/interface";
+import TrendingCard from "./TrendingCard";
 
 interface TrendingCarouselProps {
   products: IProduct[];
@@ -14,8 +13,7 @@ const VISIBLE_COUNT = 3;
 
 export default function TrendingCarousel({ products }: TrendingCarouselProps) {
   const [startIndex, setStartIndex] = useState(0);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const isAnimating = useRef(false);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   const canSlide = products.length > VISIBLE_COUNT;
   const maxStartIndex = Math.max(0, products.length - VISIBLE_COUNT);
@@ -25,45 +23,44 @@ export default function TrendingCarousel({ products }: TrendingCarouselProps) {
     startIndex + VISIBLE_COUNT
   );
 
-  const animateSlide = (direction: "next" | "prev") => {
-    if (isAnimating.current || !trackRef.current) return;
-    isAnimating.current = true;
+  // Klik arrow: langsung ganti, TANPA animasi fade/slide.
+  const handlePrev = () => setStartIndex((i) => Math.max(0, i - 1));
+  const handleNext = () => setStartIndex((i) => Math.min(maxStartIndex, i + 1));
 
-    const offset = direction === "next" ? -32 : 32;
+  // Animasi cuma jalan saat section ini masuk / keluar viewport pas discroll.
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
 
-    const tl = gsap.timeline({
-      onComplete: () => {
-        isAnimating.current = false;
+    gsap.set(el, { opacity: 0, y: 24 });
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          gsap.to(el, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: "power2.out",
+          });
+        } else {
+          gsap.to(el, {
+            opacity: 0,
+            y: 24,
+            duration: 0.4,
+            ease: "power2.in",
+          });
+        }
       },
-    });
+      { threshold: 0.15 }
+    );
 
-    tl.to(trackRef.current, {
-      x: offset,
-      opacity: 0,
-      duration: 0.2,
-      ease: "power2.in",
-    }).set(trackRef.current, { x: -offset }).to(trackRef.current, {
-      x: 0,
-      opacity: 1,
-      duration: 0.3,
-      ease: "power2.out",
-    });
-  };
-
-  const handlePrev = () => {
-    if (startIndex === 0) return;
-    animateSlide("prev");
-    setStartIndex((i) => Math.max(0, i - 1));
-  };
-
-  const handleNext = () => {
-    if (startIndex >= maxStartIndex) return;
-    animateSlide("next");
-    setStartIndex((i) => Math.min(maxStartIndex, i + 1));
-  };
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <div className="relative">
+    <div ref={rootRef} className="relative">
       {canSlide && (
         <button
           onClick={handlePrev}
@@ -75,10 +72,7 @@ export default function TrendingCarousel({ products }: TrendingCarouselProps) {
         </button>
       )}
 
-      <div
-        ref={trackRef}
-        className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-x-4 sm:gap-x-6 items-center px-2 sm:px-4"
-      >
+      <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-x-4 sm:gap-x-6 items-center px-2 sm:px-4">
         {visibleProducts.map((product, i) => (
           <TrendingCard
             key={product.id}
