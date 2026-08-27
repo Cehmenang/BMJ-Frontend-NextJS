@@ -94,7 +94,7 @@ export default function LatestProducts() {
   return (
     <section ref={sectionRef} className="py-10 sm:py-16 md:mx-28">
       {/* Header */}
-      <div className="px-4 sm:px-8 md:px-14 mb-6 sm:mb-8 flex items-end justify-between">
+      <div className="mb-6 sm:mb-8 flex items-end justify-between">
         <div>
           <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-third-light mb-2">
             Baru Masuk
