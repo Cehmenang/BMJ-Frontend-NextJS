@@ -72,7 +72,7 @@ export default function TrendingCarousel({ products }: TrendingCarouselProps) {
         </button>
       )}
 
-      <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-x-4 sm:gap-x-6 items-center px-2 sm:px-4">
+      <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-x-10 sm:gap-x-6 items-center px-2 sm:px-4">
         {visibleProducts.map((product, i) => (
           <TrendingCard
             key={product.id}
