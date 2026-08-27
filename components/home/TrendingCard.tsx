@@ -42,7 +42,7 @@ export default function TrendingCard({
       {/* Gambar produk */}
       <div className="relative mb-6 h-[160px] w-[90px] sm:h-[190px] sm:w-[105px]">
         <Image
-          src={image}
+          src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${image}`}
           alt={name}
           fill
           sizes="120px"
