@@ -104,14 +104,14 @@ export default function CartSidebar({ open, onClose, wishlist, setNeedLogin }: C
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-[440px] z-50 bg-primary flex flex-col transition-transform duration-350 ease-in-out ${
+        className={`fixed top-0 right-0 h-full w-full sm:w-[700px] z-50 bg-primary flex flex-col transition-transform duration-350 ease-in-out ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
         {/* Header — "X ITEMS IN YOUR BAG" style */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-third/10 flex-shrink-0">
-          <h2 className="font-poppins text-[15px] font-extrabold text-third uppercase tracking-[0.06em]">
-            {items.length} {items.length === 1 ? "Item" : "Items"} di Keranjang
+          <h2 className="font-poppins text-[15px] font-extrabold text-third uppercase tracking-tight">
+            {items.length} Barang di Keranjang
           </h2>
           <button
             onClick={onClose}
@@ -165,16 +165,16 @@ export default function CartSidebar({ open, onClose, wishlist, setNeedLogin }: C
                     <div className="flex items-start justify-between gap-3">
                       <Link
                         href={`/produk/${item.produk.url}`}
-                        className="font-poppins text-[13px] font-extrabold text-third uppercase leading-snug line-clamp-2 hover:opacity-70 transition"
+                        className="font-poppins text-[13px] md:text-[18px] font-extrabold text-third uppercase leading-snug line-clamp-2 hover:opacity-70 transition"
                       >
                         {item.produk.name}
                       </Link>
-                      <p className="font-poppins text-[13px] font-bold text-third whitespace-nowrap">
+                      <p className="font-poppins text-[13px] md:text-[22px] font-bold text-third whitespace-nowrap">
                         {formatRp(parseInt(item.produk.offlinePrice))}
                       </p>
                     </div>
 
-                    <p className="font-poppins text-[10.5px] text-third/40 mt-0.5">
+                    <p className="font-poppins text-[10.5px] md:text-[14px] text-third/40 mt-0.5">
                       {item.produk.brandId}
                     </p>
 
