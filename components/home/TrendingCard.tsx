@@ -9,6 +9,15 @@ interface TrendingCardProps {
   variant?: "normal" | "highlight";
 }
 
+function formatPrice(price: number) {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+  }).format(price);
+}
+
+
 export default function TrendingCard({
   product,
   variant = "normal",
@@ -71,7 +80,7 @@ export default function TrendingCard({
           isHighlight ? "text-primary" : "text-third",
         ].join(" ")}
       >
-        $ {price.toFixed(2)}
+        {formatPrice(price)}
       </p>
 
       <div className="mt-5 flex w-full items-center justify-between gap-2">
