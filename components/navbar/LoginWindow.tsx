@@ -41,10 +41,6 @@ export default function LoginWindow({ setNeedLogin, setCartOpen }: LoginWindowPr
       "-=0.15"
     );
 
-    // Cleanup: hentikan timeline kalau komponen unmount di tengah animasi.
-    // Catatan: ini cuma kill() timeline, bukan revert() inline style —
-    // cukup aman di sini karena exit animation selalu jalan duluan
-    // sebelum setNeedLogin(false) dipanggil.
     return () => {
       tl.kill();
     };
@@ -53,7 +49,6 @@ export default function LoginWindow({ setNeedLogin, setCartOpen }: LoginWindowPr
   const handleClose = () => {
     if (isClosing) return;
     setIsClosing(true);
-    setCartOpen(false)
 
     const tl = gsap.timeline({
       onComplete: () => setNeedLogin(false),
@@ -78,11 +73,12 @@ export default function LoginWindow({ setNeedLogin, setCartOpen }: LoginWindowPr
 
   const handleLoginRedirect = () => {
     if (isClosing) return;
-    setIsClosing(true);
-
+    setIsClosing(true)
+    
     const tl = gsap.timeline({
-      onComplete: () => {
+        onComplete: () => {
         setNeedLogin(false);
+        setCartOpen(false);
         router.push("/login");
       },
     });
