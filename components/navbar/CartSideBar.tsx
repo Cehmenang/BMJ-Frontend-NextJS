@@ -165,11 +165,11 @@ export default function CartSidebar({ open, onClose, wishlist, setNeedLogin }: C
                     <div className="flex items-start justify-between gap-3">
                       <Link
                         href={`/produk/${item.produk.url}`}
-                        className="font-poppins text-[13px] md:text-[18px] font-extrabold text-third uppercase leading-snug line-clamp-2 hover:opacity-70 transition"
+                        className="font-poppins text-[13px] md:text-[18px] font-extrabold text-third uppercase leading-snug line-clamp-2 hover:opacity-70 transition tracking-tight"
                       >
                         {item.produk.name}
                       </Link>
-                      <p className="font-poppins text-[13px] md:text-[22px] font-bold text-third whitespace-nowrap">
+                      <p className="font-poppins text-[13px] md:text-[18px] font-bold text-third whitespace-nowrap">
                         {formatRp(parseInt(item.produk.offlinePrice))}
                       </p>
                     </div>
@@ -244,7 +244,7 @@ export default function CartSidebar({ open, onClose, wishlist, setNeedLogin }: C
               <Link
                 href="/checkout"
                 onClick={onClose}
-                className="w-full py-3.5 rounded-xl bg-third text-primary font-poppins text-[13px] font-bold uppercase tracking-[0.03em] flex items-center justify-center gap-2 hover:bg-third-dark transition-colors"
+                className="w-full py-3.5 rounded-xl bg-second text-primary font-poppins text-[13px] font-bold uppercase tracking-[0.03em] flex items-center justify-center gap-2 hover:bg-third-dark transition-colors"
               >
                 Checkout Sekarang
               </Link>
