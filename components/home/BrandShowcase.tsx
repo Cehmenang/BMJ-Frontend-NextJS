@@ -25,7 +25,7 @@ const ANIM = {
   active:   "translate-x-0 opacity-100",
 };
 
-// ─── Marquee Row ──────────────────────────────────────────────────────────────
+// ─── Marquee Row (mobile only) ─────────────────────────────────────────────
 function MarqueeRow({
   brands,
   direction = "left",
@@ -35,13 +35,12 @@ function MarqueeRow({
   direction?: "left" | "right";
   speed?: number;
 }) {
-  // Duplicate list supaya loop seamless
   const items = [...brands, ...brands, ...brands];
 
   return (
     <div className="overflow-hidden w-full">
       <div
-        className={`flex gap-3 w-max ${
+        className={`flex w-max ${
           direction === "left" ? "animate-marquee-left" : "animate-marquee-right"
         }`}
         style={
@@ -54,12 +53,12 @@ function MarqueeRow({
           <a
             key={`${brand.id ?? brand.name}-${i}`}
             href={`/brand/${brand.name}`}
-            className="flex-shrink-0 w-[72px] h-[56px] rounded-xl border border-third/8 flex items-center justify-center px-2 py-1.5 cursor-pointer group transition-all duration-200 hover:border-third/20 hover:shadow-[0_4px_16px_rgba(62,63,32,0.08)] bg-white"
+            className="flex-shrink-0 -ml-px first:ml-0 w-[96px] h-[72px] border border-third/8 flex items-center justify-center px-2 py-1.5 cursor-pointer group transition-all duration-200 hover:z-10 hover:border-third/20 hover:shadow-[0_4px_16px_rgba(62,63,32,0.08)] bg-white"
           >
             <Image
-              width={120}
-              height={80}
-              sizes="72px"
+              width={140}
+              height={100}
+              sizes="96px"
               src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${brand.image}`}
               alt={brand.name}
               className="w-full h-full object-contain grayscale opacity-50 transition-all duration-200 group-hover:grayscale-0 group-hover:opacity-100"
@@ -72,7 +71,7 @@ function MarqueeRow({
   );
 }
 
-// ─── Desktop BrandCard ────────────────────────────────────────────────────────
+// ─── Desktop BrandCard ───────────────────────────────────────────────────────
 function BrandCard({ brand }: { brand: { name: string; image: string; description: string } }) {
   return (
     <a
@@ -92,7 +91,7 @@ function BrandCard({ brand }: { brand: { name: string; image: string; descriptio
   );
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
+// ─── Main Component ──────────────────────────────────────────────────────────
 export default function BrandShowcase() {
   const [brands, setBrands]           = useState<any[]>([]);
   const [page, setPage]               = useState(0);
@@ -151,7 +150,7 @@ export default function BrandShowcase() {
   }, []);
 
   // 20 brand untuk marquee mobile, split 10-10
-  const mobileRow1 = sorted.slice(0, MOBILE_COUNT / 2);          // 10 brand, gerak kiri
+  const mobileRow1 = sorted.slice(0, MOBILE_COUNT / 2);            // 10 brand, gerak kiri
   const mobileRow2 = sorted.slice(MOBILE_COUNT / 2, MOBILE_COUNT); // 10 brand, gerak kanan
 
   return (
@@ -189,9 +188,9 @@ export default function BrandShowcase() {
         }}
       >
         {brands.length === 0 ? (
-          <div className="flex gap-3">
+          <div className="flex">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="flex-shrink-0 w-[72px] h-[56px] rounded-xl bg-third/8 animate-pulse" />
+              <div key={i} className="flex-shrink-0 -ml-px first:ml-0 w-[96px] h-[72px] bg-third/8 animate-pulse" />
             ))}
           </div>
         ) : (
