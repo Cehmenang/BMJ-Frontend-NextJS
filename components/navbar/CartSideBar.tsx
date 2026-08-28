@@ -5,8 +5,7 @@ import Link from "next/link";
 import { createPortal } from "react-dom";
 import { IProduct } from "@/interface";
 import { removeWishlist, updateQtyWishlist } from "@/action/wishlist";
-import { redirect, useRouter } from "next/navigation";
-import { orderSession } from "@/action/checkout";
+import { useRouter } from "next/navigation";
 
 type CartItem = {
   id: string;
@@ -27,11 +26,6 @@ type CartSidebarProps = {
   wishlist: any[],
   setNeedLogin: React.SetStateAction<any>
 };
-
-function checkoutHandler(wishlist: any[]){
-    const order = orderSession(wishlist)
-    if(order){ redirect('/orders') }
-}
 
 export default function CartSidebar({ open, onClose, wishlist, setNeedLogin }: CartSidebarProps) {
   const [items, setItems] = useState<CartItem[]>(wishlist);
@@ -248,7 +242,7 @@ export default function CartSidebar({ open, onClose, wishlist, setNeedLogin }: C
 
             <div className="space-y-2">
               <button
-                onClick={()=>isLogin ? checkoutHandler(wishlist) : setNeedLogin(true)}
+                onClick={()=>isLogin ? '/checkout' : setNeedLogin(true)}
                 className="w-full py-3.5 rounded-xl bg-second text-primary font-poppins text-[13px] font-bold uppercase tracking-[0.03em] flex items-center justify-center gap-2 hover:bg-third-dark transition-colors"
               >
                 Checkout Sekarang
