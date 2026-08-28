@@ -17,7 +17,6 @@ function formatPrice(price: number) {
   }).format(price);
 }
 
-
 export default function TrendingCard({
   product,
   variant = "normal",
@@ -40,24 +39,25 @@ export default function TrendingCard({
   return (
     <div
       className={[
-        "flex flex-col items-center rounded-3xl px-5 pb-6 pt-8 transition-transform duration-300",
+        "flex w-full max-w-[380px] flex-col items-center rounded-3xl px-4 sm:px-5 pb-5 sm:pb-6 pt-6 sm:pt-8 transition-transform duration-300",
         isHighlight
-          ? "bg-second scale-[1.06] z-10"
+          ? "bg-second sm:scale-[1.06] z-10"
           : "bg-white",
       ].join(" ")}
     >
-      <div className="relative w-[400px] h-[400px] mb-6">
+      <div className="relative mb-4 sm:mb-6 aspect-square w-full max-w-[220px] sm:max-w-[280px] md:max-w-[320px] lg:max-w-[400px]">
         <Image
           src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${image}`}
           alt={name}
           fill
+          sizes="(max-width: 640px) 220px, (max-width: 768px) 280px, (max-width: 1024px) 320px, 400px"
           className="object-contain drop-shadow-md"
         />
       </div>
 
       <h3
         className={[
-          "text-center font-display text-lg sm:text-xl font-bold",
+          "text-center font-display text-base sm:text-lg md:text-xl font-bold",
           isHighlight ? "text-primary" : "text-third",
         ].join(" ")}
       >
@@ -75,14 +75,14 @@ export default function TrendingCard({
 
       <p
         className={[
-          "mt-4 text-xl sm:text-2xl font-bold",
+          "mt-3 sm:mt-4 text-lg sm:text-xl md:text-2xl font-bold",
           isHighlight ? "text-primary" : "text-third",
         ].join(" ")}
       >
         {formatPrice(price)}
       </p>
 
-      <div className="mt-5 flex w-full items-center justify-between gap-2">
+      <div className="mt-4 sm:mt-5 flex w-full flex-col xs:flex-row items-center justify-between gap-2 xs:gap-2">
         <div
           className={[
             "flex items-center gap-3 rounded-full px-3 py-1.5 text-sm font-semibold",
@@ -110,7 +110,7 @@ export default function TrendingCard({
 
         <button
           onClick={handleAddToCart}
-          className="whitespace-nowrap rounded-full bg-primary px-4 py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wide text-second transition-transform active:scale-95 hover:brightness-105"
+          className="w-full xs:w-auto whitespace-nowrap rounded-full bg-primary px-4 py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wide text-second transition-transform active:scale-95 hover:brightness-105"
         >
           Add to Cart
         </button>

@@ -5,7 +5,8 @@ import Link from "next/link";
 import { createPortal } from "react-dom";
 import { IProduct } from "@/interface";
 import { removeWishlist, updateQtyWishlist } from "@/action/wishlist";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { orderSession } from "@/action/checkout";
 
 type CartItem = {
   id: string;
@@ -27,6 +28,11 @@ type CartSidebarProps = {
   setNeedLogin: React.SetStateAction<any>
 };
 
+function checkoutHandler(wishlist: any[]){
+    const order = orderSession(wishlist)
+    if(order){ redirect('/orders') }
+}
+
 export default function CartSidebar({ open, onClose, wishlist, setNeedLogin }: CartSidebarProps) {
   const [items, setItems] = useState<CartItem[]>(wishlist);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +49,6 @@ export default function CartSidebar({ open, onClose, wishlist, setNeedLogin }: C
 
   useEffect(() => {
     setMounted(true);
-    console.log(wishlist, 'wishlist')
   }, []);
 
   useEffect(() => {
@@ -242,13 +247,12 @@ export default function CartSidebar({ open, onClose, wishlist, setNeedLogin }: C
             </div>
 
             <div className="space-y-2">
-              <Link
-                href={`${isLogin ? `/checkout/${wishlist}` : ""}`}
-                onClick={isLogin ? onClose : ()=>setNeedLogin(true)}
+              <button
+                onClick={()=>isLogin ? checkoutHandler(wishlist) : setNeedLogin(true)}
                 className="w-full py-3.5 rounded-xl bg-second text-primary font-poppins text-[13px] font-bold uppercase tracking-[0.03em] flex items-center justify-center gap-2 hover:bg-third-dark transition-colors"
               >
                 Checkout Sekarang
-              </Link>
+              </button>
               <Link
                 href={`${isLogin ? "/keranjang" : ""}`}
                 onClick={isLogin ? onClose : ()=>setNeedLogin(true)}
