@@ -117,12 +117,11 @@ export const metadata: Metadata = {
 
   icons: {
     icon: [
-      { url: "/meta/BMJOGSquare.webp" },
-      { url: "/meta/BMJOGSquare.webp", sizes: "16x16", type: "image/webp" },
-      { url: "/meta/BMJOGSquare.webp", sizes: "32x32", type: "image/webp" },
+      { url: "/meta/BMJOGSquare.png", sizes: "16x16", type: "image/png" },
+      { url: "/meta/BMJOGSquare.png", sizes: "32x32", type: "image/png" },
     ],
     apple: [
-      { url: "/meta/BMJFavSafari.svg", sizes: "180x180", type: "image/svg" },
+      { url: "/meta/BMJFavSafari.png", sizes: "180x180", type: "image/png" },
     ],
     other: [
       { rel: "mask-icon", url: "/meta/BMJFavSafari.svg", color: "#1a1a1a" },
