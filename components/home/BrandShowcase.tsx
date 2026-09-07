@@ -25,7 +25,6 @@ const ANIM = {
   active:   "translate-x-0 opacity-100",
 };
 
-// ─── Marquee Row (mobile only) ─────────────────────────────────────────────
 function MarqueeRow({
   brands,
   direction = "left",
@@ -91,7 +90,6 @@ function BrandCard({ brand }: { brand: { name: string; image: string; descriptio
   );
 }
 
-// ─── Main Component ──────────────────────────────────────────────────────────
 export default function BrandShowcase() {
   const [brands, setBrands]           = useState<any[]>([]);
   const [page, setPage]               = useState(0);

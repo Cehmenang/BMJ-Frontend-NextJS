@@ -6,7 +6,7 @@ import { LucideIcon } from "lucide-react";
 import {
   Package, Tag, Ruler, ImagePlus, X, Upload,
   ChevronDown, Percent, Truck, Wrench, Receipt,
-  CheckCircle2, AlertCircle, Star, Plus, ListChecks, Sparkles, Toolbox,
+  CheckCircle2, AlertCircle, Star, Plus, ListChecks, Sparkles, Layers,
 } from "lucide-react";
 import { IBrand, ICategory, IOption } from "@/interface";
 import { uploadProduct } from "@/action/product";
@@ -30,10 +30,12 @@ const rawNumber = (val: string): string =>
   String(val).replace(/\./g, "").replace(/\D/g, "");
 
 // ─── BASE INPUT CLASSES ────────────────────────────────────────────────────────
+// Palette: primary #eeeeee (bg terang), second #FF9100 (aksen), third #3e3f20 (teks/border gelap),
+// third-light #5a5c2e, third-dark #2b2c15, bg-site #f5f4ef (bg field, sedikit beda dari card)
 const inputCls = (hasError?: boolean): string =>
-  `w-full bg-[#141414] border ${
-    hasError ? "border-red-500/60" : "border-[#3e3f20]/60"
-  } rounded-xl px-3.5 py-2.5 text-sm text-[#eeeeee] placeholder-[#eeeeee]/20 outline-none focus:border-[#f9ad52]/70 focus:ring-2 focus:ring-[#f9ad52]/10 transition-all duration-200`;
+  `w-full bg-bg-site border ${
+    hasError ? "border-red-500/60" : "border-third/25"
+  } rounded-xl px-3.5 py-2.5 text-sm text-third placeholder-third/35 outline-none focus:border-second/70 focus:ring-2 focus:ring-second/10 transition-all duration-200`;
 
 // ─── SECTION CARD ──────────────────────────────────────────────────────────────
 interface SectionCardProps {
@@ -45,7 +47,7 @@ interface SectionCardProps {
 const SectionCard = ({ icon: Icon, title, subtitle, children }: SectionCardProps) => (
   <div className="rounded-2xl bg-primary overflow-hidden">
     <div className="flex items-center gap-3 px-5 py-4 border-b border-third/10">
-      <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-[#f9ad52]/15 text-[#f9ad52] shrink-0">
+      <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-second/15 text-second shrink-0">
         <Icon size={18} />
       </div>
       <div>
@@ -68,14 +70,14 @@ interface FieldProps {
 }
 const Field = ({ label, required, hint, error, children, className = "" }: FieldProps) => (
   <div className={`flex flex-col gap-1.5 ${className}`}>
-    <label className="text-xs font-semibold text-[#eeeeee]/70 flex items-center gap-1">
+    <label className="text-xs font-semibold text-third/70 flex items-center gap-1">
       {label}
-      {required && <span className="text-[#f9ad52]">*</span>}
+      {required && <span className="text-second">*</span>}
     </label>
     {children}
-    {hint && !error && <span className="text-[10px] text-[#eeeeee]/30">{hint}</span>}
+    {hint && !error && <span className="text-[10px] text-third/40">{hint}</span>}
     {error && (
-      <span className="flex items-center gap-1 text-[10px] text-red-400">
+      <span className="flex items-center gap-1 text-[10px] text-red-500">
         <AlertCircle size={10} /> {error.message}
       </span>
     )}
@@ -96,12 +98,12 @@ const SelectField = ({ options, placeholder, error, ...props }: SelectFieldProps
     >
       <option value="">{placeholder}</option>
       {options.map((o) => (
-        <option key={o} value={o} className="bg-[#1c1c1c]">{o}</option>
+        <option key={o} value={o} className="bg-primary text-third">{o}</option>
       ))}
     </select>
     <ChevronDown
       size={14}
-      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#eeeeee]/30 pointer-events-none"
+      className="absolute right-3 top-1/2 -translate-y-1/2 text-third/40 pointer-events-none"
     />
   </div>
 );
@@ -115,7 +117,7 @@ interface PriceInputProps {
 }
 const PriceInput = ({ value, onChange, placeholder, error }: PriceInputProps) => (
   <div className="relative">
-    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-[#f9ad52]/70 select-none">
+    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-second/80 select-none">
       Rp
     </span>
     <input
@@ -141,7 +143,7 @@ const UnitInput = ({ unit, error, ...props }: UnitInputProps) => (
       className={`${inputCls(!!error)} pr-12`}
       {...props}
     />
-    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[10px] font-bold text-[#eeeeee]/30 select-none">
+    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[10px] font-bold text-third/40 select-none">
       {unit}
     </span>
   </div>
@@ -157,7 +159,7 @@ const Toggle = ({ checked, onChange }: ToggleProps) => (
     type="button"
     onClick={() => onChange(!checked)}
     className={`relative w-11 h-6 rounded-full transition-all duration-300 shrink-0 ${
-      checked ? "bg-[#f9ad52]" : "bg-[#3e3f20]"
+      checked ? "bg-second" : "bg-third/25"
     }`}
   >
     <span
@@ -216,24 +218,24 @@ const ImageUploader = ({ images, setImages, error }: ImageUploaderProps) => {
         onDrop={onDrop}
         className={`relative border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-200 ${
           dragging
-            ? "border-[#f9ad52] bg-[#f9ad52]/5"
+            ? "border-second bg-second/5"
             : error
             ? "border-red-500/40 bg-red-500/5"
-            : "border-[#3e3f20]/60 bg-[#141414] hover:border-[#f9ad52]/40 hover:bg-[#f9ad52]/5"
+            : "border-third/30 bg-bg-site hover:border-second/40 hover:bg-second/5"
         }`}
       >
         <div
           className={`flex flex-col items-center gap-2 transition-colors ${
-            dragging ? "text-[#f9ad52]" : "text-[#eeeeee]/30"
+            dragging ? "text-second" : "text-third/40"
           }`}
         >
           <Upload size={28} />
-          <p className="text-sm font-semibold text-[#eeeeee]/60">
+          <p className="text-sm font-semibold text-third/60">
             Drag & drop foto produk di sini
           </p>
-          <p className="text-xs text-[#eeeeee]/30">
+          <p className="text-xs text-third/40">
             atau{" "}
-            <span className="text-[#f9ad52] font-semibold">klik untuk pilih</span>
+            <span className="text-second font-semibold">klik untuk pilih</span>
             &nbsp;·&nbsp; Maks. 10 foto &nbsp;·&nbsp; JPG, PNG, WEBP
           </p>
         </div>
@@ -248,7 +250,7 @@ const ImageUploader = ({ images, setImages, error }: ImageUploaderProps) => {
       </div>
 
       {error && (
-        <span className="flex items-center gap-1 text-[10px] text-red-400">
+        <span className="flex items-center gap-1 text-[10px] text-red-500">
           <AlertCircle size={10} /> {error}
         </span>
       )}
@@ -258,10 +260,10 @@ const ImageUploader = ({ images, setImages, error }: ImageUploaderProps) => {
           {images.map((img, idx) => (
             <div
               key={idx}
-              className="relative rounded-xl overflow-hidden aspect-square bg-[#141414] group"
+              className="relative rounded-xl overflow-hidden aspect-square bg-bg-site group"
             >
               {idx === 0 && (
-                <div className="absolute top-1.5 left-1.5 z-10 flex items-center gap-0.5 bg-[#f9ad52] text-[#3e3f20] text-[9px] font-extrabold px-1.5 py-0.5 rounded-md">
+                <div className="absolute top-1.5 left-1.5 z-10 flex items-center gap-0.5 bg-second text-third text-[9px] font-extrabold px-1.5 py-0.5 rounded-md">
                   <Star size={8} fill="currentColor" /> UTAMA
                 </div>
               )}
@@ -283,7 +285,7 @@ const ImageUploader = ({ images, setImages, error }: ImageUploaderProps) => {
           {images.length < 10 && (
             <div
               onClick={() => inputRef.current?.click()}
-              className="aspect-square border-2 border-dashed border-[#3e3f20]/60 rounded-xl flex flex-col items-center justify-center gap-1 cursor-pointer text-[#eeeeee]/20 hover:border-[#f9ad52]/40 hover:text-[#f9ad52]/40 transition-all duration-200"
+              className="aspect-square border-2 border-dashed border-third/30 rounded-xl flex flex-col items-center justify-center gap-1 cursor-pointer text-third/30 hover:border-second/40 hover:text-second/60 transition-all duration-200"
             >
               <ImagePlus size={18} />
               <span className="text-[10px]">Tambah</span>
@@ -307,23 +309,23 @@ const ServiceRow = ({ icon: Icon, label, desc, checked, onChange }: ServiceRowPr
   <div
     className={`flex items-center justify-between gap-4 px-4 py-3.5 rounded-xl border transition-all duration-200 ${
       checked
-        ? "border-[#f9ad52]/40 bg-[#f9ad52]/5"
-        : "border-[#3e3f20]/40 bg-[#141414]"
+        ? "border-second/40 bg-second/5"
+        : "border-third/15 bg-bg-site"
     }`}
   >
     <div className="flex items-center gap-3">
       <div
         className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-200 ${
           checked
-            ? "bg-[#f9ad52]/20 text-[#f9ad52]"
-            : "bg-[#3e3f20]/30 text-[#eeeeee]/30"
+            ? "bg-second/20 text-second"
+            : "bg-third/10 text-third/30"
         }`}
       >
         <Icon size={15} />
       </div>
       <div>
-        <p className="text-xs font-semibold text-[#eeeeee]/80">{label}</p>
-        <p className="text-[10px] text-[#eeeeee]/30 mt-0.5">{desc}</p>
+        <p className="text-xs font-semibold text-third/80">{label}</p>
+        <p className="text-[10px] text-third/40 mt-0.5">{desc}</p>
       </div>
     </div>
     <Toggle checked={checked} onChange={onChange} />
@@ -332,20 +334,20 @@ const ServiceRow = ({ icon: Icon, label, desc, checked, onChange }: ServiceRowPr
 
 // ─── SUCCESS SCREEN ────────────────────────────────────────────────────────────
 const SuccessScreen = ({ onReset }: { onReset: () => void }) => (
-  <div className="min-h-screen bg-[#0f0f0f] flex items-center justify-center p-4">
-    <div className="bg-[#1c1c1c] border border-[#3e3f20]/40 rounded-2xl p-10 text-center max-w-sm w-full shadow-2xl">
-      <div className="w-16 h-16 rounded-full bg-[#f9ad52]/15 flex items-center justify-center mx-auto mb-5 text-[#f9ad52]">
+  <div className="min-h-screen bg-bg-site flex items-center justify-center p-4">
+    <div className="bg-primary border border-third/15 rounded-2xl p-10 text-center max-w-sm w-full shadow-2xl">
+      <div className="w-16 h-16 rounded-full bg-second/15 flex items-center justify-center mx-auto mb-5 text-second">
         <CheckCircle2 size={36} />
       </div>
-      <h2 className="text-xl font-extrabold text-[#eeeeee] mb-2">
+      <h2 className="text-xl font-extrabold text-third mb-2">
         Produk Berhasil Diterbitkan!
       </h2>
-      <p className="text-sm text-[#eeeeee]/40 mb-7">
+      <p className="text-sm text-third/50 mb-7">
         Produk kamu sudah tersimpan dan siap ditampilkan ke pembeli.
       </p>
       <button
         onClick={onReset}
-        className="w-full bg-[#f9ad52] hover:bg-[#f9ad52]/90 text-[#3e3f20] font-bold text-sm rounded-xl py-3 transition-all duration-200"
+        className="w-full bg-second hover:bg-second/90 text-third font-bold text-sm rounded-xl py-3 transition-all duration-200"
       >
         + Tambah Produk Lagi
       </button>
@@ -556,25 +558,25 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
             <div className="flex flex-col gap-5 px-5 py-5">
               
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-[#eeeeee]/70">Spesifikasi Produk</label>
+                <label className="text-xs font-semibold text-third/70">Spesifikasi Produk</label>
                 <textarea
                   {...register("spesifikasi")}
                   rows={6}
                   placeholder="Contoh (Pisahkan dengan Enter):&#10;Bahan body Mahogany&#10;Fretboard Rosewood&#10;24 X-Jumbo frets"
                   className={`${inputCls(false)} resize-y leading-relaxed font-mono text-xs`}
                 />
-                <span className="text-[10px] text-[#eeeeee]/30">Tiap baris teks otomatis dihitung sebagai 1 poin spesifikasi di sistem.</span>
+                <span className="text-[10px] text-third/40">Tiap baris teks otomatis dihitung sebagai 1 poin spesifikasi di sistem.</span>
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-[#eeeeee]/70">Fitur Utama</label>
+                <label className="text-xs font-semibold text-third/70">Fitur Utama</label>
                 <textarea
                   {...register("fitur")}
                   rows={6}
                   placeholder="Contoh (Pisahkan dengan Enter):&#10;Suara jernih dan artikulasi tajam&#10;Konstruksi Neck-through kokoh&#10;Include Hardcase Premium"
                   className={`${inputCls(false)} resize-y leading-relaxed font-mono text-xs`}
                 />
-                <span className="text-[10px] text-[#eeeeee]/30">Tiap baris teks otomatis dihitung sebagai 1 poin fitur utama di sistem.</span>
+                <span className="text-[10px] text-third/40">Tiap baris teks otomatis dihitung sebagai 1 poin fitur utama di sistem.</span>
               </div>
 
             </div>
@@ -663,7 +665,7 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
                   <Field
                     label="Harga Diskon"
                     hint="Harga diskon pricelist">
-                    <p className="px-2 py-1 rounded-md border border-third">{countDiscount(parseInt(watch('pricelist')), parseInt(watch('discount')))}</p>
+                    <p className="px-2 py-1 rounded-md border border-third/30 text-third">{countDiscount(parseInt(watch('pricelist')), parseInt(watch('discount')))}</p>
                   </Field>
               }
               </div>
@@ -696,11 +698,11 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
               </div>
 
               {/* Promo Block */}
-              <div className="rounded-xl border border-[#f9ad52]/20 bg-[#f9ad52]/5 p-4 flex flex-col gap-3">
-                <p className="flex items-center gap-2 text-xs font-bold text-[#f9ad52]">
+              <div className="rounded-xl border border-second/20 bg-second/5 p-4 flex flex-col gap-3">
+                <p className="flex items-center gap-2 text-xs font-bold text-second">
                   <Percent size={13} />
                   Harga Promo
-                  <span className="font-normal text-[#eeeeee]/30">(Opsional)</span>
+                  <span className="font-normal text-third/40">(Opsional)</span>
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Field label="Nama Promo">
@@ -729,7 +731,7 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
             control={control}
             render={({ field }) => (
               <ServiceRow
-                icon={Toolbox}
+                icon={Layers}
                 label="Gunakan Varian"
                 desc="Produk bisa dikirim ke lokasi pembeli"
                 checked={addVariant}
@@ -743,7 +745,7 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
           {/* VARIANT SECTION */}
           {addVariant &&
           <div>
-          <SectionCard  icon={Toolbox} title="Varian" subtitle="Variasi berupa warna, ukuran, dsb">
+          <SectionCard  icon={Layers} title="Varian" subtitle="Variasi berupa warna, ukuran, dsb">
               <Field label="Nama Produk" required error={errors.name}>
                 <input
                   {...register("variant")}
@@ -846,14 +848,14 @@ export default function UploadForm({ brands, categories }: { brands: IBrand[], c
           <div className="flex flex-col sm:flex-row justify-end gap-3 pb-8">
             <button
               type="button"
-              className="order-2 sm:order-1 px-6 py-3 border border-[#3e3f20]/60 rounded-xl text-[#eeeeee]/50 text-sm font-semibold hover:border-[#f9ad52]/40 hover:text-[#eeeeee] transition-all"
+              className="order-2 sm:order-1 px-6 py-3 border border-third/30 rounded-xl text-third/50 text-sm font-semibold hover:border-second/40 hover:text-third transition-all"
             >
               Simpan Draft
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="order-1 sm:order-2 px-8 py-3 bg-[#f9ad52] hover:bg-[#f9ad52]/90 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed text-[#3e3f20] font-extrabold text-sm rounded-xl transition-all duration-200 shadow-lg shadow-[#f9ad52]/20"
+              className="order-1 sm:order-2 px-8 py-3 bg-second hover:bg-second/90 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed text-third font-extrabold text-sm rounded-xl transition-all duration-200 shadow-lg shadow-second/20"
             >
               {isSubmitting ? "⏳ Menyimpan..." : "🚀 Terbitkan Produk"}
             </button>

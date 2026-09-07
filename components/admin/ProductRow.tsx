@@ -1,7 +1,11 @@
 "use client"
 import { ICategory, IProduct } from "@/interface"
 import Image from "next/image"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import {
+  Save, RotateCcw, Trash2, Check, X, ChevronDown,
+  Search, PlayCircle, AlertTriangle, FolderX, ImageOff,
+} from "lucide-react"
 
 function PriceInput({ value, onChange }: { value: any, onChange: (raw: string) => void }) {
   const [display, setDisplay] = useState("")
@@ -21,13 +25,21 @@ function PriceInput({ value, onChange }: { value: any, onChange: (raw: string) =
         value={display}
         onChange={handleChange}
         onFocus={(e) => e.target.select()}
-        className="font-poppins text-[12px] font-medium w-full border border-third/10 rounded-lg px-2 py-1.5 bg-third/4 text-third outline-none focus:border-second focus:bg-white transition-colors"
+        className="font-poppins text-[12px] font-medium w-full border border-third/10 rounded-lg px-2 py-1.5 bg-primary text-third outline-none focus:border-second focus:ring-2 focus:ring-second/15 transition-all"
       />
     </div>
   )
 }
 
-export default function ProductRow({ product, onSave, onDelete, kategori }: { product: IProduct, onSave: (product: IProduct) => void, onDelete: (url: string) => void, kategori: ICategory[] }) {
+export default function ProductRow({
+  product, onSave, onDelete, kategori, index = 0,
+}: {
+  product: IProduct
+  onSave: (product: IProduct) => void
+  onDelete: (url: string) => void
+  kategori: ICategory[]
+  index?: number
+}) {
   const [row, setRow] = useState<IProduct>(product)
   const [promoOn, setPromoOn] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -37,10 +49,24 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
   const [katOpen, setKatOpen] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const katRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setRow(product)
   }, [product])
+
+  // tutup dropdown kategori kalau klik di luar
+  useEffect(() => {
+    if (!katOpen) return
+    const handler = (e: MouseEvent) => {
+      if (katRef.current && !katRef.current.contains(e.target as Node)) {
+        setKatOpen(false)
+        setKatSearch("")
+      }
+    }
+    document.addEventListener("mousedown", handler)
+    return () => document.removeEventListener("mousedown", handler)
+  }, [katOpen])
 
   const update = (field: string, value: any) => {
     setRow(prev => ({ ...prev, [field]: value }))
@@ -120,32 +146,42 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
 
   const stokBadge =
     (row.stock ?? 0) === 0
-      ? { label: "Habis", cls: "bg-red-50 text-red-700" }
+      ? { label: "Habis", cls: "bg-red-50 text-red-600" }
       : (row.stock ?? 0) < 10
       ? { label: "Menipis", cls: "bg-amber-50 text-amber-700" }
-      : { label: "Aman", cls: "bg-green-50 text-green-700" }
+      : { label: "Aman", cls: "bg-emerald-50 text-emerald-700" }
 
   return (
-    <tr className={`border-b border-third/8 align-top transition-colors ${isDirty ? "bg-second/5" : "hover:bg-third/[0.02]"}`}>
-      {/* Produk */}
-      <td className="px-4 py-3">
+    <tr
+      style={{ animation: `rowFadeIn 0.35s ease-out backwards`, animationDelay: `${Math.min(index * 25, 300)}ms` }}
+      className={`border-b border-third/8 align-top transition-colors duration-200 group ${
+        isDirty ? "bg-second/[0.04]" : "hover:bg-third/[0.02]"
+      }`}
+    >
+      {/* Produk (sticky) */}
+      <td className={`sticky left-0 z-10 px-4 py-3 shadow-[4px_0_6px_-4px_rgba(0,0,0,0.05)] transition-colors duration-200 ${
+        isDirty ? "bg-[#fdf3e8]" : "bg-primary group-hover:bg-[#f7f6f2]"
+      }`}>
         <div className="flex items-center gap-2.5">
-          <div className="image-parent-table">
-            {product.images?.[0]?.[0] && (
+          {isDirty && <span className="w-1 h-8 rounded-full bg-second flex-shrink-0" />}
+          <div className="w-9 h-9 rounded-lg bg-third/5 flex items-center justify-center flex-shrink-0 overflow-hidden">
+            {product.images?.[0]?.[0] ? (
               <Image
                 src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0][0]}`}
                 alt={product.name}
                 width={36}
                 height={36}
-                className="rounded-lg object-cover flex-shrink-0"
+                className="rounded-lg object-cover"
               />
+            ) : (
+              <ImageOff size={14} className="text-third/25" />
             )}
           </div>
-          <div>
-            <p className="font-poppins text-[10px] text-third/40 uppercase tracking-wider mb-0.5">
+          <div className="min-w-0">
+            <p className="font-poppins text-[10px] text-third/40 uppercase tracking-wider mb-0.5 truncate">
               {product.brandId}
             </p>
-            <p className="font-poppins text-[12px] font-medium text-third leading-snug">
+            <p className="font-poppins text-[12px] font-medium text-third leading-snug line-clamp-2">
               {product.name}
             </p>
           </div>
@@ -159,33 +195,33 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
           min={0}
           value={row.stock ?? 0}
           onChange={(e) => update("stock", parseInt(e.target.value) || 0)}
-          className="font-poppins text-[12px] w-14 text-center border border-third/10 rounded-lg px-2 py-1.5 bg-third/4 text-third outline-none focus:border-second transition-colors"
+          className="font-poppins text-[12px] w-16 text-center border border-third/10 rounded-lg px-2 py-1.5 bg-primary text-third outline-none focus:border-second focus:ring-2 focus:ring-second/15 transition-all"
         />
-        <span className={`mt-1.5 block text-[10px] px-2 py-0.5 rounded-full text-center font-medium ${stokBadge.cls}`}>
+        <span className={`mt-1.5 inline-block text-[10px] px-2 py-0.5 rounded-full text-center font-medium transition-colors ${stokBadge.cls}`}>
           {stokBadge.label}
         </span>
       </td>
 
       {/* Harga pricelist */}
-      <td className="px-3 py-3 bg-purple-50/30">
+      <td className="px-3 py-3 bg-second/[0.025]">
         <PriceInput value={row.pricelist} onChange={(raw) => update("pricelist", raw)} />
       </td>
 
       {/* Harga offline */}
-      <td className="px-3 py-3 bg-teal-50/30">
+      <td className="px-3 py-3 bg-second/[0.025]">
         <PriceInput value={row.offlinePrice} onChange={(raw) => update("offlinePrice", raw)} />
       </td>
 
       {/* Harga online */}
-      <td className="px-3 py-3 bg-blue-50/30">
+      <td className="px-3 py-3 bg-second/[0.025]">
         <PriceInput value={row.onlinePrice} onChange={(raw) => update("onlinePrice", raw)} />
       </td>
 
       {/* Harga promo */}
-      <td className="px-3 py-3 bg-amber-50/30">
+      <td className="px-3 py-3 bg-second/[0.025]">
         <PriceInput value={row.promo} onChange={(raw) => update("promo", raw)} />
         {promoOn && promoDisc > 0 && (
-          <span className="mt-1.5 block text-[10px] px-2 py-0.5 rounded-full text-center font-medium bg-amber-50 text-amber-700 w-fit">
+          <span className="mt-1.5 inline-block text-[10px] px-2 py-0.5 rounded-full text-center font-medium bg-second/15 text-second w-fit">
             -{promoDisc}%
           </span>
         )}
@@ -193,7 +229,7 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
 
       {/* Set promo */}
       <td className="px-3 py-3">
-        <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-2.5 items-center">
           <label className="flex items-center gap-2 cursor-pointer w-fit">
             <div className="relative">
               <input
@@ -205,8 +241,8 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
                 }}
                 className="sr-only"
               />
-              <div className={`w-8 h-4 rounded-full transition-colors ${promoOn ? "bg-green-500" : "bg-third/15"}`} />
-              <div className={`absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white transition-transform ${promoOn ? "translate-x-4" : ""}`} />
+              <div className={`w-8 h-4 rounded-full transition-colors duration-200 ${promoOn ? "bg-second" : "bg-third/15"}`} />
+              <div className={`absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white shadow transition-transform duration-200 ${promoOn ? "translate-x-4" : ""}`} />
             </div>
             <span className="font-poppins text-[11px] text-third/55">
               {promoOn ? "Aktif" : "Nonaktif"}
@@ -214,9 +250,10 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
           </label>
           {promoOn && (
             <select
+              style={{ animation: "popIn 0.15s ease-out" }}
               value={row.namaPromo ?? ""}
               onChange={(e) => update("namaPromo", e.target.value)}
-              className="font-poppins text-[11px] border border-third/10 rounded-lg px-2 py-1.5 bg-white text-third outline-none focus:border-second transition-colors w-full"
+              className="font-poppins text-[11px] border border-third/10 rounded-lg px-2 py-1.5 bg-primary text-third outline-none focus:border-second focus:ring-2 focus:ring-second/15 transition-all w-full"
             >
               <option value="" disabled>Pilih tipe promo</option>
               <option>Flash sale</option>
@@ -231,37 +268,42 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
       </td>
 
       {/* Kategori */}
-      <td className="px-3 py-3 bg-green-50/30">
-        <div className="relative">
+      <td className="px-3 py-3">
+        <div className="relative" ref={katRef}>
           <button
             onClick={() => { setKatOpen(v => !v); setKatSearch("") }}
-            className="w-full text-left font-poppins text-[11px] border border-third/10 rounded-lg px-2 py-1.5 bg-third/4 text-third outline-none hover:border-second transition-colors flex items-center justify-between gap-1"
+            className={`w-full text-left font-poppins text-[11px] border rounded-lg px-2 py-1.5 bg-primary text-third outline-none transition-all flex items-center justify-between gap-1 ${
+              katOpen ? "border-second ring-2 ring-second/15" : "border-third/10 hover:border-second/50"
+            }`}
           >
-            <span className={selectedKat ? "text-third" : "text-third/30"}>
+            <span className={selectedKat ? "text-third truncate" : "text-third/30"}>
               {selectedKat?.title || "Pilih kategori"}
             </span>
-            <svg className={`w-3 h-3 text-third/30 flex-shrink-0 transition-transform ${katOpen ? "rotate-180" : ""}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M6 9l6 6 6-6" />
-            </svg>
+            <ChevronDown size={12} className={`text-third/30 flex-shrink-0 transition-transform duration-200 ${katOpen ? "rotate-180" : ""}`} />
           </button>
+
           {katOpen && (
-            <div className="absolute top-[calc(100%+4px)] left-0 z-50 w-48 bg-white border border-third/10 rounded-xl shadow-lg overflow-hidden">
-              <div className="p-2 border-b border-third/8">
+            <div
+              style={{ animation: "popIn 0.15s ease-out" }}
+              className="absolute top-[calc(100%+4px)] left-0 z-30 w-48 bg-primary border border-third/10 rounded-xl shadow-lg overflow-hidden origin-top"
+            >
+              <div className="p-2 border-b border-third/8 relative">
+                <Search size={12} className="absolute left-4 top-1/2 -translate-y-1/2 text-third/30" />
                 <input
                   type="text"
                   value={katSearch}
                   onChange={(e) => setKatSearch(e.target.value)}
                   placeholder="Cari kategori..."
                   autoFocus
-                  className="w-full font-poppins text-[11px] px-2 py-1.5 rounded-lg border border-third/10 bg-third/4 text-third outline-none focus:border-second transition-colors placeholder:text-third/30"
+                  className="w-full font-poppins text-[11px] pl-6 pr-2 py-1.5 rounded-lg border border-third/10 bg-bg-site text-third outline-none focus:border-second transition-colors placeholder:text-third/30"
                 />
               </div>
               <div className="max-h-48 overflow-y-auto">
                 <button
                   onClick={() => { update("kategoriId", ""); setKatOpen(false); setKatSearch("") }}
-                  className="w-full text-left px-3 py-2 font-poppins text-[11px] text-third/35 hover:bg-third/4 transition-colors italic"
+                  className="w-full text-left px-3 py-2 font-poppins text-[11px] text-third/35 hover:bg-third/4 transition-colors italic flex items-center gap-2"
                 >
-                  Tanpa kategori
+                  <FolderX size={12} /> Tanpa kategori
                 </button>
                 {filteredKat.length > 0 ? filteredKat.map(k => (
                   <button
@@ -282,7 +324,7 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
                         className="rounded object-cover flex-shrink-0"
                       />
                     )}
-                    {k.title}
+                    <span className="truncate">{k.title}</span>
                   </button>
                 )) : (
                   <p className="px-3 py-3 font-poppins text-[11px] text-third/30 text-center">
@@ -294,29 +336,29 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
           )}
         </div>
         {selectedKat && (
-          <span className="mt-1.5 block font-poppins text-[10px] px-2 py-0.5 rounded-full bg-green-50 text-green-700 text-center truncate">
+          <span className="mt-1.5 inline-block max-w-full font-poppins text-[10px] px-2 py-0.5 rounded-full bg-third/8 text-third/60 text-center truncate">
             {selectedKat.title}
           </span>
         )}
       </td>
 
       {/* Video */}
-      <td className="px-3 py-3 bg-red-50/30">
+      <td className="px-3 py-3">
         <input
           type="text"
           value={row.video ?? ""}
           onChange={(e) => update("video", e.target.value)}
           placeholder="Link YouTube..."
-          className="font-poppins text-[11px] w-full border border-third/10 rounded-lg px-2 py-1.5 bg-third/4 text-third outline-none focus:border-second focus:bg-white transition-colors"
+          className="font-poppins text-[11px] w-full border border-third/10 rounded-lg px-2 py-1.5 bg-primary text-third outline-none focus:border-second focus:ring-2 focus:ring-second/15 transition-all"
         />
         {row.video && (
           <a
             href={row.video}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-1.5 block font-poppins text-[10px] text-red-500 hover:text-red-600 truncate"
+            className="mt-1.5 flex items-center gap-1 font-poppins text-[10px] text-second hover:text-second/80 transition-colors truncate"
           >
-            ▶ Lihat video
+            <PlayCircle size={11} /> Lihat video
           </a>
         )}
       </td>
@@ -327,50 +369,67 @@ export default function ProductRow({ product, onSave, onDelete, kategori }: { pr
           <button
             onClick={handleSave}
             disabled={!isDirty || loading}
-            className={`font-poppins text-[11px] px-3 py-1.5 rounded-lg transition-colors w-full font-medium
+            className={`flex items-center justify-center gap-1.5 font-poppins text-[11px] px-3 py-1.5 rounded-lg transition-all duration-150 w-full font-medium active:scale-95
               ${isDirty && !loading
-                ? "bg-green-500 text-white hover:bg-green-600"
+                ? "bg-emerald-500 text-white hover:bg-emerald-600 shadow-sm shadow-emerald-500/20"
                 : saved
-                ? "bg-green-50 text-green-700"
+                ? "bg-emerald-50 text-emerald-700"
                 : "bg-third/5 text-third/25 cursor-not-allowed"
               }`}
           >
-            {loading ? "Menyimpan..." : saved ? "✓ Tersimpan" : "Simpan"}
+            {loading ? (
+              <span className="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+            ) : saved ? (
+              <Check size={12} />
+            ) : (
+              <Save size={12} />
+            )}
+            {loading ? "Menyimpan..." : saved ? "Tersimpan" : "Simpan"}
           </button>
+
           {isDirty && (
             <button
               onClick={handleReset}
-              className="font-poppins text-[11px] px-3 py-1.5 rounded-lg border border-third/10 text-third/40 hover:text-third/70 transition-colors w-full"
+              style={{ animation: "popIn 0.15s ease-out" }}
+              className="flex items-center justify-center gap-1.5 font-poppins text-[11px] px-3 py-1.5 rounded-lg border border-third/10 text-third/40 hover:text-third/70 hover:border-third/20 transition-all active:scale-95 w-full"
             >
-              Reset
+              <RotateCcw size={11} /> Reset
             </button>
           )}
+
           {!confirmDelete ? (
             <button
               onClick={() => setConfirmDelete(true)}
-              className="font-poppins text-[11px] px-3 py-1.5 rounded-lg border border-red-200 text-red-400 hover:bg-red-50 hover:text-red-600 hover:border-red-300 transition-colors w-full"
+              className="flex items-center justify-center gap-1.5 font-poppins text-[11px] px-3 py-1.5 rounded-lg border border-red-200 text-red-400 hover:bg-red-50 hover:text-red-600 hover:border-red-300 transition-all active:scale-95 w-full"
             >
-              Hapus
+              <Trash2 size={11} /> Hapus
             </button>
           ) : (
-            <div className="flex flex-col gap-1">
-              <p className="font-poppins text-[10px] text-red-500 text-center leading-tight">
-                Yakin hapus produk ini?
+            <div
+              style={{ animation: "popIn 0.15s ease-out" }}
+              className="flex flex-col gap-1.5 bg-red-50/60 border border-red-100 rounded-lg p-1.5"
+            >
+              <p className="flex items-center justify-center gap-1 font-poppins text-[10px] text-red-500 text-center leading-tight">
+                <AlertTriangle size={11} /> Yakin hapus?
               </p>
               <div className="flex gap-1">
                 <button
                   onClick={handleDelete}
                   disabled={deleting}
-                  className="flex-1 font-poppins text-[11px] px-2 py-1.5 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors font-medium disabled:opacity-60"
+                  className="flex-1 flex items-center justify-center gap-1 font-poppins text-[11px] px-2 py-1.5 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-all font-medium disabled:opacity-60 active:scale-95"
                 >
-                  {deleting ? "..." : "Ya"}
+                  {deleting ? (
+                    <span className="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <Check size={11} />
+                  )}
                 </button>
                 <button
                   onClick={() => setConfirmDelete(false)}
                   disabled={deleting}
-                  className="flex-1 font-poppins text-[11px] px-2 py-1.5 rounded-lg border border-third/10 text-third/50 hover:text-third/70 transition-colors"
+                  className="flex-1 flex items-center justify-center font-poppins text-[11px] px-2 py-1.5 rounded-lg border border-third/10 text-third/50 hover:text-third/70 transition-all active:scale-95"
                 >
-                  Batal
+                  <X size={11} />
                 </button>
               </div>
             </div>
