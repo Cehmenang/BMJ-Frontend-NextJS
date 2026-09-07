@@ -15,6 +15,7 @@ async function getTrending() {
 
 export default async function TrendingProducts() {
   const products = await getTrending();
+  console.log(products, 'PRODUK TRENDING!')
   if (!products || products.length === 0) return null;
 
   return (
