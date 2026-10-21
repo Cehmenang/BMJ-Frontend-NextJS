@@ -1,15 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Archivo } from "next/font/google";
 import { FaWhatsapp, FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// Font heading sans-serif tebal (gantikan font-play yang serif).
-// Body tetap Poppins lewat class `font-poppins` yang sudah ada di project lo.
+gsap.registerPlugin(ScrollTrigger);
+
+const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 const archivo = Archivo({ subsets: ["latin"], weight: ["800", "900"], display: "swap" });
 
-// ── Foto toko (ganti dengan foto asli) ──
 const GALLERY = [
   { src: "/about1.webp", caption: "Tampak Depan Toko" },
   { src: "/about2.webp", caption: "Area Display Gitar" },
@@ -19,10 +22,10 @@ const GALLERY = [
 ];
 
 const STATS = [
-  { value: "15+", label: "Tahun Berpengalaman" },
-  { value: "5.000+", label: "Produk Tersedia" },
-  { value: "200+", label: "Brand Resmi" },
-  { value: "50K+", label: "Pelanggan Puas" },
+  { value: "15+", to: 15, suffix: "+", label: "Tahun Berpengalaman" },
+  { value: "5.000+", to: 5000, suffix: "+", label: "Produk Tersedia" },
+  { value: "200+", to: 200, suffix: "+", label: "Brand Resmi" },
+  { value: "50K+", to: 50, suffix: "K+", label: "Pelanggan Puas" },
 ];
 
 const SOCIALS = [
@@ -32,8 +35,6 @@ const SOCIALS = [
   { icon: FaYoutube, label: "YouTube", handle: "Bandar Musik Jakarta", href: "https://youtube.com/@bandarmusikjakarta" },
 ];
 
-// ── Token spacing & tipografi: semua section pakai ini, jadi jaraknya konsisten ──
-// Skala jarak kelipatan 8: 16 / 24 / 32 / 48 / 64 / 112
 const WRAP = "max-w-7xl mx-auto px-6 md:px-20";
 const SECTION = "py-28"; // 112px atas-bawah di semua section
 const HEADING = `${archivo.className} font-black uppercase leading-none tracking-tight`;
@@ -48,6 +49,61 @@ const BTN_LINE = `${BTN} border-primary text-primary hover:bg-primary hover:text
 
 export default function About() {
   const [activeImg, setActiveImg] = useState(0);
+  const root = useRef<HTMLDivElement>(null);
+
+  // ── Animasi GSAP (otomatis nonaktif kalau user pilih "reduce motion") ──
+  useIsoLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        // 1) Hero: satu urutan masuk saat halaman dibuka
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+        tl.from("[data-hero='media']", { clipPath: "inset(0 0 100% 0)", duration: 1, ease: "power3.inOut" })
+          .from("[data-hero='item']", { y: 24, opacity: 0, duration: 0.7, stagger: 0.12 }, 0.2)
+          .from("[data-hero='mark']", { clipPath: "inset(0 100% 0 0)", duration: 0.6, ease: "power2.inOut" }, "-=0.5");
+
+        // 2) Angka statistik menghitung naik saat masuk layar
+        gsap.utils.toArray<HTMLElement>("[data-count]").forEach((el) => {
+          const to = Number(el.dataset.count);
+          const suffix = el.dataset.suffix ?? "";
+          const o = { n: 0 };
+          el.textContent = `0${suffix}`;
+          gsap.to(o, {
+            n: to,
+            duration: 1.6,
+            ease: "power2.out",
+            scrollTrigger: { trigger: el, start: "top 90%", once: true },
+            onUpdate: () => {
+              el.textContent = `${Math.round(o.n).toLocaleString("id-ID")}${suffix}`;
+            },
+          });
+        });
+
+        // 3) Blok yang muncul saat di-scroll (sekali saja)
+        gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((el) => {
+          gsap.from(el, {
+            y: 32,
+            opacity: 0,
+            duration: 0.8,
+            ease: "power3.out",
+            scrollTrigger: { trigger: el, start: "top 85%", once: true },
+          });
+        });
+        gsap.utils.toArray<HTMLElement>("[data-stagger]").forEach((group) => {
+          gsap.from(group.children, {
+            y: 32,
+            opacity: 0,
+            duration: 0.7,
+            stagger: 0.1,
+            ease: "power3.out",
+            scrollTrigger: { trigger: group, start: "top 85%", once: true },
+          });
+        });
+      });
+    }, root);
+
+    return () => ctx.revert();
+  }, []);
 
   // Auto-advance foto hero
   useEffect(() => {
@@ -56,22 +112,22 @@ export default function About() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-bg-site font-poppins">
+    <div ref={root} className="min-h-screen bg-bg-site font-poppins">
       {/* ── HERO ── */}
       <section className="bg-third text-primary">
         <div className={`${WRAP} py-24`}>
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-12 items-end">
             <div>
-              <p className={`${EYEBROW} !text-primary/70`}>Tentang Kami</p>
-              <h1 className={`${HEADING} text-[clamp(44px,7vw,104px)] leading-[0.95] mb-8`}>
+              <p data-hero="item" className={`${EYEBROW} !text-primary/70`}>Tentang Kami</p>
+              <h1 data-hero="item" className={`${HEADING} text-[clamp(30px,4.2vw,60px)] leading-[1.05] mb-8`}>
                 Surga alat musik{" "}
-                <span className="inline-block bg-second text-third px-3">Jakarta</span> sejak 2009
+                <span data-hero="mark" className="inline-block bg-second text-third px-3">Jakarta</span> sejak 2009
               </h1>
-              <p className={`${BODY} !text-primary/80 max-w-md mb-8`}>
+              <p data-hero="item" className={`${BODY} !text-primary/80 max-w-md mb-8`}>
                 Lebih dari satu dekade melayani musisi Indonesia dengan koleksi alat musik terlengkap
                 dari brand terbaik dunia.
               </p>
-              <div className="flex flex-wrap gap-4">
+              <div data-hero="item" className="flex flex-wrap gap-4">
                 <Link href="https://wa.me/6281929290560" target="_blank" rel="noopener noreferrer" className={BTN_FILL}>
                   <FaWhatsapp size={16} /> Chat WhatsApp
                 </Link>
@@ -83,7 +139,7 @@ export default function About() {
 
             {/* Foto bergantian */}
             <div>
-              <div className="relative h-[320px] md:h-[480px] border-2 border-primary overflow-hidden">
+              <div data-hero="media" className="relative h-[320px] md:h-[480px] border-2 border-primary overflow-hidden">
                 {GALLERY.map((img, i) => (
                   <img
                     key={i}
@@ -119,7 +175,7 @@ export default function About() {
           <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x-2 md:divide-primary/25">
             {STATS.map((stat) => (
               <div key={stat.label} className="py-8 px-6 first:pl-0">
-                <p className={`${HEADING} text-[clamp(36px,4vw,56px)] text-second mb-2`}>{stat.value}</p>
+                <p className={`${HEADING} text-[clamp(36px,4vw,56px)] text-second mb-2`} data-count={stat.to} data-suffix={stat.suffix}>{stat.value}</p>
                 <p className="text-xs font-medium uppercase tracking-widest text-primary/75">{stat.label}</p>
               </div>
             ))}
@@ -130,7 +186,7 @@ export default function About() {
       {/* ── STORY ── */}
       <section className={`${WRAP} ${SECTION}`}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
-          <div className="border-t-4 border-third pt-6">
+          <div data-reveal className="border-t-4 border-third pt-6">
             <p className={EYEBROW}>Cerita Kami</p>
             <h2 className={H2}>Dari passion jadi destinasi musik</h2>
             <div className="space-y-4">
@@ -161,7 +217,7 @@ export default function About() {
           </div>
 
           {/* Grid foto: tinggi & gap konsisten (gap-4 = 16px) */}
-          <div className="grid grid-cols-2 gap-4">
+          <div data-stagger className="grid grid-cols-2 gap-4">
             <img src={GALLERY[1].src} alt={GALLERY[1].caption} className="w-full h-80 object-cover border-2 border-third" />
             <img src={GALLERY[2].src} alt={GALLERY[2].caption} className="w-full h-52 object-cover border-2 border-third" />
             <img src={GALLERY[3].src} alt={GALLERY[3].caption} className="w-full h-52 object-cover border-2 border-third" />
@@ -211,7 +267,7 @@ export default function About() {
             <div>
               <p className={EYEBROW}>Hubungi Kami</p>
               <h2 className={H2}>Tetap terhubung</h2>
-              <div className="flex flex-col gap-4 mt-8">
+              <div data-stagger className="flex flex-col gap-4 mt-8">
                 {SOCIALS.map((s) => (
                   <a
                     key={s.label}
@@ -239,7 +295,7 @@ export default function About() {
 
       {/* ── CTA ── */}
       <section className={`${WRAP} ${SECTION}`}>
-        <div className="bg-third text-primary rounded border-2 border-third p-8 md:p-16 flex flex-col md:flex-row md:items-center md:justify-between gap-12">
+        <div data-reveal className="bg-third text-primary rounded border-2 border-third p-8 md:p-16 flex flex-col md:flex-row md:items-center md:justify-between gap-12">
           <div className="max-w-xl">
             <p className={`${EYEBROW} !text-primary/70`}>Kunjungi Kami</p>
             <h2 className={`${H2} !text-primary !mb-0`}>Rasakan langsung belanja di toko kami</h2>
