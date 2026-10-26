@@ -9,7 +9,6 @@ import {
   ChevronRight,
   X,
   Play,
-  ShoppingBag,
   Megaphone,
   Truck,
   ShieldCheck,
@@ -183,7 +182,7 @@ export default function ProductDetail({ product }: { product?: any }) {
   const [selectedOptions, setSelectedOptions] = useState<Record<number, VariantOption>>({});
   const [activeImgSrc, setActiveImgSrc] = useState<string | null>(null);
   const [related, setRelated] = useState<IProduct[] | []>([]);
-  const [cekOngkir, setCekOngkir] = useState<boolean>(false);
+  // const [cekOngkir, setCekOngkir] = useState<boolean>(false);
   const tabContentRef = useRef<HTMLDivElement>(null);
   const mainImgRef = useRef<HTMLImageElement>(null);
   const imgWrapRef = useRef<HTMLDivElement>(null);

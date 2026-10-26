@@ -9,6 +9,7 @@ async function getTrending() {
     cache: "no-store",
   });
   if (!res.ok) return [];
+  console.log(await res.json())
   const result = await res.json();
   return result.data;
 }
