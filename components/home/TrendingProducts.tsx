@@ -9,8 +9,8 @@ async function getTrending() {
     cache: "no-store",
   });
   if (!res.ok) return [];
-  console.log(await res.json())
   const result = await res.json();
+  console.log(result.data, 'JOREK')
   return result.data;
 }
 
