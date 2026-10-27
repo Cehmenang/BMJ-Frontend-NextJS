@@ -9,23 +9,49 @@ interface TrendingCarouselProps {
   products: IProduct[];
 }
 
-const VISIBLE_COUNT = 5;
+const DESKTOP_COUNT = 5;
+
+function useVisibleCount() {
+  const [count, setCount] = useState(DESKTOP_COUNT);
+
+  useEffect(() => {
+    const queries = [
+      { mq: window.matchMedia("(min-width: 1024px)"), n: DESKTOP_COUNT },
+      { mq: window.matchMedia("(min-width: 768px)"), n: 3 },
+      { mq: window.matchMedia("(min-width: 480px)"), n: 2 },
+    ];
+
+    const update = () => {
+      const hit = queries.find((q) => q.mq.matches);
+      setCount(hit ? hit.n : 1);
+    };
+
+    update();
+    queries.forEach((q) => q.mq.addEventListener("change", update));
+    return () =>
+      queries.forEach((q) => q.mq.removeEventListener("change", update));
+  }, []);
+
+  return count;
+}
 
 export default function TrendingCarousel({ products }: TrendingCarouselProps) {
   const [startIndex, setStartIndex] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
+  const visibleCount = useVisibleCount();
 
-  const canSlide = products.length > VISIBLE_COUNT;
-  const maxStartIndex = Math.max(0, products.length - VISIBLE_COUNT);
+  const canSlide = products.length > visibleCount;
+  const maxStartIndex = Math.max(0, products.length - visibleCount);
+  // Jaga-jaga kalau layar di-resize dan startIndex melewati batas.
+  const safeStart = Math.min(startIndex, maxStartIndex);
 
-  const visibleProducts = products.slice(
-    startIndex,
-    startIndex + VISIBLE_COUNT
-  );
+  const visibleProducts = products.slice(safeStart, safeStart + visibleCount);
+  const isDesktopLayout = visibleCount === DESKTOP_COUNT;
 
   // Klik arrow: langsung ganti, TANPA animasi fade/slide.
-  const handlePrev = () => setStartIndex((i) => Math.max(0, i - 1));
-  const handleNext = () => setStartIndex((i) => Math.min(maxStartIndex, i + 1));
+  const handlePrev = () => setStartIndex(Math.max(0, safeStart - 1));
+  const handleNext = () =>
+    setStartIndex(Math.min(maxStartIndex, safeStart + 1));
 
   // Animasi cuma jalan saat section ini masuk / keluar viewport pas discroll.
   useEffect(() => {
@@ -64,20 +90,32 @@ export default function TrendingCarousel({ products }: TrendingCarouselProps) {
       {canSlide && (
         <button
           onClick={handlePrev}
-          disabled={startIndex === 0}
+          disabled={safeStart === 0}
           aria-label="Produk sebelumnya"
-          className="absolute left-0 top-1/2 z-20 -translate-y-1/2 -translate-x-2 sm:-translate-x-5 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-third shadow-md transition-opacity disabled:opacity-30 hover:brightness-95"
+          className="absolute left-0 top-1/2 z-20 flex h-10 w-10 -translate-x-2 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-third shadow-md transition-opacity hover:brightness-95 disabled:opacity-30 sm:-translate-x-5"
         >
           <ArrowIcon direction="left" />
         </button>
       )}
 
-      <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-5 gap-x-5 md:gap-x-6 items-center px-2 sm:px-4">
+      {/* Jumlah kolom langsung mengikuti visibleCount, tidak bergantung breakpoint Tailwind */}
+      <div
+        className="grid items-center gap-x-4 px-2 sm:px-4 xl:gap-x-6"
+        style={{
+          gridTemplateColumns: `repeat(${visibleCount}, minmax(0, 1fr))`,
+        }}
+      >
         {visibleProducts.map((product, i) => (
           <TrendingCard
             key={product.id}
             product={product}
-            variant={i === 1 && visibleProducts.length === 5 ? "highlight" : "normal"}
+            variant={
+              i === 1 &&
+              isDesktopLayout &&
+              visibleProducts.length === DESKTOP_COUNT
+                ? "highlight"
+                : "normal"
+            }
           />
         ))}
       </div>
@@ -85,9 +123,9 @@ export default function TrendingCarousel({ products }: TrendingCarouselProps) {
       {canSlide && (
         <button
           onClick={handleNext}
-          disabled={startIndex >= maxStartIndex}
+          disabled={safeStart >= maxStartIndex}
           aria-label="Produk selanjutnya"
-          className="absolute right-0 top-1/2 z-20 -translate-y-1/2 translate-x-2 sm:translate-x-5 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-third shadow-md transition-opacity disabled:opacity-30 hover:brightness-95"
+          className="absolute right-0 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 translate-x-2 items-center justify-center rounded-full bg-primary text-third shadow-md transition-opacity hover:brightness-95 disabled:opacity-30 sm:translate-x-5"
         >
           <ArrowIcon direction="right" />
         </button>
@@ -104,7 +142,9 @@ function ArrowIcon({ direction }: { direction: "left" | "right" }) {
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      style={{ transform: direction === "right" ? "rotate(180deg)" : undefined }}
+      style={{
+        transform: direction === "right" ? "rotate(180deg)" : undefined,
+      }}
     >
       <path
         d="M15 18L9 12L15 6"
