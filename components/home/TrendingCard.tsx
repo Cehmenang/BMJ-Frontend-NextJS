@@ -57,7 +57,7 @@ export default function TrendingCard({
 
       <h3
         className={[
-          "text-center font-display text-base sm:text-lg md:text-xl font-bold",
+          "text-center font-display text-base sm:text-lg md:text-md font-bold",
           isHighlight ? "text-primary" : "text-third",
         ].join(" ")}
       >
