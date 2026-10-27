@@ -9,7 +9,7 @@ interface TrendingCarouselProps {
   products: IProduct[];
 }
 
-const VISIBLE_COUNT = 3;
+const VISIBLE_COUNT = 5;
 
 export default function TrendingCarousel({ products }: TrendingCarouselProps) {
   const [startIndex, setStartIndex] = useState(0);
