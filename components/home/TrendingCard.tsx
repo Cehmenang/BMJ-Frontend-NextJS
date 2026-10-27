@@ -39,25 +39,23 @@ export default function TrendingCard({
   return (
     <div
       className={[
-        "flex w-full max-w-[380px] flex-col items-center rounded-3xl px-4 sm:px-5 pb-5 sm:pb-6 pt-6 sm:pt-8 transition-transform duration-300",
-        isHighlight
-          ? "bg-second sm:scale-[1.06] z-10"
-          : "bg-white",
+        "mx-auto flex w-full max-w-[320px] flex-col items-center rounded-3xl px-3 pb-5 pt-6 transition-transform duration-300 xl:px-4",
+        isHighlight ? "z-10 bg-second lg:scale-[1.04]" : "bg-white",
       ].join(" ")}
     >
-      <div className="relative mb-4 sm:mb-6 aspect-square w-full max-w-[220px] sm:max-w-[280px] md:max-w-[320px] lg:max-w-[400px]">
+      <div className="relative mb-4 aspect-square w-full max-w-[220px]">
         <Image
           src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${image}`}
           alt={name}
           fill
-          sizes="(max-width: 640px) 220px, (max-width: 768px) 280px, (max-width: 1024px) 320px, 400px"
+          sizes="(max-width: 640px) 220px, (max-width: 1024px) 200px, 220px"
           className="object-contain drop-shadow-md"
         />
       </div>
 
       <h3
         className={[
-          "text-center font-display text-base sm:text-lg md:text-md font-bold",
+          "line-clamp-2 text-center font-display text-base font-bold lg:text-sm xl:text-base",
           isHighlight ? "text-primary" : "text-third",
         ].join(" ")}
       >
@@ -66,7 +64,7 @@ export default function TrendingCard({
 
       <p
         className={[
-          "mt-2 line-clamp-2 text-center text-xs sm:text-sm leading-relaxed",
+          "mt-2 line-clamp-2 text-center text-xs leading-relaxed",
           isHighlight ? "text-primary/80" : "text-third/60",
         ].join(" ")}
       >
@@ -75,20 +73,19 @@ export default function TrendingCard({
 
       <p
         className={[
-          "mt-3 sm:mt-4 text-lg sm:text-xl md:text-2xl font-bold",
+          "mt-3 text-lg font-bold lg:text-base xl:text-xl",
           isHighlight ? "text-primary" : "text-third",
         ].join(" ")}
       >
         {formatPrice(price)}
       </p>
 
-      <div className="mt-4 sm:mt-5 flex w-full flex-col xs:flex-row items-center justify-between gap-2 xs:gap-2">
+      {/* Selalu ditumpuk vertikal supaya muat di kartu sempit */}
+      <div className="mt-4 flex w-full flex-col items-center gap-2">
         <div
           className={[
             "flex items-center gap-3 rounded-full px-3 py-1.5 text-sm font-semibold",
-            isHighlight
-              ? "bg-primary/15 text-primary"
-              : "bg-third/5 text-third",
+            isHighlight ? "bg-primary/15 text-primary" : "bg-third/5 text-third",
           ].join(" ")}
         >
           <button
@@ -110,7 +107,7 @@ export default function TrendingCard({
 
         <button
           onClick={handleAddToCart}
-          className="w-full xs:w-auto whitespace-nowrap rounded-full bg-primary px-4 py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wide text-second transition-transform active:scale-95 hover:brightness-105"
+          className="w-full whitespace-nowrap rounded-full bg-primary px-4 py-2 text-[11px] font-bold uppercase tracking-wide text-second transition-transform hover:brightness-105 active:scale-95"
         >
           Add to Cart
         </button>
