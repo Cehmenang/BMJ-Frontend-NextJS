@@ -237,7 +237,7 @@ export default function ProductCard({
   return (
     <Link
       href={`/produk/${product.url}`}
-      className="group relative flex flex-shrink-0 w-auto md:w-[200px] flex-col overflow-hidden bg-white ring-1 ring-third/10 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-third/10"
+      className="group relative flex flex-shrink-0 w-auto flex-col overflow-hidden bg-white ring-1 ring-third/10 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-third/10"
     >
       <div className="relative aspect-square w-full overflow-hidden bg-gray-50">
         {newBadge}
