@@ -159,7 +159,7 @@ export default function BrandShowcase() {
     <section className="px-4 pb-16 sm:px-8 sm:pb-20 md:px-14">
       <div className="mb-6 flex items-end justify-between gap-4 px-0 sm:mb-8">
         <div>
-        <h2 className="text-md md:text-4xl font-boldonse text-[clamp(22px,3.5vw,42px)] font-bold text-third leading-9">
+          <h2 className="text-md md:text-4xl font-boldonse text-[clamp(22px,3.5vw,42px)] font-bold text-third leading-9">
             TEMUKAN <em className="text-second not-italic">BRAND FAVORIT</em>
           </h2>
         </div>
@@ -210,65 +210,68 @@ export default function BrandShowcase() {
       </div>
 
       <div className="hidden sm:block">
-        <div className="relative overflow-hidden">
-          <button
-            onClick={prev}
-            disabled={page === 0 || brands.length === 0}
-            aria-label="Halaman sebelumnya"
-            className="absolute left-2 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-sm bg-white text-third shadow-md ring-1 ring-third/10 transition-all duration-150 hover:bg-third hover:text-white disabled:cursor-default disabled:opacity-25 disabled:hover:bg-white disabled:hover:text-third"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </button>
-
-          <div className="overflow-hidden px-14 py-2">
-            {brands.length === 0 ? (
-              <div className="grid grid-cols-6 gap-2 sm:gap-3 lg:grid-cols-8">
-                {[...Array(PER_PAGE)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="aspect-square animate-pulse overflow-hidden rounded-md bg-third/10"
-                  />
-                ))}
-              </div>
-            ) : (
-              <div
-                className={`grid grid-cols-6 gap-2 transition-all duration-[420ms] ease-[cubic-bezier(0.4,0,0.2,1)] sm:gap-3 lg:grid-cols-8 ${animClass}`}
-              >
-                {visibleBrands.map((brand, i: number) => (
-                  <BrandCard key={`${page}-${i}`} brand={brand} />
-                ))}
-              </div>
-            )}
-          </div>
-
-          <button
-            onClick={next}
-            disabled={page === totalPages - 1 || brands.length === 0}
-            aria-label="Halaman selanjutnya"
-            className="absolute right-2 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-sm bg-white text-third shadow-md ring-1 ring-third/10 transition-all duration-150 hover:bg-third hover:text-white disabled:cursor-default disabled:opacity-25 disabled:hover:bg-white disabled:hover:text-third"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </button>
-        </div>
-
-        <div className="mt-10 flex justify-center gap-2">
-          {brands.length === 0
-            ? [...Array(3)].map((_, i) => (
+        <div className="overflow-hidden py-2">
+          {brands.length === 0 ? (
+            <div className="grid grid-cols-6 gap-2 sm:gap-3 lg:grid-cols-8">
+              {[...Array(PER_PAGE)].map((_, i) => (
                 <div
                   key={i}
-                  className={`h-[3px] animate-pulse rounded-sm bg-third/10 ${i === 0 ? "w-9" : "w-6"}`}
-                />
-              ))
-            : Array.from({ length: totalPages }, (_, i) => (
-                <button
-                  key={i}
-                  onClick={() => goTo(i, i > page ? "left" : "right")}
-                  aria-label={`Ke halaman ${i + 1}`}
-                  className={`h-[3px] rounded-sm border-none transition-all duration-300 ${
-                    i === page ? "w-9 bg-second" : "w-6 bg-third/20"
-                  }`}
+                  className="aspect-square animate-pulse overflow-hidden rounded-md bg-third/10"
                 />
               ))}
+            </div>
+          ) : (
+            <div
+              className={`grid grid-cols-6 gap-2 transition-all duration-[420ms] ease-[cubic-bezier(0.4,0,0.2,1)] sm:gap-3 lg:grid-cols-8 ${animClass}`}
+            >
+              {visibleBrands.map((brand, i: number) => (
+                <BrandCard key={`${page}-${i}`} brand={brand} />
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="mt-8 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+          <div />
+
+          <div className="flex justify-center gap-2">
+            {brands.length === 0
+              ? [...Array(3)].map((_, i) => (
+                  <div
+                    key={i}
+                    className={`h-[3px] animate-pulse rounded-sm bg-third/10 ${i === 0 ? "w-9" : "w-6"}`}
+                  />
+                ))
+              : Array.from({ length: totalPages }, (_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => goTo(i, i > page ? "left" : "right")}
+                    aria-label={`Ke halaman ${i + 1}`}
+                    className={`h-[3px] rounded-sm border-none transition-all duration-300 ${
+                      i === page ? "w-9 bg-second" : "w-6 bg-third/20"
+                    }`}
+                  />
+                ))}
+          </div>
+
+          <div className="flex items-center justify-end gap-2">
+            <button
+              onClick={prev}
+              disabled={page === 0 || brands.length === 0}
+              aria-label="Halaman sebelumnya"
+              className="flex h-9 w-9 items-center justify-center rounded-sm bg-white text-third shadow-sm ring-1 ring-third/10 transition-all duration-150 hover:bg-third hover:text-white disabled:cursor-default disabled:opacity-25 disabled:hover:bg-white disabled:hover:text-third"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              onClick={next}
+              disabled={page === totalPages - 1 || brands.length === 0}
+              aria-label="Halaman selanjutnya"
+              className="flex h-9 w-9 items-center justify-center rounded-sm bg-white text-third shadow-sm ring-1 ring-third/10 transition-all duration-150 hover:bg-third hover:text-white disabled:cursor-default disabled:opacity-25 disabled:hover:bg-white disabled:hover:text-third"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       </div>
     </section>
