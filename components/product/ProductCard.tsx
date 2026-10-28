@@ -93,58 +93,55 @@ export default function ProductCard({
     </div>
   );
 
-  const priceNode = (align: "center" | "left") => (
-    <div
-      className={`flex flex-col gap-1.5 ${
-        align === "center" ? "items-center" : "items-start"
-      }`}
-    >
-      {promoPrice ? (
-        <>
-          <div className="flex items-center gap-1.5 flex-wrap justify-center">
-            <span className="font-display text-base font-bold text-second leading-none">
-              {formatPrice(promoPrice)}
-            </span>
-            {promoDiscount && (
-              <span className="text-[10px] bg-second/15 text-second px-2 py-[3px] rounded-full font-bold leading-none">
-                -{promoDiscount}%
+  const priceNode = (align: "center" | "left") => {
+    const itemsAlign = align === "center" ? "items-center" : "items-start";
+    const justifyAlign = align === "center" ? "justify-center" : "justify-start";
+
+    return (
+      <div className={`flex flex-col gap-y-2 ${itemsAlign}`}>
+        {promoPrice ? (
+          <>
+            <div className={`flex items-center gap-1.5 flex-wrap ${justifyAlign}`}>
+              <span className="font-bold text-[15px] text-amber-700 leading-none">
+                {formatPrice(promoPrice)}
               </span>
-            )}
-          </div>
-          {promoBasePrice && (
-            <span className="text-[11px] text-third/40 line-through leading-none">
-              {formatPrice(promoBasePrice)}
-            </span>
-          )}
-          {product.namaPromo && (
-            <span className="text-[10px] text-second font-semibold leading-none">
-              {product.namaPromo}
-            </span>
-          )}
-        </>
-      ) : (
-        <>
-          {offlinePrice && (
-            <span className="font-display text-base font-bold text-third leading-none">
-              {formatPrice(offlinePrice)}
-            </span>
-          )}
-          {pricelist && (
-            <div className="flex items-center gap-1.5 flex-wrap justify-center">
-              {discount && (
-                <span className="text-[10px] bg-second/15 text-second px-2 py-[3px] rounded-full font-bold leading-none">
-                  -{discount}%
+              {promoDiscount && (
+                <span className="text-[11px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">
+                  -{promoDiscount}%
                 </span>
               )}
-              <span className="text-[11px] text-third/40 line-through leading-none">
-                {formatPrice(pricelist)}
-              </span>
             </div>
-          )}
-        </>
-      )}
-    </div>
-  );
+            {promoBasePrice && (
+              <span className="text-[11px] text-third/40 line-through leading-none">
+                {formatPrice(promoBasePrice)}
+              </span>
+            )}
+            {product.namaPromo && (
+              <span className="text-[10px] text-amber-700 font-semibold italic leading-none">
+                {product.namaPromo}
+              </span>
+            )}
+          </>
+        ) : (
+          <>
+            <span className="font-bold text-[15px] text-red-500 leading-none">
+              {offlinePrice && formatPrice(offlinePrice)}
+            </span>
+            {pricelist && (
+              <div className={`font-semibold text-[10px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center ${justifyAlign}`}>
+                {discount && (
+                  <span className="text-[11px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold not-italic">
+                    -{discount}%
+                  </span>
+                )}
+                <span>Pricelist: {formatPrice(pricelist)}</span>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    );
+  };
 
   if (listView) {
     return (
@@ -157,7 +154,7 @@ export default function ProductCard({
             <img src="/BadgeBaru.webp" alt="Badge Baru" width={44} height={44} className="absolute top-2 left-2 z-20" />
           )}
           {product.promo && (
-            <span className="absolute top-2 right-2 z-20 bg-second text-third text-[9px] font-bold px-2 py-[3px] rounded-full shadow-sm">
+            <span className="absolute top-2 right-2 z-20 bg-amber-600 text-white text-[9px] font-bold px-2 py-[3px] rounded-full shadow-sm">
               PROMO
             </span>
           )}
@@ -231,7 +228,7 @@ export default function ProductCard({
         )}
 
         {product.promo && (
-          <span className="absolute top-2.5 right-2.5 z-20 bg-second text-third text-[10px] font-bold px-3 py-1 rounded-full shadow-md">
+          <span className="absolute top-2.5 right-2.5 z-20 bg-amber-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-md">
             {product.namaPromo ? product.namaPromo : "Promo"}
           </span>
         )}
@@ -257,13 +254,22 @@ export default function ProductCard({
           />
         )}
 
-        <button
-          onClick={copyLink}
-          className="absolute bottom-2.5 right-2.5 z-20 flex h-9 w-9 translate-y-2 items-center justify-center rounded-full bg-white/90 text-third/60 opacity-0 shadow-md backdrop-blur-sm transition-all duration-300 hover:text-third group-hover:translate-y-0 group-hover:opacity-100 cursor-pointer"
-          title="Salin tautan produk"
-        >
-          <Navigation className="w-4 h-4" />
-        </button>
+        <div className="absolute bottom-3 right-3 z-20 flex flex-col gap-2 translate-y-3 opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+          <button
+            onClick={copyLink}
+            className="w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center text-gray-400 hover:text-third transition-colors duration-150 cursor-pointer"
+            title="Salin tautan produk"
+          >
+            <Navigation className="w-4 h-4" />
+          </button>
+          <button
+            onClick={addToCart}
+            className="w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center text-gray-400 hover:text-second transition-colors duration-150 cursor-pointer"
+            title="Tambah ke keranjang"
+          >
+            <ShoppingCart className="w-4 h-4" />
+          </button>
+        </div>
 
         {toastNode}
       </div>
@@ -277,7 +283,7 @@ export default function ProductCard({
           {product.kategoriId} • <span className={`font-semibold ${stockColor}`}>{stockLabel}</span>
         </p>
 
-        <div className="mt-3 flex flex-1 items-center justify-center">
+        <div className="mt-3 flex flex-1 items-center justify-center pb-1">
           {priceNode("center")}
         </div>
 
@@ -289,14 +295,6 @@ export default function ProductCard({
             })}
           </p>
         )}
-
-        <button
-          onClick={addToCart}
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-third py-2.5 text-[11px] font-bold uppercase tracking-wider text-white transition-all duration-200 hover:bg-second hover:text-third active:scale-[0.98] cursor-pointer"
-        >
-          <ShoppingCart className="w-3.5 h-3.5" />
-          Tambah Keranjang
-        </button>
       </div>
     </Link>
   );
