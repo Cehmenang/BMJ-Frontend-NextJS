@@ -600,7 +600,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                     {product.brandId}
                   </span>
                 </div>
-                <h1 className="font-poppins text-[clamp(16px,2vw,26px)] font-bold uppercase leading-snug text-third">
+                <h1 className="font-poppins text-[clamp(16px,2vw,26px)] font-extrabold uppercase leading-snug text-third">
                   {product.name}
                 </h1>
                 <div className="mt-3 flex items-center gap-1.5 text-[12px] text-third/45">
