@@ -13,16 +13,16 @@ export type Brand = {
 };
 
 const PER_PAGE = 24;
-const MOBILE_COUNT = 20; // brand yang ditampilkan di marquee mobile
+const MOBILE_COUNT = 20;
 
 type SlideDir = "left" | "right" | null;
 
 const ANIM = {
-  outLeft:  "translate-x-[-40px] opacity-0",
+  outLeft: "translate-x-[-40px] opacity-0",
   outRight: "translate-x-[40px] opacity-0",
-  inLeft:   "-translate-x-[40px] opacity-0",
-  inRight:  "translate-x-[40px] opacity-0",
-  active:   "translate-x-0 opacity-100",
+  inLeft: "-translate-x-[40px] opacity-0",
+  inRight: "translate-x-[40px] opacity-0",
+  active: "translate-x-0 opacity-100",
 };
 
 function MarqueeRow({
@@ -37,7 +37,7 @@ function MarqueeRow({
   const items = [...brands, ...brands, ...brands];
 
   return (
-    <div className="overflow-hidden w-full">
+    <div className="w-full overflow-hidden py-1">
       <div
         className={`flex w-max ${
           direction === "left" ? "animate-marquee-left" : "animate-marquee-right"
@@ -52,7 +52,7 @@ function MarqueeRow({
           <a
             key={`${brand.id ?? brand.name}-${i}`}
             href={`/brand/${brand.name}`}
-            className="flex-shrink-0 -ml-px first:ml-0 w-[96px] h-[72px] border border-third/8 flex items-center justify-center px-2 py-1.5 cursor-pointer group transition-all duration-200 hover:z-10 hover:border-third/20 hover:shadow-[0_4px_16px_rgba(62,63,32,0.08)] bg-white"
+            className="group relative mr-2 flex h-[72px] w-[96px] flex-shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-sm bg-white px-2 py-1.5 ring-1 ring-third/10 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-third/10"
           >
             <Image
               width={140}
@@ -60,9 +60,10 @@ function MarqueeRow({
               sizes="96px"
               src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${brand.image}`}
               alt={brand.name}
-              className="w-full h-full object-contain grayscale opacity-50 transition-all duration-200 group-hover:grayscale-0 group-hover:opacity-100"
+              className="h-full w-full object-contain opacity-60 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0"
               loading="lazy"
             />
+            <span className="absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-second transition-transform duration-300 group-hover:scale-x-100" />
           </a>
         ))}
       </div>
@@ -70,32 +71,32 @@ function MarqueeRow({
   );
 }
 
-// ─── Desktop BrandCard ───────────────────────────────────────────────────────
-function BrandCard({ brand }: { brand: { name: string; image: string; description: string } }) {
+function BrandCard({ brand }: { brand: { name: string; image: string } }) {
   return (
     <a
       href={`/brand/${brand.name}`}
-      className="aspect-square rounded-xl border border-third/8 flex flex-col items-center justify-center gap-1 px-1 py-2 cursor-pointer group transition-all duration-200 hover:border-third/20 hover:-translate-y-0.5 hover:shadow-[0_4px_16px_rgba(62,63,32,0.08)]"
+      className="group relative flex aspect-square cursor-pointer items-center justify-center overflow-hidden rounded-md bg-white p-2 ring-1 ring-third/10 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-third/10"
     >
       <Image
         width={300}
         height={300}
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        sizes="(max-width: 1024px) 16vw, 10vw"
         src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${brand.image}`}
         alt={brand.name}
-        className="w-full h-full p-2 object-contain grayscale opacity-55 transition-all duration-220 group-hover:grayscale-0 group-hover:opacity-100"
+        className="h-full w-full object-contain p-2 opacity-60 grayscale transition-all duration-300 group-hover:scale-105 group-hover:opacity-100 group-hover:grayscale-0"
         loading="lazy"
       />
+      <span className="absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-second transition-transform duration-300 group-hover:scale-x-100" />
     </a>
   );
 }
 
 export default function BrandShowcase() {
-  const [brands, setBrands]           = useState<any[]>([]);
-  const [page, setPage]               = useState(0);
-  const [animClass, setAnimClass]     = useState(ANIM.active);
+  const [brands, setBrands] = useState<any[]>([]);
+  const [page, setPage] = useState(0);
+  const [animClass, setAnimClass] = useState(ANIM.active);
   const [visibleBrands, setVisibleBrands] = useState<any[]>([]);
-  const animating                     = useRef(false);
+  const animating = useRef(false);
 
   const sorted = useMemo(
     () => [...brands].sort((a, b) => a.name.localeCompare(b.name)),
@@ -103,8 +104,10 @@ export default function BrandShowcase() {
   );
 
   const totalPages = Math.ceil(sorted.length / PER_PAGE);
-  const sortedRef  = useRef<any[]>([]);
-  useEffect(() => { sortedRef.current = sorted; }, [sorted]);
+  const sortedRef = useRef<any[]>([]);
+  useEffect(() => {
+    sortedRef.current = sorted;
+  }, [sorted]);
 
   const getPage = useCallback((p: number, data: any[]) => {
     return data.slice(p * PER_PAGE, (p + 1) * PER_PAGE);
@@ -129,7 +132,9 @@ export default function BrandShowcase() {
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             setAnimClass(ANIM.active);
-            setTimeout(() => { animating.current = false; }, 420);
+            setTimeout(() => {
+              animating.current = false;
+            }, 420);
           });
         });
       }, 280);
@@ -147,39 +152,35 @@ export default function BrandShowcase() {
     })();
   }, []);
 
-  // 20 brand untuk marquee mobile, split 10-10
-  const mobileRow1 = sorted.slice(0, MOBILE_COUNT / 2);            // 10 brand, gerak kiri
-  const mobileRow2 = sorted.slice(MOBILE_COUNT / 2, MOBILE_COUNT); // 10 brand, gerak kanan
+  const mobileRow1 = sorted.slice(0, MOBILE_COUNT / 2);
+  const mobileRow2 = sorted.slice(MOBILE_COUNT / 2, MOBILE_COUNT);
 
   return (
-    <section className="pb-16 sm:pb-20 md:mx-28">
-      {/* Header */}
-      <div className="px-4 sm:px-14 mb-6 sm:mb-8 flex items-end justify-between">
+    <section className="px-4 pb-16 sm:px-8 sm:pb-20 md:px-14">
+      <div className="mb-6 flex items-end justify-between gap-4 px-0 sm:mb-8 sm:px-14">
         <div>
-          <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-third-light mb-2">
+          <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-third-light">
             Partner Resmi
           </p>
-          <h2 className="font-display text-[clamp(22px,3.5vw,42px)] font-bold text-third leading-[1.1]">
-            Brand <em className="text-second not-italic">Pilihan</em>
+          <h2 className="font-display text-[clamp(22px,3.5vw,42px)] font-bold leading-[1.1] text-third">
+            Brand <em className="not-italic text-second">Pilihan</em>
           </h2>
         </div>
         <div className="flex flex-col items-end gap-y-2">
           <a
             href="/brand"
-            className="text-[12px] sm:text-[13px] text-third/40 border border-third/40 px-3 py-1 rounded-md hover:text-third/90 hover:border-third/90 transition"
+            className="rounded-sm bg-third px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white transition-all duration-200 hover:bg-second hover:text-third active:scale-[0.98] sm:text-xs"
           >
             Semua Brand
           </a>
-          {/* Page info — desktop only */}
-          <span className="hidden sm:block text-[13px] text-third/40">
+          <span className="hidden text-[13px] text-third/50 sm:block">
             Halaman {page + 1} dari {totalPages || 1} · {brands.length} brand
           </span>
         </div>
       </div>
 
-      {/* ── MOBILE: Marquee 2 baris ── */}
       <div
-        className="flex sm:hidden flex-col gap-3"
+        className="flex flex-col gap-2 sm:hidden"
         style={{
           maskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
           WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
@@ -188,49 +189,54 @@ export default function BrandShowcase() {
         {brands.length === 0 ? (
           <div className="flex">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="flex-shrink-0 -ml-px first:ml-0 w-[96px] h-[72px] bg-third/8 animate-pulse" />
+              <div
+                key={i}
+                className="mr-2 h-[72px] w-[96px] flex-shrink-0 animate-pulse rounded-sm bg-third/10"
+              />
             ))}
           </div>
         ) : (
           <>
-            <MarqueeRow brands={mobileRow1} direction="left"  speed={30} />
+            <MarqueeRow brands={mobileRow1} direction="left" speed={30} />
             <MarqueeRow brands={mobileRow2} direction="right" speed={30} />
           </>
         )}
-
-        {/* CTA mobile */}
-        <div className="flex justify-center mt-4">
-          <a
-            href="/brand"
-            className="text-[13px] font-medium text-third/60 border border-third/30 px-5 py-2 rounded-full hover:text-third hover:border-third/70 transition"
-          >
-            Lihat semua {brands.length} brand →
-          </a>
-        </div>
       </div>
 
-      {/* ── DESKTOP: Grid + Pagination ── */}
+      <div className="mt-6 flex justify-center sm:hidden">
+        <a
+          href="/brand"
+          className="flex items-center justify-center rounded-sm bg-third px-6 py-2.5 text-[11px] font-bold uppercase tracking-wider text-white transition-all duration-200 hover:bg-second hover:text-third active:scale-[0.98]"
+        >
+          Lihat semua {brands.length} brand →
+        </a>
+      </div>
+
       <div className="hidden sm:block">
         <div className="relative overflow-hidden">
           <button
             onClick={prev}
             disabled={page === 0 || brands.length === 0}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white border border-third/15 text-third flex items-center justify-center transition-colors duration-150 hover:bg-bg-site disabled:opacity-25 disabled:cursor-default"
+            aria-label="Halaman sebelumnya"
+            className="absolute left-2 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-sm bg-white text-third shadow-md ring-1 ring-third/10 transition-all duration-150 hover:bg-third hover:text-white disabled:cursor-default disabled:opacity-25 disabled:hover:bg-white disabled:hover:text-third"
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft className="h-4 w-4" />
           </button>
 
-          <div className="px-14 overflow-hidden">
+          <div className="overflow-hidden px-14 py-2">
             {brands.length === 0 ? (
-              <div className="grid grid-cols-8 gap-2">
-                {[...Array(36)].map((_, i) => (
-                  <div key={i} className="aspect-square rounded-xl border border-third/8 flex items-center justify-center overflow-hidden">
-                    <div className="w-full h-full bg-gradient-to-br from-third/6 to-third/10 animate-pulse" />
-                  </div>
+              <div className="grid grid-cols-6 gap-2 sm:gap-3 lg:grid-cols-8">
+                {[...Array(PER_PAGE)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="aspect-square animate-pulse overflow-hidden rounded-md bg-third/10"
+                  />
                 ))}
               </div>
             ) : (
-              <div className={`grid grid-cols-8 gap-2 transition-all duration-[420ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${animClass}`}>
+              <div
+                className={`grid grid-cols-6 gap-2 transition-all duration-[420ms] ease-[cubic-bezier(0.4,0,0.2,1)] sm:gap-3 lg:grid-cols-8 ${animClass}`}
+              >
                 {visibleBrands.map((brand, i: number) => (
                   <BrandCard key={`${page}-${i}`} brand={brand} />
                 ))}
@@ -241,29 +247,31 @@ export default function BrandShowcase() {
           <button
             onClick={next}
             disabled={page === totalPages - 1 || brands.length === 0}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white border border-third/15 text-third flex items-center justify-center transition-colors duration-150 hover:bg-bg-site disabled:opacity-25 disabled:cursor-default"
+            aria-label="Halaman selanjutnya"
+            className="absolute right-2 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-sm bg-white text-third shadow-md ring-1 ring-third/10 transition-all duration-150 hover:bg-third hover:text-white disabled:cursor-default disabled:opacity-25 disabled:hover:bg-white disabled:hover:text-third"
           >
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="h-4 w-4" />
           </button>
         </div>
 
-        {/* Dots */}
-        <div className="flex justify-center gap-2 mt-16">
-          {brands.length === 0 ? (
-            [...Array(3)].map((_, i) => (
-              <div key={i} className={`h-[3px] rounded-sm bg-third/10 animate-pulse ${i === 0 ? "w-9" : "w-6"}`} />
-            ))
-          ) : (
-            Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i}
-                onClick={() => goTo(i, i > page ? "left" : "right")}
-                className={`h-[3px] rounded-sm transition-all duration-300 border-none ${
-                  i === page ? "w-9 bg-second" : "w-6 bg-third/20"
-                }`}
-              />
-            ))
-          )}
+        <div className="mt-10 flex justify-center gap-2">
+          {brands.length === 0
+            ? [...Array(3)].map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-[3px] animate-pulse rounded-sm bg-third/10 ${i === 0 ? "w-9" : "w-6"}`}
+                />
+              ))
+            : Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => goTo(i, i > page ? "left" : "right")}
+                  aria-label={`Ke halaman ${i + 1}`}
+                  className={`h-[3px] rounded-sm border-none transition-all duration-300 ${
+                    i === page ? "w-9 bg-second" : "w-6 bg-third/20"
+                  }`}
+                />
+              ))}
         </div>
       </div>
     </section>
