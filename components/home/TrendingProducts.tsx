@@ -26,7 +26,7 @@ export default async function TrendingProducts() {
             Lagi panas nih
           </p>
           <h2 className="text-2xl md:text-4xl font-boldonse text-[clamp(22px,3.5vw,42px)] font-bold text-third leading-[1.1] relative">
-            ALAT <em className="text-second not-italic">PALING DICARI</em><span className="absolute right-0 bottom-2 px-5 py-2 border-2 border-third bg-second text-primary text-md md:text-lg">MINGGU INI</span>
+            ALAT <em className="text-second not-italic">PALING DICARI</em><span className="absolute right-[200px] bottom-2 px-5 py-2 border-2 border-third bg-second text-primary text-md md:text-lg outline-1 outline-third">MINGGU INI</span>
           </h2>
         </div>
 
