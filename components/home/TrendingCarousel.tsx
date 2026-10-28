@@ -107,13 +107,6 @@ export default function TrendingCarousel({ products }: TrendingCarouselProps) {
           <TrendingCard
             key={product.id}
             product={product}
-            variant={
-              i === 1 &&
-              isDesktopLayout &&
-              visibleProducts.length === DESKTOP_COUNT
-                ? "highlight"
-                : "normal"
-            }
           />
         ))}
       </div>
