@@ -578,14 +578,14 @@ export default function ProductsLayout({
             <div className={`transition-opacity duration-200 ${isPending ? "opacity-25 pointer-events-none" : "opacity-100"}`}>
               {viewMode === "grid" ? (
                 // ── Grid view: 3 kolom ──
-                <div className="grid gap-x-2 gap-y-6 md:gap-x-1 md:gap-y-3 grid-cols-2 md:grid-cols-4">
+                <div className="grid gap-x-2 gap-y-6 md:gap-x-0 md:gap-y-0 grid-cols-2 md:grid-cols-4">
                   {products.map((product) => (
                     <ProductCard key={product.id} product={product} isAdmin={role?.toLocaleLowerCase() == "admin" && true}/>
                   ))}
                 </div>
               ) : (
                 // ── List view: 1 produk per baris, horizontal layout ──
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col">
                   {products.map((product) => (
                     <ProductCard key={product.id} product={product} listView isAdmin={role?.toLocaleLowerCase() == "admin" && true}/>
                   ))}
