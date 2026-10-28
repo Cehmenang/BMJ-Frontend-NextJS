@@ -22,11 +22,11 @@ export default async function TrendingProducts() {
     <section className="py-10 sm:py-16 pt-20 bg-bg-site overflow-hidden px-4 sm:px-8 md:px-14">
       <div className="mb-6 sm:mb-8 flex items-end justify-between">
         <div>
-          <p className="text-[10px] font-boldonse font-semibold tracking-[0.2em] uppercase text-third-light mb-2">
-            Trending Minggu Ini
+          <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-third-light mb-2">
+            Lagi panas nih
           </p>
           <h2 className="font-boldonse text-[clamp(22px,3.5vw,42px)] font-bold text-third leading-[1.1]">
-            Produk <em className="text-second not-italic">Trending</em>
+            ALAT <em className="text-second not-italic">PALING DICARI MINGGU INI</em>
           </h2>
         </div>
 
