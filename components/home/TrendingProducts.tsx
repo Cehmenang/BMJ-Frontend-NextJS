@@ -21,10 +21,11 @@ export default async function TrendingProducts() {
   return (
     <section className="py-10 sm:py-16 pt-20 bg-bg-site overflow-hidden px-4 sm:px-8 md:px-14">
       <div className="mb-6 sm:mb-8 flex items-end justify-between">
-        <div>
+        <div className="flex items-center gap-x-4">
           <h2 className="text-2xl md:text-4xl font-boldonse text-[clamp(22px,3.5vw,42px)] font-bold text-third leading-[1.1] relative">
-            ALAT <em className="text-second not-italic">PALING DICARI</em><span className="absolute right-[-100px] top-[-50px] px-5 py-2 border-2 border-third bg-second text-primary text-md md:text-lg outline-1 outline-third">MINGGU INI</span>
+            ALAT <em className="text-second not-italic">PALING DICARI</em>
           </h2>
+          <span className="px-5 py-2 border-2 border-third bg-second text-third text-md md:text-lg">MINGGU INI</span>
         </div>
 
         <Link
