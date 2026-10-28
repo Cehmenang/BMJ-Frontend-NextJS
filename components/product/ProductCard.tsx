@@ -86,75 +86,99 @@ export default function ProductCard({
         toast.show ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
       }`}
     >
-      <div className="bg-third/90 text-white text-[11px] font-medium px-3 py-1.5 rounded-full shadow-lg flex items-center gap-2 backdrop-blur-sm">
+      <div className="bg-third/90 text-white text-[11px] font-medium px-3 py-1.5 rounded-sm shadow-lg flex items-center gap-2 backdrop-blur-sm">
         <InfoIcon className="w-3.5 h-3.5 text-second flex-shrink-0" />
         {toast.msg}
       </div>
     </div>
   );
 
+  const newBadge = isNew && (
+    <img
+      src="/BadgeBaru.webp"
+      alt="Badge Baru"
+      width={40}
+      height={40}
+      className="absolute top-2 left-2 z-20 h-10 w-10"
+    />
+  );
+
   const priceNode = (align: "center" | "left") => {
     const itemsAlign = align === "center" ? "items-center" : "items-start";
     const justifyAlign = align === "center" ? "justify-center" : "justify-start";
 
-    return (
-      <div className={`flex flex-col gap-y-2 ${itemsAlign}`}>
-        {promoPrice ? (
-          <>
-            <div className={`flex items-center gap-1.5 flex-wrap ${justifyAlign}`}>
-              <span className="font-bold text-[15px] text-amber-700 leading-none">
-                {formatPrice(promoPrice)}
-              </span>
-              {promoDiscount && (
-                <span className="text-[11px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">
-                  -{promoDiscount}%
-                </span>
-              )}
-            </div>
-            {promoBasePrice && (
-              <span className="text-[11px] text-third/40 line-through leading-none">
-                {formatPrice(promoBasePrice)}
-              </span>
-            )}
-            {product.namaPromo && (
-              <span className="text-[10px] text-amber-700 font-semibold italic leading-none">
-                {product.namaPromo}
-              </span>
-            )}
-          </>
-        ) : (
-          <>
-            <span className="font-bold text-[15px] text-red-500 leading-none">
-              {offlinePrice && formatPrice(offlinePrice)}
+    if (promoPrice) {
+      return (
+        <div className={`flex flex-col gap-y-1.5 ${itemsAlign}`}>
+          <div className={`flex items-center gap-1.5 flex-wrap ${justifyAlign}`}>
+            <span className="font-bold text-[15px] text-amber-700 leading-none">
+              {formatPrice(promoPrice)}
             </span>
-            {pricelist && (
-              <div className={`font-semibold text-[10px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center ${justifyAlign}`}>
-                {discount && (
-                  <span className="text-[11px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold not-italic">
-                    -{discount}%
-                  </span>
-                )}
-                <span>Pricelist: {formatPrice(pricelist)}</span>
-              </div>
+            {promoDiscount && (
+              <span className="text-[11px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">
+                -{promoDiscount}%
+              </span>
             )}
-          </>
-        )}
-      </div>
-    );
+          </div>
+          {promoBasePrice && (
+            <span className="text-[11px] text-red-500 line-through leading-none">
+              {formatPrice(promoBasePrice)}
+            </span>
+          )}
+          {product.namaPromo && (
+            <span className="text-[10px] text-amber-700 font-semibold italic leading-none">
+              {product.namaPromo}
+            </span>
+          )}
+        </div>
+      );
+    }
+
+    if (offlinePrice) {
+      return (
+        <div className={`flex flex-col gap-y-1.5 ${itemsAlign}`}>
+          <div className="relative inline-block">
+            <span className="block font-bold text-[15px] text-third leading-none">
+              {formatPrice(offlinePrice)}
+            </span>
+            {discount && (
+              <span className="absolute -top-3 left-full ml-1 whitespace-nowrap text-[10px] bg-amber-100 border border-amber-600 text-third px-1.5 py-[1px] rounded-sm font-bold leading-tight">
+                -{discount}%
+              </span>
+            )}
+          </div>
+          {pricelist && (
+            <span className="text-[11px] text-red-500 line-through leading-none">
+              {formatPrice(pricelist)}
+            </span>
+          )}
+        </div>
+      );
+    }
+
+    if (pricelist) {
+      return (
+        <div className={`flex flex-col gap-y-1.5 ${itemsAlign}`}>
+          <span className="font-bold text-[15px] text-third leading-none">
+            {formatPrice(pricelist)}
+          </span>
+        </div>
+      );
+    }
+
+    return null;
   };
 
   if (listView) {
     return (
       <Link
         href={`/produk/${product.url}`}
-        className="group relative flex gap-4 p-3 rounded-3xl bg-white ring-1 ring-third/5 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-third/10"
+        className="group relative flex overflow-hidden rounded-md bg-white ring-1 ring-third/10 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-third/10"
       >
-        <div className="relative w-28 h-28 md:w-36 md:h-36 flex-shrink-0 rounded-2xl overflow-hidden bg-gray-50">
-          {isNew && (
-            <img src="/BadgeBaru.webp" alt="Badge Baru" width={44} height={44} className="absolute top-2 left-2 z-20" />
-          )}
+        <div className="relative min-h-28 w-28 md:w-36 flex-shrink-0 self-stretch overflow-hidden bg-gray-50">
+          {newBadge}
           {product.promo && (
-            <span className="absolute top-2 right-2 z-20 bg-amber-600 text-white text-[9px] font-bold px-2 py-[3px] rounded-full shadow-sm">
+            <span className="absolute top-2 right-2 z-20 bg-amber-600 text-white text-[9px] font-bold px-2 py-[3px] rounded-sm shadow-sm">
               PROMO
             </span>
           )}
@@ -180,7 +204,7 @@ export default function ProductCard({
           )}
         </div>
 
-        <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+        <div className="flex min-w-0 flex-1 flex-col justify-between p-3">
           <div>
             <h3 className="line-clamp-2 text-left font-display text-base font-bold lg:text-sm xl:text-base text-third">
               {product.name}
@@ -190,20 +214,20 @@ export default function ProductCard({
             </p>
           </div>
 
-          <div className="flex items-end justify-between mt-3 gap-2">
-            {priceNode("left")}
+          <div className="mt-3 flex items-end justify-between gap-2">
+            <div>{priceNode("left")}</div>
 
-            <div className="flex gap-2 flex-shrink-0">
+            <div className="flex flex-shrink-0 gap-2">
               <button
                 onClick={copyLink}
-                className="w-9 h-9 rounded-full bg-third/5 flex items-center justify-center text-third/60 hover:bg-third/10 hover:text-third transition-colors duration-150 cursor-pointer"
+                className="w-9 h-9 rounded-sm bg-third/5 flex items-center justify-center text-third/60 hover:bg-third/10 hover:text-third transition-colors duration-150 cursor-pointer"
                 title="Salin tautan produk"
               >
                 <Navigation className="w-4 h-4" />
               </button>
               <button
                 onClick={addToCart}
-                className="w-9 h-9 rounded-full bg-third flex items-center justify-center text-white hover:bg-second hover:text-third transition-colors duration-150 cursor-pointer"
+                className="w-9 h-9 rounded-sm bg-third flex items-center justify-center text-white hover:bg-second hover:text-third transition-colors duration-150 cursor-pointer"
                 title="Tambah ke keranjang"
               >
                 <ShoppingCart className="w-4 h-4" />
@@ -220,15 +244,13 @@ export default function ProductCard({
   return (
     <Link
       href={`/produk/${product.url}`}
-      className="group relative flex flex-shrink-0 w-auto md:w-[200px] flex-col rounded-3xl bg-white p-3 ring-1 ring-third/5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-third/10"
+      className="group relative flex flex-shrink-0 w-auto md:w-[200px] flex-col overflow-hidden rounded-md bg-white ring-1 ring-third/10 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-third/10"
     >
-      <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-gray-50">
-        {isNew && (
-          <img src="/BadgeBaru.webp" alt="Badge Baru" width={50} height={50} className="absolute top-2 left-2 z-20" />
-        )}
+      <div className="relative aspect-square w-full overflow-hidden bg-gray-50">
+        {newBadge}
 
         {product.promo && (
-          <span className="absolute top-2.5 right-2.5 z-20 bg-amber-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-md">
+          <span className="absolute top-2.5 right-2.5 z-20 bg-amber-600 text-white text-[10px] font-bold px-3 py-1 rounded-sm shadow-md">
             {product.namaPromo ? product.namaPromo : "Promo"}
           </span>
         )}
@@ -257,14 +279,14 @@ export default function ProductCard({
         <div className="absolute bottom-3 right-3 z-20 flex flex-col gap-2 translate-y-3 opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100">
           <button
             onClick={copyLink}
-            className="w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center text-gray-400 hover:text-third transition-colors duration-150 cursor-pointer"
+            className="w-9 h-9 rounded-sm bg-white shadow-md flex items-center justify-center text-gray-400 hover:text-third transition-colors duration-150 cursor-pointer"
             title="Salin tautan produk"
           >
             <Navigation className="w-4 h-4" />
           </button>
           <button
             onClick={addToCart}
-            className="w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center text-gray-400 hover:text-second transition-colors duration-150 cursor-pointer"
+            className="w-9 h-9 rounded-sm bg-white shadow-md flex items-center justify-center text-gray-400 hover:text-second transition-colors duration-150 cursor-pointer"
             title="Tambah ke keranjang"
           >
             <ShoppingCart className="w-4 h-4" />
@@ -274,7 +296,7 @@ export default function ProductCard({
         {toastNode}
       </div>
 
-      <div className="flex flex-1 flex-col px-1 pt-4">
+      <div className="flex flex-1 flex-col px-3 pb-4 pt-4">
         <h3 className="line-clamp-2 min-h-[2.4rem] text-center font-display text-base font-bold leading-snug lg:text-sm xl:min-h-[2.75rem] xl:text-base text-third">
           {product.name}
         </h3>
@@ -283,7 +305,7 @@ export default function ProductCard({
           {product.kategoriId} • <span className={`font-semibold ${stockColor}`}>{stockLabel}</span>
         </p>
 
-        <div className="mt-3 flex flex-1 items-center justify-center pb-1">
+        <div className="mt-3 flex flex-1 items-center justify-center">
           {priceNode("center")}
         </div>
 
