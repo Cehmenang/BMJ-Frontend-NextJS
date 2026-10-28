@@ -13,6 +13,7 @@ import {
   Truck,
   ShieldCheck,
   PiggyBank,
+  Eye,
 } from "lucide-react";
 import ZoomImage from "./ZoomImage";
 import Image from "next/image";
@@ -22,7 +23,6 @@ import ProductFaq from "./ProductFaq";
 import { getRelated } from "@/action/product";
 import { IProduct } from "@/interface";
 import RelatedProducts from "./RelatedProducts";
-import CekOngkir from "./CekOngkir";
 import { useRouter } from "next/navigation";
 
 type Tab = "description" | "features" | "specifications";
@@ -64,7 +64,13 @@ function formatPrice(price: number) {
   }).format(price);
 }
 
-// ── YouTube helpers ──
+function parsePrice(value?: string | number | null) {
+  if (value === undefined || value === null || value === "") return null;
+  const str = String(value).trim();
+  const num = parseInt(str.includes(" ") ? str.split(" ")[0].trim() : str);
+  return isNaN(num) ? null : num;
+}
+
 function getYoutubeId(url: string): string | null {
   const match = url.match(
     /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
@@ -76,7 +82,6 @@ function getYoutubeThumbnail(videoId: string): string {
   return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 }
 
-// ── Fullscreen Viewer ──
 function FullscreenViewer({
   images,
   initialIndex,
@@ -102,20 +107,23 @@ function FullscreenViewer({
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/92 flex flex-col items-center justify-center gap-4"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-black/90"
       onClick={onClose}
     >
       <button
         onClick={onClose}
-        className="absolute top-5 right-6 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
+        className="absolute right-5 top-5 flex h-9 w-9 items-center justify-center rounded-sm bg-white/10 text-white transition-colors hover:bg-white/20"
       >
-        <X className="w-4 h-4" />
+        <X className="h-4 w-4" />
       </button>
       <button
-        onClick={(e) => { e.stopPropagation(); nav(-1); }}
-        className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-second/30 border border-white/15 text-white flex items-center justify-center transition-colors"
+        onClick={(e) => {
+          e.stopPropagation();
+          nav(-1);
+        }}
+        className="absolute left-4 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-sm border border-white/15 bg-white/10 text-white transition-colors hover:bg-second/40"
       >
-        <ChevronLeft className="w-5 h-5" />
+        <ChevronLeft className="h-5 w-5" />
       </button>
       <Image
         width={500}
@@ -124,11 +132,11 @@ function FullscreenViewer({
         sizes="(max-width: 768px) 90vw, 60vw"
         src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${images[idx]}`}
         alt={`${images[idx]}`}
-        className="max-w-[88vw] max-h-[65vh] object-contain rounded-lg"
+        className="max-h-[65vh] max-w-[88vw] rounded-sm bg-white object-contain"
         onClick={(e) => e.stopPropagation()}
       />
       <div
-        className="flex gap-2.5 overflow-x-auto max-w-[90vw] pb-1"
+        className="flex max-w-[90vw] gap-2.5 overflow-x-auto pb-1"
         onClick={(e) => e.stopPropagation()}
         style={{ scrollbarWidth: "none" }}
       >
@@ -136,7 +144,7 @@ function FullscreenViewer({
           <div
             key={i}
             onClick={() => setIdx(i)}
-            className={`flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${
+            className={`h-12 w-12 flex-shrink-0 cursor-pointer overflow-hidden rounded-sm border-2 transition-all sm:h-14 sm:w-14 ${
               i === idx
                 ? "border-second opacity-100"
                 : "border-transparent opacity-50 hover:opacity-80"
@@ -149,30 +157,32 @@ function FullscreenViewer({
               sizes="56px"
               alt={`${src}`}
               src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${src}`}
-              className="w-full h-full object-contain bg-white/5 p-1"
+              className="h-full w-full bg-white object-contain p-1"
             />
           </div>
         ))}
       </div>
-      <span className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[12px] text-white/40">
+      <span className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[12px] text-white/50">
         {idx + 1} / {images.length}
       </span>
       <button
-        onClick={(e) => { e.stopPropagation(); nav(1); }}
-        className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-second/30 border border-white/15 text-white flex items-center justify-center transition-colors"
+        onClick={(e) => {
+          e.stopPropagation();
+          nav(1);
+        }}
+        className="absolute right-4 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-sm border border-white/15 bg-white/10 text-white transition-colors hover:bg-second/40"
       >
-        <ChevronRight className="w-5 h-5" />
+        <ChevronRight className="h-5 w-5" />
       </button>
     </div>
   );
 }
 
-// ── Main Component ──
 export default function ProductDetail({ product }: { product?: any }) {
   const [activeImg, setActiveImg] = useState(0);
   const [qty, setQty] = useState(1);
-  const [toast, setToast] = useState({ show: false, message: "" }); // State toast simpel
-  const toastRef = useRef<HTMLDivElement>(null); // Ref untuk target animasi GSAP
+  const [toast, setToast] = useState({ show: false, message: "" });
+  const toastRef = useRef<HTMLDivElement>(null);
   const [tab, setTab] = useState<Tab>("description");
   const [fsOpen, setFsOpen] = useState(false);
   const [showingVideo, setShowingVideo] = useState(true);
@@ -182,127 +192,105 @@ export default function ProductDetail({ product }: { product?: any }) {
   const [selectedOptions, setSelectedOptions] = useState<Record<number, VariantOption>>({});
   const [activeImgSrc, setActiveImgSrc] = useState<string | null>(null);
   const [related, setRelated] = useState<IProduct[] | []>([]);
-  // const [cekOngkir, setCekOngkir] = useState<boolean>(false);
   const tabContentRef = useRef<HTMLDivElement>(null);
   const mainImgRef = useRef<HTMLImageElement>(null);
   const imgWrapRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  // ── AMBIL LOG VIEW PRODUK SECARA OTOMATIS (CLIENT-SIDE) ──
-useEffect(() => {
-  if (product?.id) {
-    // Helper instan untuk membaca cookie langsung di browser client
-    const getClientCookie = (name: string) => {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop()?.split(";").shift();
-      return null;
-    };
+  useEffect(() => {
+    if (product?.id) {
+      const getClientCookie = (name: string) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop()?.split(";").shift();
+        return null;
+      };
 
-    const token = getClientCookie("access_token");
-    const guestId = getClientCookie("guest_id");
+      const token = getClientCookie("access_token");
+      const guestId = getClientCookie("guest_id");
 
-    // Tembak API hit view ke endpoint Laravel Queue yang baru kita bikin
-    fetch(`${process.env.NEXT_PUBLIC_SERVER_API}/api/produk/${product.id}/view`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        ...(token && { "Authorization": `Bearer ${token}` }), // Kirim bearer token kalau user sudah login
-      },
-      body: JSON.stringify({
-        guest_id: token ? null : guestId, // Kirim guest_id hanya jika dia berstatus Guest
-      }),
-    })
-    .then((res) => res.json())
-    .then((data) => {
-      // Opsional: lu bisa console.log buat mastiin statusnya beneran "View queued"
-      console.log("Log View Tracker:", data.message);
-    })
-    .catch((err) => console.error("Gagal mendaftarkan data view:", err));
-  }
-}, [product?.id]); // Otomatis nge-hit ulang kalau user pindah ke halaman produk lain
+      fetch(`${process.env.NEXT_PUBLIC_SERVER_API}/api/produk/${product.id}/view`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: JSON.stringify({
+          guest_id: token ? null : guestId,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("Log View Tracker:", data.message);
+        })
+        .catch((err) => console.error("Gagal mendaftarkan data view:", err));
+    }
+  }, [product?.id]);
 
   useEffect(() => {
-  if (tabContentRef.current) {
+    if (tabContentRef.current) {
+      import("gsap").then((mod) => {
+        const gsap = mod.gsap ?? mod.default;
+        gsap.killTweensOf(tabContentRef.current);
+        gsap.fromTo(
+          tabContentRef.current,
+          { y: 15, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }
+        );
+      });
+    }
+  }, [tab]);
+
+  useEffect(() => {
+    if (toast.show && toastRef.current) {
+      import("gsap").then((mod) => {
+        const gsap = mod.gsap ?? mod.default;
+
+        gsap.fromTo(
+          toastRef.current,
+          { y: -40, opacity: 0, scale: 0.9 },
+          { y: 0, opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.5)" }
+        );
+
+        gsap.to(toastRef.current, {
+          y: -30,
+          opacity: 0,
+          scale: 0.95,
+          delay: 3,
+          duration: 0.3,
+          ease: "power2.in",
+          onComplete: () => setToast({ show: false, message: "" }),
+        });
+      });
+    }
+  }, [toast.show]);
+
+  const handleCloseToast = () => {
+    if (!toastRef.current) return;
     import("gsap").then((mod) => {
       const gsap = mod.gsap ?? mod.default;
-
-      // Reset & matikan dulu animasi sebelumnya kalau user nge-klik tab terlalu cepat
-      gsap.killTweensOf(tabContentRef.current);
-
-      // Mainkan gerakan Slide Up + Fade In lembut
-      gsap.fromTo(
-        tabContentRef.current,
-        { 
-          y: 15,          // Mulai dari 15 piksel agak ke bawah
-          opacity: 0,     // Mulai dari transparan
-        },
-        { 
-          y: 0,           // Naik ke posisi asli
-          opacity: 1,     // Memadat sempurna
-          duration: 0.4,  // Kecepatan transisi 0.4 detik
-          ease: "power2.out" // Karakter pergerakan halus di akhir
-        }
-      );
-    });
-  }
-}, [tab]);
-  
-  // ── EFek Animasi Toast Menggunakan GSAP ──
-useEffect(() => {
-  if (toast.show && toastRef.current) {
-    import("gsap").then((mod) => {
-      const gsap = mod.gsap ?? mod.default;
-
-      // 1. Animasi MASUK (Smooth fade-in + slide down + bounce back khas GSAP)
-      gsap.fromTo(
-        toastRef.current,
-        { y: -40, opacity: 0, scale: 0.9 },
-        { y: 0, opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.5)" }
-      );
-
-      // 2. Animasi KELUAR Otomatis (Berjalan setelah delay 3 detik)
+      gsap.killTweensOf(toastRef.current);
       gsap.to(toastRef.current, {
         y: -30,
         opacity: 0,
         scale: 0.95,
-        delay: 3, // Standby selama 3 detik
         duration: 0.3,
         ease: "power2.in",
-        onComplete: () => setToast({ show: false, message: "" }), // Hapus dari DOM pas kelar
+        onComplete: () => setToast({ show: false, message: "" }),
       });
     });
-  }
-}, [toast.show]);
+  };
 
-// Fungsi khusus kalau user nge-klik tombol silang (X) sebelum 3 detik
-const handleCloseToast = () => {
-  if (!toastRef.current) return;
-  import("gsap").then((mod) => {
-    const gsap = mod.gsap ?? mod.default;
-    gsap.killTweensOf(toastRef.current); // Hentikan auto-dismiss yang sedang berjalan
-    gsap.to(toastRef.current, {
-      y: -30,
-      opacity: 0,
-      scale: 0.95,
-      duration: 0.3,
-      ease: "power2.in",
-      onComplete: () => setToast({ show: false, message: "" }),
-    });
-  });
-};
-
+  const rawImages = product?.images;
   const imageList: string[] =
-    typeof product.images === "string"
-      ? JSON.parse(product.images)
-      : product.images;
+    typeof rawImages === "string" ? JSON.parse(rawImages) : rawImages ?? [];
 
-  const variants: Variant[] = product.variants ?? [];
+  const variants: Variant[] = product?.variants ?? [];
   const allVariantsSelected =
     variants.length === 0 || variants.every((v) => selectedOptions[v.id]);
 
-  const videoId = product.video ? getYoutubeId(product.video) : null;
+  const videoId = product?.video ? getYoutubeId(product.video) : null;
 
   const currentSrc = activeImgSrc
     ? `${process.env.NEXT_PUBLIC_SERVER_API}/storage/${activeImgSrc}`
@@ -330,7 +318,7 @@ const handleCloseToast = () => {
   useEffect(() => {
     if (product) {
       const waMessage = encodeURIComponent(
-        `Halo, saya ingin menanyakan ketersediaan :\nNama Produk: ${product?.name}\nHarga Offline: ${formatPrice(product.offlinePrice)}\nTokopedia: ${product.tautan ? product.tautan : 'https://www.tokopedia.com/bandarmusikjakarta'}\n\nApakah barangnya tersedia dan harganya sesuai?\nUntuk detailnya ada disini https://bandarmusikjakarta.com/produk/${product.url}. Terimakasih`
+        `Halo, saya ingin menanyakan ketersediaan :\nNama Produk: ${product?.name}\nHarga Offline: ${formatPrice(product.offlinePrice)}\nTokopedia: ${product.tautan ? product.tautan : "https://www.tokopedia.com/bandarmusikjakarta"}\n\nApakah barangnya tersedia dan harganya sesuai?\nUntuk detailnya ada disini https://bandarmusikjakarta.com/produk/${product.url}. Terimakasih`
       );
       setWaUrl(`https://wa.me/6281929290560?text=${waMessage}`);
     }
@@ -340,7 +328,10 @@ const handleCloseToast = () => {
     import("gsap").then((mod) => {
       const gsap = mod.gsap ?? mod.default;
       const target = imgWrapRef.current;
-      if (!target) { callback(); return; }
+      if (!target) {
+        callback();
+        return;
+      }
       gsap.killTweensOf(target);
       gsap.fromTo(
         target,
@@ -383,35 +374,56 @@ const handleCloseToast = () => {
 
   if (!product) return null;
 
+  const offlineNum = parsePrice(product.offlinePrice);
+  const pricelistNum = parsePrice(product.pricelist);
+  const discount =
+    offlineNum && pricelistNum && pricelistNum > offlineNum
+      ? Math.round(((pricelistNum - offlineNum) / pricelistNum) * 100)
+      : null;
+
+  const thumbBase =
+    "h-[64px] w-[64px] flex-shrink-0 overflow-hidden rounded-sm bg-white transition-all duration-200 md:h-[88px] md:w-[88px]";
+  const thumbActive = "ring-2 ring-second";
+  const thumbIdle = "opacity-60 ring-1 ring-third/10 hover:opacity-100 hover:ring-third/30";
+
+  const metaItems = [
+    { label: "Berat", value: product.weight },
+    { label: "SKU", value: product.sku },
+    { label: "Garansi", value: product.warranty },
+    { label: "Stok", value: `${product.stock} unit` },
+  ];
+
+  const trustItems = [
+    { Icon: Truck, title: "Pengiriman Cepat", sub: "Pengiriman barang cepat dan aman" },
+    { Icon: ShieldCheck, title: "Garansi 1 Year", sub: "Perlindungan sejak tanggal pembelian" },
+    { Icon: PiggyBank, title: "Best Price", sub: "Kualitas dengan harga terbaik" },
+  ];
+
   return (
     <>
       {toast.show && (
-      <div 
-        ref={toastRef} // 🎯 WAJIB: Biar GSAP bisa mendeteksi elemen ini
-        className="fixed top-20 right-4 z-50 flex items-center gap-3 bg-slate-900 border border-second/30 text-white px-5 py-3.5 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] max-w-sm will-change-transform"
-      >
-        {/* Icon Sukses */}
-        <div className="w-6 h-6 rounded-full bg-second flex items-center justify-center flex-shrink-0">
-          <svg className="w-3.5 h-3.5 text-third" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
-        </div>
-        
-        {/* Pesan */}
-        <div className="flex flex-col">
-          <p className="text-[13px] font-poppins font-semibold tracking-wide leading-tight">Berhasil!</p>
-          <p className="text-[11px] font-poppins text-gray-400 mt-0.5 leading-snug">{toast.message}</p>
-        </div>
-        
-        {/* Tombol Close Manual */}
-        <button 
-          onClick={handleCloseToast} 
-          className="ml-2 text-gray-500 hover:text-white transition-colors"
+        <div
+          ref={toastRef}
+          className="fixed right-4 top-20 z-50 flex max-w-sm items-center gap-3 rounded-sm bg-third px-4 py-3 text-white shadow-xl ring-1 ring-second/30 will-change-transform"
         >
-          <X size={14} />
-        </button>
-      </div>
-    )}
+          <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-sm bg-second">
+            <svg className="h-3.5 w-3.5 text-third" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+          <div className="flex flex-col">
+            <p className="text-[13px] font-semibold leading-tight tracking-wide">Berhasil!</p>
+            <p className="mt-0.5 text-[11px] leading-snug text-white/60">{toast.message}</p>
+          </div>
+          <button
+            onClick={handleCloseToast}
+            className="ml-2 text-white/50 transition-colors hover:text-white"
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
+
       {fsOpen && (
         <FullscreenViewer
           images={imageList}
@@ -419,26 +431,38 @@ const handleCloseToast = () => {
           onClose={() => setFsOpen(false)}
         />
       )}
-      <div className="min-h-screen bg-bg-site font-sans">
-        {/* Breadcrumb */}
-        <div className="px-4 md:px-28 lg:px-48 pt-5 md:pt-8 flex items-center gap-1.5 text-[11px] md:text-[13px] text-third/45 overflow-x-auto whitespace-nowrap pb-1" style={{ scrollbarWidth: "none" }}>
-          <Link href="/" className="hover:text-third transition-colors flex-shrink-0">Beranda</Link>
-          <span>/</span>
-          <Link href={`/kategori/${product.kategoriId}`} className="hover:text-third transition-colors flex-shrink-0">{product.kategoriId}</Link>
-          <span>/</span>
-          <Link href={`/brand/${product.brandId}`} className="hover:text-third transition-colors flex-shrink-0">{product.brandId}</Link>
-          <span>/</span>
-          <span className="text-third truncate">{product.name.toUpperCase()}</span>
-        </div>
 
-        <div className="px-0 md:px-28 lg:px-48 py-4 md:py-8">
-          {/* ── Top: Gallery + Info ── */}
-          <div className="flex flex-col md:grid md:grid-cols-2 gap-0 md:gap-8 mb-8 md:mb-14">
-            {/* ── GALLERY ── */}
-            <div className="flex flex-col gap-3">
-              {/* Main image / video */}
+      <div className="min-h-screen bg-bg-site font-sans">
+        <div className="mx-auto w-full max-w-[1400px] px-4 pb-16 sm:px-8 md:px-14 md:pb-24">
+          <div
+            className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-1 pt-5 text-[11px] text-third/50 md:pt-8 md:text-[13px]"
+            style={{ scrollbarWidth: "none" }}
+          >
+            <Link href="/" className="flex-shrink-0 transition-colors hover:text-third">
+              Beranda
+            </Link>
+            <span>/</span>
+            <Link
+              href={`/kategori/${product.kategoriId}`}
+              className="flex-shrink-0 transition-colors hover:text-third"
+            >
+              {product.kategoriId}
+            </Link>
+            <span>/</span>
+            <Link
+              href={`/brand/${product.brandId}`}
+              className="flex-shrink-0 transition-colors hover:text-third"
+            >
+              {product.brandId}
+            </Link>
+            <span>/</span>
+            <span className="truncate text-third">{product.name.toUpperCase()}</span>
+          </div>
+
+          <div className="mt-4 grid items-start gap-6 md:mt-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-10">
+            <div className="flex flex-col gap-3 lg:sticky lg:top-24">
               <div
-                className="relative mx-4 md:mx-0 rounded-2xl md:rounded-4xl border border-slate-300 overflow-hidden bg-white cursor-zoom-in"
+                className="relative cursor-zoom-in overflow-hidden rounded-md bg-white shadow-sm ring-1 ring-third/10"
                 onClick={() => {
                   if (showingVideo) {
                     if (!videoPlaying) setVideoPlaying(true);
@@ -447,35 +471,35 @@ const handleCloseToast = () => {
                   }
                 }}
               >
-                {/* Discount badge */}
-                {!showingVideo && product.offlinePrice && product.pricelist &&
-                  product.pricelist.trim() && product.offlinePrice.trim() &&
-                  parseInt(product.pricelist) > parseInt(product.offlinePrice) && (
-                  <span className="text-[13px] md:text-[18px] absolute top-3 right-3 z-10 bg-red-600 border border-red-900 text-white px-2 py-[2px] rounded-sm font-black tracking-tight">
-                    -{Math.round(((parseInt(product.pricelist) - parseInt(product.offlinePrice)) / parseInt(product.pricelist)) * 100)}%
+                {!showingVideo && discount && (
+                  <span className="absolute right-3 top-3 z-10 rounded-sm border border-amber-600 bg-amber-100 px-2 py-[3px] text-[13px] font-black leading-none tracking-tight text-third shadow-sm md:text-[16px]">
+                    -{discount}%
                   </span>
                 )}
 
-                <div ref={imgWrapRef} className="w-full aspect-square md:aspect-auto md:h-[480px] p-4 md:p-8">
+                <div
+                  ref={imgWrapRef}
+                  className="aspect-square w-full p-4 md:p-8 lg:aspect-[4/3.4]"
+                >
                   {showingVideo && videoId ? (
                     videoPlaying ? (
                       <iframe
                         src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
-                        className="w-full h-full rounded-lg"
+                        className="h-full w-full rounded-sm"
                         allow="autoplay; encrypted-media; clipboard-write; gyroscope; picture-in-picture; web-share"
                         allowFullScreen
                         onClick={(e) => e.stopPropagation()}
                       />
                     ) : (
-                      <div className="relative w-full h-full rounded-lg overflow-hidden group">
+                      <div className="group relative h-full w-full overflow-hidden rounded-sm">
                         <img
                           src={getYoutubeThumbnail(videoId)}
                           alt="Video produk"
-                          className="w-full h-full object-cover opacity-70 group-hover:opacity-90 transition-opacity duration-200"
+                          className="h-full w-full object-cover opacity-70 transition-opacity duration-200 group-hover:opacity-90"
                         />
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-third/80 group-hover:bg-third flex items-center justify-center transition-colors duration-200 shadow-xl">
-                            <Play className="w-6 h-6 md:w-7 md:h-7 text-second ml-1" fill="#f9ad52" />
+                          <div className="flex h-14 w-14 items-center justify-center rounded-sm bg-third/85 shadow-xl transition-colors duration-200 group-hover:bg-third md:h-16 md:w-16">
+                            <Play className="ml-1 h-6 w-6 text-second md:h-7 md:w-7" fill="#f9ad52" />
                           </div>
                         </div>
                       </div>
@@ -492,283 +516,280 @@ const handleCloseToast = () => {
                 </div>
               </div>
 
-              {/* Thumbnails — horizontal scroll */}
               <div
-                className="flex gap-2.5 md:gap-3 overflow-x-auto px-4 md:px-0 pb-1"
+                className="flex gap-2 overflow-x-auto pb-1 md:gap-3"
                 style={{ scrollbarWidth: "none" }}
               >
                 {imageList.map((src: string, i: number) => (
                   <button
                     key={i}
                     onClick={() => switchImg(i)}
-                    className={`flex-shrink-0 w-[68px] h-[68px] md:w-[100px] md:h-[100px] rounded-xl overflow-hidden border-2 bg-white transition-all duration-150 ${
-                      !showingVideo && !activeImgSrc && i === activeImg
-                        ? "border-second"
-                        : "border-transparent opacity-50 hover:opacity-80 hover:border-third/15"
+                    className={`${thumbBase} ${
+                      !showingVideo && !activeImgSrc && i === activeImg ? thumbActive : thumbIdle
                     }`}
                   >
                     <Image
-                      width={200} height={200}
+                      width={200}
+                      height={200}
                       loading="lazy"
                       sizes="100px"
                       src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${src}`}
                       alt={`${src}`}
-                      className="w-full h-full object-contain p-1.5 md:p-2"
+                      className="h-full w-full object-contain p-1.5 md:p-2"
                     />
                   </button>
                 ))}
 
-                {/* Video thumbnail */}
                 {videoId && (
                   <button
                     onClick={openVideo}
-                    className={`flex-shrink-0 relative w-[68px] h-[68px] md:w-[100px] md:h-[100px] rounded-xl overflow-hidden border-2 bg-white transition-all duration-150 ${
-                      showingVideo
-                        ? "border-second"
-                        : "border-transparent opacity-50 hover:opacity-80 hover:border-third/15"
-                    }`}
+                    className={`${thumbBase} relative ${showingVideo ? thumbActive : thumbIdle}`}
                   >
                     <img
                       src={getYoutubeThumbnail(videoId)}
                       alt="Video produk"
-                      className="w-full h-full object-cover"
+                      className="h-full w-full object-cover"
                     />
                     <div className="absolute inset-0 flex items-center justify-center bg-black/25">
-                      <div className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-third/85 flex items-center justify-center">
-                        <Play className="w-3 h-3 md:w-3.5 md:h-3.5 text-second ml-0.5" fill="#f9ad52" />
+                      <div className="flex h-6 w-6 items-center justify-center rounded-sm bg-third/85 md:h-7 md:w-7">
+                        <Play className="ml-0.5 h-3 w-3 text-second md:h-3.5 md:w-3.5" fill="#f9ad52" />
                       </div>
                     </div>
                   </button>
                 )}
 
-                {variants.flatMap((v) => v.options).filter((o) => o.image).map((option) => {
-                  const isActiveVariantImg = !showingVideo && activeImgSrc === option.image;
-                  return (
-                    <button
-                      key={`opt-${option.id}`}
-                      onClick={() => {
-                        const parentVariant = variants.find((v) =>
-                          v.options.some((o) => o.id === option.id)
-                        );
-                        if (parentVariant) toggleOption(parentVariant.id, option);
-                      }}
-                      className={`flex-shrink-0 w-[68px] h-[68px] md:w-[100px] md:h-[100px] rounded-xl overflow-hidden border-2 bg-white transition-all duration-150 ${
-                        isActiveVariantImg
-                          ? "border-second"
-                          : "border-transparent opacity-50 hover:opacity-80 hover:border-third/15"
-                      }`}
-                      title={option.name}
-                    >
-                      <Image
-                        width={200} height={200}
-                        loading="lazy"
-                        sizes="100px"
-                        src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${option.image}`}
-                        alt={option.name}
-                        className="w-full h-full object-contain p-1.5 md:p-2"
-                      />
-                    </button>
-                  );
-                })}
+                {variants
+                  .flatMap((v) => v.options)
+                  .filter((o) => o.image)
+                  .map((option) => {
+                    const isActiveVariantImg = !showingVideo && activeImgSrc === option.image;
+                    return (
+                      <button
+                        key={`opt-${option.id}`}
+                        onClick={() => {
+                          const parentVariant = variants.find((v) =>
+                            v.options.some((o) => o.id === option.id)
+                          );
+                          if (parentVariant) toggleOption(parentVariant.id, option);
+                        }}
+                        className={`${thumbBase} ${isActiveVariantImg ? thumbActive : thumbIdle}`}
+                        title={option.name}
+                      >
+                        <Image
+                          width={200}
+                          height={200}
+                          loading="lazy"
+                          sizes="100px"
+                          src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${option.image}`}
+                          alt={option.name}
+                          className="h-full w-full object-contain p-1.5 md:p-2"
+                        />
+                      </button>
+                    );
+                  })}
               </div>
             </div>
 
-            {/* ── INFO ── */}
-            <div className="flex flex-col gap-4 md:gap-5 px-4 md:px-0 pt-2 md:pt-6">
-              {/* Name */}
+            <div className="flex flex-col gap-5 rounded-md bg-white p-5 shadow-sm ring-1 ring-third/10 md:gap-6 md:p-7">
               <div>
-                <p className="text-[11px] md:text-[13px] text-third/50 tracking-wide uppercase font-medium mb-1">
-                  {product.kategoriId}
-                </p>
-                <h1 className="font-display text-[22px] md:text-[28px] font-black text-third leading-snug">
-                  {product.name.toUpperCase()}
+                <div className="mb-3 flex flex-wrap items-center gap-2">
+                  <span className="rounded-sm bg-second/15 px-2.5 py-1 text-[10px] font-bold uppercase leading-none tracking-wider text-third md:text-[11px]">
+                    {product.kategoriId}
+                  </span>
+                  <span className="rounded-sm bg-third/5 px-2.5 py-1 text-[10px] font-bold uppercase leading-none tracking-wider text-third/70 md:text-[11px]">
+                    {product.brandId}
+                  </span>
+                </div>
+                <h1 className="font-boldonse text-[clamp(16px,2vw,26px)] font-bold uppercase leading-snug text-third">
+                  {product.name}
                 </h1>
-                <div className="flex items-center gap-1 mt-1 text-[11px] text-third/40">
-                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
+                <div className="mt-3 flex items-center gap-1.5 text-[12px] text-third/45">
+                  <Eye className="h-3.5 w-3.5" />
                   <span>Dilihat {product.views_count ?? 0} kali</span>
                 </div>
               </div>
 
-              <div className="h-px bg-third/8" />
+              <div className="h-px bg-third/10" />
 
-              {/* Price */}
-              <div>
-                <div className="grid grid-cols-2 md:flex gap-2.5 md:gap-5">
+              <div className="flex flex-col gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   {waUrl && (
                     <Link
                       href={waUrl}
                       suppressHydrationWarning
-                      className="font-display leading-none px-3 py-2.5 md:px-5 md:py-2 border rounded-md border-third flex flex-col gap-y-1"
+                      className="group flex flex-col gap-2 rounded-sm bg-bg-site px-4 py-3 ring-1 ring-third/10 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:ring-third/25"
                     >
-                      <p className="text-[12px] md:text-[14px] italic opacity-60">Harga Offline</p>
-                      <p className="text-[17px] md:text-[20px] font-black text-red-500">
-                        {formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}
+                      <p className="text-[11px] font-semibold uppercase leading-none tracking-wider text-third/50">
+                        Harga Offline
                       </p>
-                    </Link>
-                  )}
-                  {waUrl && (
-                    <Link
-                      href={waUrl}
-                      suppressHydrationWarning
-                      className="font-display leading-none px-3 py-2.5 md:px-5 md:py-2 border rounded-md border-third flex flex-col gap-y-1"
-                    >
-                      <p className="text-[12px] md:text-[14px] italic opacity-60">Special Price</p>
-                      <p className="text-[17px] md:text-[20px] font-black text-red-500">Rp.XXXXXXX</p>
-                    </Link>
-                  )}
-                </div>
-                {product.pricelist && (
-                  <div className="font-semibold text-[13px] md:text-[15px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center mt-2">
-                    <span
-                      className={`${
-                        product.offlinePrice &&
-                        product.pricelist.trim() &&
-                        product.offlinePrice.trim() &&
-                        parseInt(product.pricelist) > parseInt(product.offlinePrice)
-                          ? "line-through"
-                          : ""
-                      }`}
-                    >
-                      Pricelist:{" "}
-                      {formatPrice(
-                        parseInt(
-                          product.pricelist.includes(" ")
-                            ? product.pricelist.split(" ")[0].trim()
-                            : product.pricelist.trim()
-                        )
-                      )}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              <div className="h-px bg-third/8" />
-
-              {/* Variants */}
-              {variants.length > 0 && (
-                <div className="flex flex-col gap-4 md:gap-5">
-                  {variants.map((variant) => (
-                    <div key={variant.id}>
-                      <div className="flex items-center gap-2 mb-2.5 md:mb-3">
-                        <p className="font-poppins text-[12px] md:text-[13px] font-semibold text-third/60 uppercase tracking-[0.1em]">
-                          Pilih {variant.type} :
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="text-[20px] font-black leading-none text-third md:text-[22px]">
+                          {formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}
                         </p>
-                        {selectedOptions[variant.id] && (
-                          <span className="font-poppins text-[12px] md:text-[13px] text-third/45">
-                            <span className="text-third font-bold">
-                              {selectedOptions[variant.id].name}
-                            </span>
+                        {discount && (
+                          <span className="rounded-sm border border-amber-600 bg-amber-100 px-1.5 py-[2px] text-[11px] font-bold leading-none text-third">
+                            -{discount}%
                           </span>
                         )}
                       </div>
-                      <div className="flex flex-wrap gap-2 md:gap-2.5 w-full">
-                        {variant.options.map((option) => {
-                          const isSelected = selectedOptions[variant.id]?.id === option.id;
-                          return (
-                            <button
-                              key={option.id}
-                              type="button"
-                              onClick={() => toggleOption(variant.id, option)}
-                              className={`border-2 relative flex items-center gap-2 ${
-                                variant.type === "Warna"
-                                  ? "w-9 h-9 md:w-10 md:h-10 rounded-full border-third"
-                                  : "px-2.5 py-1.5 md:px-3 md:py-2 rounded-sm"
-                              } transition-all duration-200 ${
-                                isSelected
-                                  ? "border-second bg-second/8 shadow-[0_2px_12px_rgba(249,173,82,0.2)]"
-                                  : "border-third/12 hover:border-third/25"
-                              } ${bgVariantColor[option.name.toLowerCase().split(" ").join("")]}`}
-                            >
-                              {variant.type !== "Warna" && (
-                                <span
-                                  className={`font-poppins text-[15px] md:text-[17px] font-bold leading-tight transition-colors ${
-                                    isSelected ? "text-third" : "text-third/65"
-                                  }`}
-                                >
-                                  {option.name}
-                                </span>
-                              )}
-                              {isSelected && (
-                                <div className="absolute -top-1.5 -right-1.5 w-5 h-5 md:w-6 md:h-6 rounded-full bg-second flex items-center justify-center shadow-sm">
-                                  <svg className="w-3 h-3 md:w-4 md:h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                    <polyline points="20 6 9 17 4 12" />
-                                  </svg>
-                                </div>
-                              )}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ))}
-                  {!allVariantsSelected && (
-                    <p className="font-poppins text-[11px] text-third/40 flex items-center gap-1.5">
-                      <svg className="w-3.5 h-3.5 text-second flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="12" y1="8" x2="12" y2="12" />
-                        <line x1="12" y1="16" x2="12.01" y2="16" />
-                      </svg>
-                      Pilih{" "}
-                      {variants
-                        .filter((v) => !selectedOptions[v.id])
-                        .map((v) => v.type)
-                        .join(", ")}{" "}
-                      terlebih dahulu
-                    </p>
+                      {pricelistNum && (
+                        <span
+                          className={`text-[12px] font-semibold leading-none text-red-500 ${
+                            discount ? "line-through" : ""
+                          }`}
+                        >
+                          Pricelist: {formatPrice(pricelistNum)}
+                        </span>
+                      )}
+                    </Link>
+                  )}
+                  {waUrl && (
+                    <Link
+                      href={waUrl}
+                      suppressHydrationWarning
+                      className="group flex flex-col gap-2 rounded-sm bg-second/10 px-4 py-3 ring-1 ring-second/40 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:ring-second"
+                    >
+                      <p className="text-[11px] font-semibold uppercase leading-none tracking-wider text-third/50">
+                        Special Price
+                      </p>
+                      <p className="text-[20px] font-black leading-none text-red-500 md:text-[22px]">
+                        Rp.XXXXXXX
+                      </p>
+                      <span className="text-[12px] font-semibold leading-none text-third/60">
+                        Tanya via WhatsApp
+                      </span>
+                    </Link>
                   )}
                 </div>
+              </div>
+
+              {variants.length > 0 && (
+                <>
+                  <div className="h-px bg-third/10" />
+                  <div className="flex flex-col gap-4 md:gap-5">
+                    {variants.map((variant) => (
+                      <div key={variant.id}>
+                        <div className="mb-2.5 flex items-center gap-2 md:mb-3">
+                          <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-third/60 md:text-[13px]">
+                            Pilih {variant.type} :
+                          </p>
+                          {selectedOptions[variant.id] && (
+                            <span className="text-[12px] font-bold text-third md:text-[13px]">
+                              {selectedOptions[variant.id].name}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex w-full flex-wrap gap-2 md:gap-2.5">
+                          {variant.options.map((option) => {
+                            const isSelected = selectedOptions[variant.id]?.id === option.id;
+                            return (
+                              <button
+                                key={option.id}
+                                type="button"
+                                onClick={() => toggleOption(variant.id, option)}
+                                className={`relative flex items-center gap-2 border-2 transition-all duration-200 ${
+                                  variant.type === "Warna"
+                                    ? "h-9 w-9 rounded-full md:h-10 md:w-10"
+                                    : "rounded-sm px-3 py-1.5 md:py-2"
+                                } ${
+                                  isSelected
+                                    ? "border-second bg-second/10 shadow-[0_2px_12px_rgba(249,173,82,0.25)]"
+                                    : "border-third/15 hover:border-third/40"
+                                } ${bgVariantColor[option.name.toLowerCase().split(" ").join("")] ?? ""}`}
+                              >
+                                {variant.type !== "Warna" && (
+                                  <span
+                                    className={`text-[14px] font-bold leading-tight transition-colors md:text-[15px] ${
+                                      isSelected ? "text-third" : "text-third/65"
+                                    }`}
+                                  >
+                                    {option.name}
+                                  </span>
+                                )}
+                                {isSelected && (
+                                  <div className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-sm bg-second shadow-sm">
+                                    <svg className="h-3 w-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                      <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                  </div>
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                    {!allVariantsSelected && (
+                      <p className="flex items-center gap-1.5 rounded-sm bg-second/10 px-3 py-2 text-[11px] text-third/60">
+                        <svg className="h-3.5 w-3.5 flex-shrink-0 text-second" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="12" cy="12" r="10" />
+                          <line x1="12" y1="8" x2="12" y2="12" />
+                          <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                        Pilih{" "}
+                        {variants
+                          .filter((v) => !selectedOptions[v.id])
+                          .map((v) => v.type)
+                          .join(", ")}{" "}
+                        terlebih dahulu
+                      </p>
+                    )}
+                  </div>
+                </>
               )}
 
-              {variants.length > 0 && <div className="h-px bg-third/8" />}
+              <div className="h-px bg-third/10" />
 
-              {/* Qty + Cart + WA */}
               <div className="flex flex-col gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1.5 border-2 border-third rounded-md overflow-hidden">
+                <div className="flex items-stretch gap-2.5">
+                  <div className="flex items-center overflow-hidden rounded-sm ring-1 ring-third/20">
                     <button
                       onClick={() => setQty((q) => Math.max(1, q - 1))}
-                      className="w-9 h-10 flex items-center justify-center text-third hover:bg-third/8 transition-colors"
+                      className="flex h-11 w-9 items-center justify-center text-third transition-colors hover:bg-third/5"
                     >
-                      <ChevronDown size={18} strokeWidth={3} />
+                      <ChevronDown size={16} strokeWidth={3} />
                     </button>
-                    <span className="w-8 text-center font-semibold text-[16px] text-third">
-                      {qty}
-                    </span>
+                    <span className="w-8 text-center text-[15px] font-bold text-third">{qty}</span>
                     <button
                       onClick={() => setQty((q) => q + 1)}
-                      className="w-9 h-10 flex items-center justify-center text-third hover:bg-third/8 transition-colors"
+                      className="flex h-11 w-9 items-center justify-center text-third transition-colors hover:bg-third/5"
                     >
-                      <ChevronUp size={18} strokeWidth={3} />
+                      <ChevronUp size={16} strokeWidth={3} />
                     </button>
                   </div>
+
                   <button
-                    disabled={
-                        !allVariantsSelected
-                      //  || product.stock == 0
-                    }
-                    className="flex-1 py-2.5 px-4 bg-second text-third border-2 border-third rounded-md font-bold text-[16px] md:text-[18px] flex items-center justify-center gap-2 transition-all duration-150 disabled:bg-slate-200 disabled:cursor-not-allowed drop-shadow-[4px_4px_0px_rgba(62,63,32,1)] md:drop-shadow-[6px_6px_0px_rgba(62,63,32,1)]"
-                    onClick={async () =>{ 
+                    disabled={!allVariantsSelected}
+                    className="flex h-11 flex-1 items-center justify-center gap-2 rounded-sm bg-second px-4 text-[14px] font-bold uppercase tracking-wider text-third transition-all duration-200 hover:bg-third hover:text-white active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-third/40 disabled:hover:bg-slate-200 disabled:hover:text-third/40 md:text-[15px]"
+                    onClick={async () => {
                       try {
                         await createWishlist(product.id, qty);
-                        router.refresh(); 
+                        router.refresh();
                         setToast({
                           show: true,
-                          message: "Produk berhasil ditambahkan ke keranjang!"
+                          message: "Produk berhasil ditambahkan ke keranjang!",
                         });
-                      } catch (err) { console.error("Gagal menambah barang:", err); }
+                      } catch (err) {
+                        console.error("Gagal menambah barang:", err);
+                      }
                     }}
                   >
-                    <ShoppingCart strokeWidth={3} className="w-5 h-5 md:w-6 md:h-6" />
+                    <ShoppingCart strokeWidth={2.5} className="h-5 w-5" />
                     <span>{product.stock < 0 ? "Pre-Order" : "Keranjang"}</span>
                   </button>
-                  <Link href={`${product.tautan || "https://www.tokopedia.com/bandarmusikjakarta"}`}
+
+                  <Link
+                    href={`${product.tautan || "https://www.tokopedia.com/bandarmusikjakarta"}`}
                     target="_blank"
                     suppressHydrationWarning
-                    className="p-1 border-2 border-third rounded-md">
-                    <Image src={'/tokped.webp'} alt="Tokopedia - Bandar Musik Jakarta" width={30}/>
+                    className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-sm bg-white ring-1 ring-third/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                  >
+                    <Image
+                      src={"/tokped.webp"}
+                      alt="Tokopedia - Bandar Musik Jakarta"
+                      width={28}
+                      height={28}
+                    />
                   </Link>
                 </div>
 
@@ -777,38 +798,40 @@ const handleCloseToast = () => {
                     href={waUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-2.5 px-5 flex gap-x-2.5 items-center justify-center rounded-xl border-2 border-third transition-colors duration-150 hover:bg-third/5"
+                    className="group flex w-full items-center justify-center gap-x-3 rounded-sm bg-third px-5 py-3 text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-third/20"
                   >
-                    <FaWhatsapp size={26} className="text-third flex-shrink-0" />
+                    <FaWhatsapp size={26} className="flex-shrink-0 text-second" />
                     <div>
-                      <p className="text-[11px] leading-none text-third/60">Pembelian Melalui</p>
-                      <p className="text-[18px] md:text-[20px] font-extrabold tracking-tight leading-none">
+                      <p className="text-[10px] uppercase leading-none tracking-wider text-white/60">
+                        Pembelian Melalui
+                      </p>
+                      <p className="mt-1 text-[17px] font-extrabold leading-none tracking-tight md:text-[19px]">
                         Whatsapp
                       </p>
                     </div>
                   </Link>
                 )}
 
-                <div className="flex gap-x-2 items-start text-third mt-1">
-                  <Megaphone size={16} className="flex-shrink-0 mt-0.5" />
-                  <p className="text-[11px] md:text-[12px] italic leading-snug">
+                <div className="flex items-start gap-x-2 rounded-sm bg-second/10 px-3 py-2.5 text-third">
+                  <Megaphone size={15} className="mt-0.5 flex-shrink-0 text-second" />
+                  <p className="text-[11px] italic leading-snug md:text-[12px]">
                     Harap Tanya Ketersediaan Barang Melalui Whatsapp Sebelum Melakukan Pemesanan.
                   </p>
                 </div>
               </div>
 
-              {/* Trust badges */}
-              <div className="grid grid-cols-3 gap-2 md:flex md:gap-4 mt-2 md:mt-4 border-t border-third/8 pt-4">
-                {[
-                  { Icon: Truck, title: "Pengiriman Cepat", sub: "Pengiriman barang cepat dan aman" },
-                  { Icon: ShieldCheck, title: "Garansi 1 Year", sub: "Perlindungan sejak tanggal pembelian" },
-                  { Icon: PiggyBank, title: "Best Price", sub: "Kualitas dengan harga terbaik" },
-                ].map(({ Icon, title, sub }) => (
-                  <div key={title} className="flex flex-col md:flex-row items-center md:items-start gap-1 md:gap-2 text-center md:text-left md:border-r last:border-r-0 border-third/50 md:pr-4 last:pr-0">
-                    <Icon size={24} strokeWidth={2} className="flex-shrink-0 text-third/70" />
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                {trustItems.map(({ Icon, title, sub }) => (
+                  <div
+                    key={title}
+                    className="flex items-start gap-2.5 rounded-sm bg-bg-site px-3 py-3 ring-1 ring-third/5"
+                  >
+                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-sm bg-white text-third ring-1 ring-third/10">
+                      <Icon size={16} strokeWidth={2} />
+                    </div>
                     <div>
-                      <p className="font-bold text-[11px] md:text-[13px] leading-tight">{title}</p>
-                      <p className="text-[10px] md:text-[12px] font-light text-third/60 leading-snug">{sub}</p>
+                      <p className="text-[12px] font-bold leading-tight text-third">{title}</p>
+                      <p className="mt-0.5 text-[11px] leading-snug text-third/60">{sub}</p>
                     </div>
                   </div>
                 ))}
@@ -816,93 +839,104 @@ const handleCloseToast = () => {
             </div>
           </div>
 
-          {/* ── Bottom: Tabs + Meta ── */}
-          <div className="border-t border-third/8 pt-8 md:pt-10 flex flex-col gap-8 md:gap-10 px-4 md:px-0">
-  {/* Tabs */}
-  <div>
-    <div className="flex border-b border-third/8 mb-5 md:mb-6 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
-      {(["description", "features", "specifications"] as Tab[]).map((t) => (
-        <button
-          key={t}
-          onClick={() => setTab(t)}
-          className={`text-[12px] md:text-[13px] font-medium px-4 md:px-5 py-2.5 border-b-2 -mb-px transition-all duration-150 whitespace-nowrap flex-shrink-0 ${
-            tab === t
-              ? "border-second text-third"
-              : "border-transparent text-third/45 hover:text-third/70"
-          }`}
-        >
-          {t === "description" ? "Deskripsi" : t === "features" ? "Fitur" : "Spesifikasi"}
-        </button>
-      ))}
-    </div>
-
-    {/* ── REVISI DI SINI: Tambah ref={tabContentRef} dan class will-change-transform ── */}
-    <div 
-      ref={tabContentRef} 
-      className="text-[13px] md:text-[14px] leading-relaxed text-third/70 text-justify will-change-transform"
-    >
-      {tab === "description" && <p>{product.description}</p>}
-      
-      {/* ── MAPPING FITUR ── */}
-      {tab === "features" && (
-        <ul className="flex flex-col gap-2 md:gap-2.5 list-none">
-          {product.fitur && product.fitur.length > 0 ? (
-            product.fitur.map((f: string, i: number) => (
-              <li key={i} className="flex items-start gap-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-second mt-2 flex-shrink-0" />
-                {f}
-              </li>
-            ))
-          ) : (
-            <p className="text-third/40 italic text-sm">Tidak ada informasi fitur.</p>
-          )}
-        </ul>
-      )}
-      
-      {/* ── MAPPING SPESIFIKASI ── */}
-      {tab === "specifications" && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-0">
-          {product.spesifikasi && product.spesifikasi.length > 0 ? (
-            product.spesifikasi.map((s: string, i: number) => (
-              <div key={i} className="flex items-start gap-2 py-2 md:py-2.5 border-b border-third/6">
-                <span className="w-1.5 h-1.5 rounded-full bg-second mt-2 flex-shrink-0" />
-                <span className="text-third text-[12px] md:text-[13px]">{s}</span>
+          <div className="mt-8 grid items-start gap-6 md:mt-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:gap-10">
+            <div className="overflow-hidden rounded-md bg-white shadow-sm ring-1 ring-third/10">
+              <div
+                className="flex overflow-x-auto border-b border-third/10"
+                style={{ scrollbarWidth: "none" }}
+              >
+                {(["description", "features", "specifications"] as Tab[]).map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => setTab(t)}
+                    className={`relative flex-shrink-0 whitespace-nowrap px-5 py-3.5 text-[12px] font-bold uppercase tracking-wider transition-colors duration-150 md:px-6 md:text-[13px] ${
+                      tab === t ? "text-third" : "text-third/40 hover:text-third/70"
+                    }`}
+                  >
+                    {t === "description" ? "Deskripsi" : t === "features" ? "Fitur" : "Spesifikasi"}
+                    <span
+                      className={`absolute bottom-0 left-0 h-[2px] w-full bg-second transition-transform duration-300 ${
+                        tab === t ? "scale-x-100" : "scale-x-0"
+                      }`}
+                    />
+                  </button>
+                ))}
               </div>
-            ))
-          ) : (
-            <p className="text-third/40 italic text-sm col-span-2">Tidak ada informasi spesifikasi.</p>
-          )}
-        </div>
-      )}
-    </div>
-  </div>
 
-  {/* Meta info */}
-  <div>
-    <p className="text-[10px] font-semibold tracking-[0.15em] uppercase text-third/40 mb-3 md:mb-4">
-      Informasi Produk
-    </p>
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:flex md:gap-10">
-      {[
-        { label: "Berat", value: product.weight },
-        { label: "SKU", value: product.sku },
-        { label: "Garansi", value: product.warranty },
-        { label: "Stok", value: `${product.stock} unit` },
-      ].map((m) => (
-        <div key={m.label} className="flex flex-col gap-1">
-          <span className="text-[10px] font-semibold tracking-[0.12em] uppercase text-third/35">
-            {m.label}
-          </span>
-          <span className="text-[13px] md:text-[14px] font-medium text-third">{m.value}</span>
-        </div>
-      ))}
-    </div>
-  </div>
-</div>
+              <div
+                ref={tabContentRef}
+                className="p-5 text-[13px] leading-relaxed text-third/75 will-change-transform md:p-7 md:text-[14px]"
+              >
+                {tab === "description" && (
+                  <p className="whitespace-pre-line">{product.description}</p>
+                )}
 
-          <div className="px-4 md:px-0 mt-10">
+                {tab === "features" && (
+                  <ul className="flex list-none flex-col gap-2.5">
+                    {product.fitur && product.fitur.length > 0 ? (
+                      product.fitur.map((f: string, i: number) => (
+                        <li key={i} className="flex items-start gap-3">
+                          <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-sm bg-second" />
+                          {f}
+                        </li>
+                      ))
+                    ) : (
+                      <p className="text-sm italic text-third/40">Tidak ada informasi fitur.</p>
+                    )}
+                  </ul>
+                )}
+
+                {tab === "specifications" && (
+                  <div className="grid grid-cols-1 gap-x-10 sm:grid-cols-2">
+                    {product.spesifikasi && product.spesifikasi.length > 0 ? (
+                      product.spesifikasi.map((s: string, i: number) => (
+                        <div
+                          key={i}
+                          className="flex items-start gap-2.5 border-b border-third/10 py-2.5"
+                        >
+                          <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-sm bg-second" />
+                          <span className="text-[12px] text-third md:text-[13px]">{s}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="col-span-2 text-sm italic text-third/40">
+                        Tidak ada informasi spesifikasi.
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="overflow-hidden rounded-md bg-white shadow-sm ring-1 ring-third/10 lg:sticky lg:top-24">
+              <div className="border-b border-third/10 px-5 py-3.5 md:px-6">
+                <p className="text-[12px] font-bold uppercase tracking-wider text-third md:text-[13px]">
+                  Informasi Produk
+                </p>
+              </div>
+              <div className="flex flex-col">
+                {metaItems.map((m, i) => (
+                  <div
+                    key={m.label}
+                    className={`flex items-center justify-between gap-4 px-5 py-3 md:px-6 ${
+                      i !== metaItems.length - 1 ? "border-b border-third/10" : ""
+                    }`}
+                  >
+                    <span className="text-[11px] font-semibold uppercase tracking-wider text-third/45">
+                      {m.label}
+                    </span>
+                    <span className="text-right text-[13px] font-semibold text-third md:text-[14px]">
+                      {m.value || "-"}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-12 md:mt-16">
             <ProductFaq />
-            {(related && related.length > 0) && <RelatedProducts related={related}/>}
+            {related && related.length > 0 && <RelatedProducts related={related} />}
           </div>
         </div>
       </div>
