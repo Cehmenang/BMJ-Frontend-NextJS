@@ -157,13 +157,10 @@ export default function BrandShowcase() {
 
   return (
     <section className="px-4 pb-16 sm:px-8 sm:pb-20 md:px-14">
-      <div className="mb-6 flex items-end justify-between gap-4 px-0 sm:mb-8 sm:px-14">
+      <div className="mb-6 flex items-end justify-between gap-4 px-0 sm:mb-8">
         <div>
-          <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-third-light">
-            Partner Resmi
-          </p>
-          <h2 className="font-display text-[clamp(22px,3.5vw,42px)] font-bold leading-[1.1] text-third">
-            Brand <em className="not-italic text-second">Pilihan</em>
+        <h2 className="text-md md:text-4xl font-boldonse text-[clamp(22px,3.5vw,42px)] font-bold text-third leading-9">
+            TEMUKAN <em className="text-second not-italic">BRAND FAVORIT</em>
           </h2>
         </div>
         <div className="flex flex-col items-end gap-y-2">
