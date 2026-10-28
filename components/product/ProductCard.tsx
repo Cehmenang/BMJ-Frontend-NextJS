@@ -73,9 +73,7 @@ export default function ProductCard({
         {/* Image */}
         <div className="relative w-28 h-28 md:w-36 md:h-36 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100">
           {isNew && (
-            <span className="absolute bg-red-600 text-white z-[15] top-2 left-2 text-[10px] font-bold px-2 py-[2px] rounded-sm">
-              Baru
-            </span>
+            <img src="/BadgeBaru.webp" alt="Badge Baru" width={40} height={40}/>
           )}
           {product.promo && (
             <span className="absolute bg-amber-600 text-white z-[15] top-2 right-2 text-[9px] font-bold px-2 py-[2px] rounded-sm shadow-sm">
