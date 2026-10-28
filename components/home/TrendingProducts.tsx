@@ -22,11 +22,8 @@ export default async function TrendingProducts() {
     <section className="py-10 sm:py-16 pt-20 bg-bg-site overflow-hidden px-4 sm:px-8 md:px-14">
       <div className="mb-6 sm:mb-8 flex items-end justify-between">
         <div>
-          <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-third-light mb-2">
-            Lagi panas nih
-          </p>
           <h2 className="text-2xl md:text-4xl font-boldonse text-[clamp(22px,3.5vw,42px)] font-bold text-third leading-[1.1] relative">
-            ALAT <em className="text-second not-italic">PALING DICARI</em><span className="absolute right-[200px] bottom-2 px-5 py-2 border-2 border-third bg-second text-primary text-md md:text-lg outline-1 outline-third">MINGGU INI</span>
+            ALAT <em className="text-second not-italic">PALING DICARI</em><span className="absolute right-[-100px] top-[-50px] px-5 py-2 border-2 border-third bg-second text-primary text-md md:text-lg outline-1 outline-third">MINGGU INI</span>
           </h2>
         </div>
 
