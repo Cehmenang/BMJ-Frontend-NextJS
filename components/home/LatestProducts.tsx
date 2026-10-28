@@ -92,48 +92,48 @@ export default function LatestProducts() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-10 sm:py-16 md:mx-28">
-      {/* Header */}
+    <section className="py-10 sm:py-16 bg-bg-site overflow-hidden px-4 sm:px-8 md:px-14">
       <div className="mb-6 sm:mb-8 flex items-end justify-between">
-        <div>
-          <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-third-light mb-2">
-            Baru Masuk
-          </p>
-          <h2 className="font-display text-[clamp(22px,3.5vw,42px)] font-bold text-third leading-[1.1]">
-            Produk <em className="text-second not-italic">Terbaru</em>
-          </h2>
-        </div>
+    <div>
+      <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-third-light mb-2">
+        Baru Masuk
+      </p>
+      {/* Menggunakan font-boldonse dan uppercase agar konsisten dengan header sebelumnya */}
+      <h2 className="text-md md:text-4xl font-boldonse text-[clamp(22px,3.5vw,42px)] font-bold text-third leading-9 uppercase">
+        PRODUK <em className="text-second not-italic">TERBARU</em>
+      </h2>
+    </div>
 
-        <div className="flex items-center gap-4">
-          <Link
-            href="/produk"
-            className="flex items-center gap-1.5 text-[12px] sm:text-[13px] font-medium text-third/60 hover:text-third transition-colors duration-200"
-          >
-            Lihat semua
-            <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          </Link>
+    <div className="flex items-center gap-4">
+      <Link
+        href="/produk"
+        className="flex items-center gap-1.5 text-[12px] sm:text-[13px] font-medium text-third/60 hover:text-third transition-colors duration-200"
+      >
+        Lihat semua
+        <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+      </Link>
 
-          {/* Arrow nav */}
-          <div className="hidden sm:flex items-center gap-2">
-            <button
-              onClick={() => handleSlide("prev")}
-              disabled={atStart}
-              aria-label="Produk sebelumnya"
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-third/5 text-third transition-opacity disabled:opacity-30 hover:bg-third/10"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => handleSlide("next")}
-              disabled={atEnd}
-              aria-label="Produk selanjutnya"
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-third/5 text-third transition-opacity disabled:opacity-30 hover:bg-third/10"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
+      {/* Arrow nav */}
+      <div className="hidden sm:flex items-center gap-2">
+        <button
+          onClick={() => handleSlide("prev")}
+          disabled={atStart}
+          aria-label="Produk sebelumnya"
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-third/5 text-third transition-opacity disabled:opacity-30 hover:bg-third/10"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </button>
+        <button
+          onClick={() => handleSlide("next")}
+          disabled={atEnd}
+          aria-label="Produk selanjutnya"
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-third/5 text-third transition-opacity disabled:opacity-30 hover:bg-third/10"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </button>
       </div>
+    </div>
+  </div>
 
       {/* Scroll container — arrow-driven, drag dimatikan */}
       <div
