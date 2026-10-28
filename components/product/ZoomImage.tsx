@@ -32,7 +32,6 @@ export default function ZoomImage({
         }}
       >
         <Image
-          width={500} height={500}
           loading="lazy"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           ref={productRef}
