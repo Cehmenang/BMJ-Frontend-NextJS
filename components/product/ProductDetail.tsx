@@ -9,11 +9,15 @@ import {
   ChevronRight,
   X,
   Play,
-  Megaphone,
   Truck,
   ShieldCheck,
   PiggyBank,
   Eye,
+  Share2,
+  Maximize2,
+  ListChecks,
+  FileText,
+  TriangleAlert,
 } from "lucide-react";
 import ZoomImage from "./ZoomImage";
 import Image from "next/image";
@@ -25,7 +29,7 @@ import { IProduct } from "@/interface";
 import RelatedProducts from "./RelatedProducts";
 import { useRouter } from "next/navigation";
 
-type Tab = "description" | "features" | "specifications";
+type DrawerType = "features" | "specifications";
 type VariantOption = {
   id: number;
   variant_id: number;
@@ -42,18 +46,6 @@ type Variant = {
   options: VariantOption[];
   created_at: string;
   updated_at: string;
-};
-
-const bgVariantColor: Record<string, string> = {
-  black: "bg-select-black",
-  white: "bg-select-white",
-  red: "bg-select-red",
-  calmblue: "bg-select-calm-blue",
-  mellowbeige: "bg-select-mellow-beige",
-  hawaiianblue: "bg-select-hawaiian-blue",
-  mallardfade: "bg-select-mallard-fade",
-  spacefly: "bg-select-space-fly",
-  natural: "bg-select-natural",
 };
 
 function formatPrice(price: number) {
@@ -107,7 +99,7 @@ function FullscreenViewer({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-black/90"
+      className="fixed inset-0 z-[70] flex flex-col items-center justify-center gap-4 bg-black/90"
       onClick={onClose}
     >
       <button
@@ -183,7 +175,9 @@ export default function ProductDetail({ product }: { product?: any }) {
   const [qty, setQty] = useState(1);
   const [toast, setToast] = useState({ show: false, message: "" });
   const toastRef = useRef<HTMLDivElement>(null);
-  const [tab, setTab] = useState<Tab>("description");
+  const [drawer, setDrawer] = useState<DrawerType | null>(null);
+  const [drawerType, setDrawerType] = useState<DrawerType>("features");
+  const [descOpen, setDescOpen] = useState(false);
   const [fsOpen, setFsOpen] = useState(false);
   const [showingVideo, setShowingVideo] = useState(true);
   const [videoPlaying, setVideoPlaying] = useState(true);
@@ -192,10 +186,16 @@ export default function ProductDetail({ product }: { product?: any }) {
   const [selectedOptions, setSelectedOptions] = useState<Record<number, VariantOption>>({});
   const [activeImgSrc, setActiveImgSrc] = useState<string | null>(null);
   const [related, setRelated] = useState<IProduct[] | []>([]);
-  const tabContentRef = useRef<HTMLDivElement>(null);
   const mainImgRef = useRef<HTMLImageElement>(null);
   const imgWrapRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  const drawerOpen = drawer !== null;
+
+  const openDrawer = (type: DrawerType) => {
+    setDrawerType(type);
+    setDrawer(type);
+  };
 
   useEffect(() => {
     if (product?.id) {
@@ -229,18 +229,18 @@ export default function ProductDetail({ product }: { product?: any }) {
   }, [product?.id]);
 
   useEffect(() => {
-    if (tabContentRef.current) {
-      import("gsap").then((mod) => {
-        const gsap = mod.gsap ?? mod.default;
-        gsap.killTweensOf(tabContentRef.current);
-        gsap.fromTo(
-          tabContentRef.current,
-          { y: 15, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }
-        );
-      });
-    }
-  }, [tab]);
+    if (!drawerOpen) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setDrawer(null);
+    };
+    window.addEventListener("keydown", handler);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", handler);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [drawerOpen]);
 
   useEffect(() => {
     if (toast.show && toastRef.current) {
@@ -335,8 +335,8 @@ export default function ProductDetail({ product }: { product?: any }) {
       gsap.killTweensOf(target);
       gsap.fromTo(
         target,
-        { opacity: 0.7 },
-        { opacity: 1, duration: 0.35, ease: "back.out(1.6)" }
+        { scale: 0.7, opacity: 0.5 },
+        { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(1.6)" }
       );
       callback();
     });
@@ -348,6 +348,12 @@ export default function ProductDetail({ product }: { product?: any }) {
     setShowingVideo(false);
     setVideoPlaying(false);
     popImage(() => {});
+  };
+
+  const stepImg = (dir: number) => {
+    const total = imageList.length;
+    if (total === 0) return;
+    switchImg((activeImg + dir + total) % total);
   };
 
   const toggleOption = (variantId: number, option: VariantOption) => {
@@ -372,19 +378,41 @@ export default function ProductDetail({ product }: { product?: any }) {
     popImage(() => {});
   };
 
+  const handleShare = async () => {
+    const url = window.location.href;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: product?.name, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+        setToast({ show: true, message: "Tautan produk berhasil disalin!" });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   if (!product) return null;
+
+  const isVideo = showingVideo && !!videoId;
 
   const offlineNum = parsePrice(product.offlinePrice);
   const pricelistNum = parsePrice(product.pricelist);
+  const hasVariantPrice = Object.values(selectedOptions).some((o) => o?.harga);
+  const showMainPrice = !!offlineNum || hasVariantPrice;
+  const displayNum = showMainPrice ? Number(activePrice) : pricelistNum;
+  const mainPriceText = showMainPrice
+    ? formattedPrice || formatPrice(Number(activePrice))
+    : pricelistNum
+    ? formatPrice(pricelistNum)
+    : null;
+  const strikePrice = showMainPrice ? pricelistNum : null;
   const discount =
-    offlineNum && pricelistNum && pricelistNum > offlineNum
-      ? Math.round(((pricelistNum - offlineNum) / pricelistNum) * 100)
+    strikePrice && displayNum && strikePrice > displayNum
+      ? Math.round(((strikePrice - displayNum) / strikePrice) * 100)
       : null;
 
-  const thumbBase =
-    "h-[64px] w-[64px] flex-shrink-0 overflow-hidden rounded-sm bg-white transition-all duration-200 md:h-[88px] md:w-[88px]";
-  const thumbActive = "ring-2 ring-second";
-  const thumbIdle = "opacity-60 ring-1 ring-third/10 hover:opacity-100 hover:ring-third/30";
+  const longDesc = (product.description ?? "").length > 220;
 
   const metaItems = [
     { label: "Berat", value: product.weight },
@@ -399,12 +427,27 @@ export default function ProductDetail({ product }: { product?: any }) {
     { Icon: PiggyBank, title: "Best Price", sub: "Kualitas dengan harga terbaik" },
   ];
 
+  const sideBtn =
+    "flex h-10 w-10 items-center justify-center rounded-sm bg-white text-third ring-1 ring-third/10 transition-colors duration-200 hover:bg-third hover:text-white";
+
+  const thumbBase =
+    "h-16 w-16 flex-shrink-0 overflow-hidden rounded-sm bg-white transition-all duration-200 md:h-[72px] md:w-[72px]";
+  const thumbActive = "ring-2 ring-third";
+  const thumbIdle = "opacity-60 ring-1 ring-third/10 hover:opacity-100";
+
+  const dashed = "border-t border-dashed border-third/25";
+
+  const stop = (fn: () => void) => (e: React.MouseEvent) => {
+    e.stopPropagation();
+    fn();
+  };
+
   return (
     <>
       {toast.show && (
         <div
           ref={toastRef}
-          className="fixed right-4 top-20 z-50 flex max-w-sm items-center gap-3 rounded-sm bg-third px-4 py-3 text-white shadow-xl ring-1 ring-second/30 will-change-transform"
+          className="fixed right-4 top-20 z-[80] flex max-w-sm items-center gap-3 rounded-sm bg-third px-4 py-3 text-white shadow-xl will-change-transform"
         >
           <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-sm bg-second">
             <svg className="h-3.5 w-3.5 text-third" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
@@ -432,85 +475,224 @@ export default function ProductDetail({ product }: { product?: any }) {
         />
       )}
 
+      <div
+        onClick={() => setDrawer(null)}
+        aria-hidden="true"
+        className={`fixed inset-0 z-[60] bg-black/50 transition-opacity duration-300 ${
+          drawerOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      />
+      <aside
+        aria-hidden={!drawerOpen}
+        className={`fixed inset-y-0 left-0 z-[65] flex w-full max-w-[440px] flex-col bg-white shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+          drawerOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="flex items-center justify-between border-b border-dashed border-third/25 px-5 py-4 md:px-6">
+          <h2 className="font-boldonse text-[13px] font-bold uppercase tracking-wide text-third">
+            {drawerType === "features" ? "Fitur Produk" : "Spesifikasi"}
+          </h2>
+          <button
+            onClick={() => setDrawer(null)}
+            aria-label="Tutup"
+            className="flex h-9 w-9 items-center justify-center rounded-sm text-third ring-1 ring-third/15 transition-colors hover:bg-third hover:text-white"
+          >
+            <X size={16} />
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-5 py-5 md:px-6">
+          {drawerType === "features" && (
+            <ul className="flex list-none flex-col">
+              {product.fitur && product.fitur.length > 0 ? (
+                product.fitur.map((f: string, i: number) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-3 border-b border-dashed border-third/20 py-3 text-[13px] leading-relaxed text-third/80 last:border-b-0"
+                  >
+                    <span className="mt-[7px] h-1.5 w-1.5 flex-shrink-0 bg-second" />
+                    {f}
+                  </li>
+                ))
+              ) : (
+                <p className="text-sm italic text-third/40">Tidak ada informasi fitur.</p>
+              )}
+            </ul>
+          )}
+
+          {drawerType === "specifications" && (
+            <div className="flex flex-col gap-7">
+              <div>
+                <p className="mb-2 text-[11px] font-bold uppercase tracking-wider text-third/45">
+                  Informasi Produk
+                </p>
+                <div className="flex flex-col">
+                  {metaItems.map((m) => (
+                    <div
+                      key={m.label}
+                      className="flex items-center justify-between gap-4 border-b border-dashed border-third/20 py-2.5 last:border-b-0"
+                    >
+                      <span className="text-[12px] text-third/55">{m.label}</span>
+                      <span className="text-right text-[13px] font-semibold text-third">
+                        {m.value || "-"}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <p className="mb-2 text-[11px] font-bold uppercase tracking-wider text-third/45">
+                  Spesifikasi
+                </p>
+                {product.spesifikasi && product.spesifikasi.length > 0 ? (
+                  <ul className="flex list-none flex-col">
+                    {product.spesifikasi.map((s: string, i: number) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-3 border-b border-dashed border-third/20 py-2.5 text-[13px] leading-relaxed text-third/80 last:border-b-0"
+                      >
+                        <span className="mt-[7px] h-1.5 w-1.5 flex-shrink-0 bg-second" />
+                        {s}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm italic text-third/40">Tidak ada informasi spesifikasi.</p>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </aside>
+
       <div className="min-h-screen bg-bg-site font-sans">
         <div className="mx-auto w-full max-w-[1400px] px-4 pb-16 sm:px-8 md:px-14 md:pb-24">
-          <div
-            className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-1 pt-5 text-[11px] text-third/50 md:pt-8 md:text-[13px]"
+          <nav
+            className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-1 pt-5 text-[11px] text-third/50 md:pt-8 md:text-[12px]"
             style={{ scrollbarWidth: "none" }}
           >
             <Link href="/" className="flex-shrink-0 transition-colors hover:text-third">
               Beranda
             </Link>
-            <span>/</span>
+            <ChevronRight className="h-3 w-3 flex-shrink-0" />
             <Link
               href={`/kategori/${product.kategoriId}`}
               className="flex-shrink-0 transition-colors hover:text-third"
             >
               {product.kategoriId}
             </Link>
-            <span>/</span>
+            <ChevronRight className="h-3 w-3 flex-shrink-0" />
             <Link
               href={`/brand/${product.brandId}`}
               className="flex-shrink-0 transition-colors hover:text-third"
             >
               {product.brandId}
             </Link>
-            <span>/</span>
-            <span className="truncate text-third">{product.name.toUpperCase()}</span>
-          </div>
+            <ChevronRight className="h-3 w-3 flex-shrink-0" />
+            <span className="truncate font-semibold text-third">{product.name}</span>
+          </nav>
 
-          <div className="mt-4 grid items-start gap-6 md:mt-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-10">
+          <div className="mt-5 grid items-start gap-8 md:mt-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-14">
             <div className="flex flex-col gap-3 lg:sticky lg:top-24">
-              <div
-                className="relative cursor-zoom-in overflow-hidden rounded-md bg-white shadow-sm ring-1 ring-third/10"
-                onClick={() => {
-                  if (showingVideo) {
-                    if (!videoPlaying) setVideoPlaying(true);
-                  } else {
-                    setFsOpen(true);
-                  }
-                }}
-              >
-                {!showingVideo && discount && (
-                  <span className="absolute right-3 top-3 z-10 rounded-sm border border-amber-600 bg-amber-100 px-2 py-[3px] text-[13px] font-black leading-none tracking-tight text-third shadow-sm md:text-[16px]">
-                    -{discount}%
-                  </span>
-                )}
-
+              <div className="flex gap-3">
                 <div
-                  ref={imgWrapRef}
-                  className="aspect-square w-full"
+                  className="relative min-w-0 flex-1 cursor-zoom-in overflow-hidden rounded-sm bg-white ring-1 ring-third/5"
+                  onClick={() => {
+                    if (isVideo) {
+                      if (!videoPlaying) setVideoPlaying(true);
+                    } else {
+                      setFsOpen(true);
+                    }
+                  }}
                 >
-                  {showingVideo && videoId ? (
-                    videoPlaying ? (
-                      <iframe
-                        src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
-                        className="h-full w-full rounded-sm"
-                        allow="autoplay; encrypted-media; clipboard-write; gyroscope; picture-in-picture; web-share"
-                        allowFullScreen
-                        onClick={(e) => e.stopPropagation()}
-                      />
-                    ) : (
-                      <div className="group relative h-full w-full overflow-hidden rounded-sm">
-                        <img
-                          src={getYoutubeThumbnail(videoId)}
-                          alt="Video produk"
-                          className="h-full w-full object-cover opacity-70 transition-opacity duration-200 group-hover:opacity-90"
+                  <div ref={imgWrapRef} className="aspect-square w-full p-4 md:p-8">
+                    {isVideo ? (
+                      videoPlaying ? (
+                        <iframe
+                          src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+                          className="h-full w-full rounded-sm"
+                          allow="autoplay; encrypted-media; clipboard-write; gyroscope; picture-in-picture; web-share"
+                          allowFullScreen
+                          onClick={(e) => e.stopPropagation()}
                         />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="flex h-14 w-14 items-center justify-center rounded-sm bg-third/85 shadow-xl transition-colors duration-200 group-hover:bg-third md:h-16 md:w-16">
-                            <Play className="ml-1 h-6 w-6 text-second md:h-7 md:w-7" fill="#f9ad52" />
+                      ) : (
+                        <div className="group relative h-full w-full overflow-hidden rounded-sm">
+                          <img
+                            src={getYoutubeThumbnail(videoId as string)}
+                            alt="Video produk"
+                            className="h-full w-full object-cover opacity-70 transition-opacity duration-200 group-hover:opacity-90"
+                          />
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="flex h-14 w-14 items-center justify-center rounded-sm bg-third/85 shadow-xl transition-colors duration-200 group-hover:bg-third md:h-16 md:w-16">
+                              <Play className="ml-1 h-6 w-6 text-second md:h-7 md:w-7" fill="#f9ad52" />
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )
-                  ) : (
-                    <ZoomImage
-                      src={currentSrc}
-                      alt={product.name}
-                      productRef={mainImgRef}
-                    />
-                  )}
+                      )
+                    ) : (
+                      <ZoomImage
+                        src={currentSrc}
+                        width="400"
+                        height="400"
+                        alt={product.name}
+                        productRef={mainImgRef}
+                      />
+                    )}
+                  </div>
+
+                  <button
+                    onClick={stop(handleShare)}
+                    aria-label="Bagikan produk"
+                    className={`${sideBtn} absolute right-2 top-2 h-9 w-9 md:hidden`}
+                  >
+                    <Share2 size={15} />
+                  </button>
+                  <button
+                    onClick={stop(() => stepImg(-1))}
+                    aria-label="Gambar sebelumnya"
+                    className={`${sideBtn} absolute left-2 top-1/2 h-9 w-9 -translate-y-1/2 md:hidden`}
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+                  <button
+                    onClick={stop(() => stepImg(1))}
+                    aria-label="Gambar selanjutnya"
+                    className={`${sideBtn} absolute right-2 top-1/2 h-9 w-9 -translate-y-1/2 md:hidden`}
+                  >
+                    <ChevronRight size={16} />
+                  </button>
+                </div>
+
+                <div className="hidden flex-col justify-between md:flex">
+                  <div className="flex flex-col gap-3">
+                    <button onClick={handleShare} aria-label="Bagikan produk" className={sideBtn}>
+                      <Share2 size={16} />
+                    </button>
+                    <button
+                      onClick={() => setFsOpen(true)}
+                      aria-label="Perbesar gambar"
+                      className={sideBtn}
+                    >
+                      <Maximize2 size={16} />
+                    </button>
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    <button
+                      onClick={() => stepImg(-1)}
+                      aria-label="Gambar sebelumnya"
+                      className={sideBtn}
+                    >
+                      <ChevronLeft size={18} />
+                    </button>
+                    <button
+                      onClick={() => stepImg(1)}
+                      aria-label="Gambar selanjutnya"
+                      className={sideBtn}
+                    >
+                      <ChevronRight size={18} />
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -523,17 +705,17 @@ export default function ProductDetail({ product }: { product?: any }) {
                     key={i}
                     onClick={() => switchImg(i)}
                     className={`${thumbBase} ${
-                      !showingVideo && !activeImgSrc && i === activeImg ? thumbActive : thumbIdle
+                      !isVideo && !activeImgSrc && i === activeImg ? thumbActive : thumbIdle
                     }`}
                   >
                     <Image
                       width={200}
                       height={200}
                       loading="lazy"
-                      sizes="100px"
+                      sizes="80px"
                       src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${src}`}
                       alt={`${src}`}
-                      className="h-full w-full object-contain p-1.5 md:p-2"
+                      className="h-full w-full object-contain p-1.5"
                     />
                   </button>
                 ))}
@@ -541,7 +723,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                 {videoId && (
                   <button
                     onClick={openVideo}
-                    className={`${thumbBase} relative ${showingVideo ? thumbActive : thumbIdle}`}
+                    className={`${thumbBase} relative ${isVideo ? thumbActive : thumbIdle}`}
                   >
                     <img
                       src={getYoutubeThumbnail(videoId)}
@@ -549,8 +731,8 @@ export default function ProductDetail({ product }: { product?: any }) {
                       className="h-full w-full object-cover"
                     />
                     <div className="absolute inset-0 flex items-center justify-center bg-black/25">
-                      <div className="flex h-6 w-6 items-center justify-center rounded-sm bg-third/85 md:h-7 md:w-7">
-                        <Play className="ml-0.5 h-3 w-3 text-second md:h-3.5 md:w-3.5" fill="#f9ad52" />
+                      <div className="flex h-6 w-6 items-center justify-center rounded-sm bg-third/85">
+                        <Play className="ml-0.5 h-3 w-3 text-second" fill="#f9ad52" />
                       </div>
                     </div>
                   </button>
@@ -560,7 +742,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                   .flatMap((v) => v.options)
                   .filter((o) => o.image)
                   .map((option) => {
-                    const isActiveVariantImg = !showingVideo && activeImgSrc === option.image;
+                    const isActiveVariantImg = !isVideo && activeImgSrc === option.image;
                     return (
                       <button
                         key={`opt-${option.id}`}
@@ -577,10 +759,10 @@ export default function ProductDetail({ product }: { product?: any }) {
                           width={200}
                           height={200}
                           loading="lazy"
-                          sizes="100px"
+                          sizes="80px"
                           src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${option.image}`}
                           alt={option.name}
-                          className="h-full w-full object-contain p-1.5 md:p-2"
+                          className="h-full w-full object-contain p-1.5"
                         />
                       </button>
                     );
@@ -588,163 +770,168 @@ export default function ProductDetail({ product }: { product?: any }) {
               </div>
             </div>
 
-            <div className="flex flex-col gap-5 rounded-md bg-white p-5 shadow-sm ring-1 ring-third/10 md:gap-6 md:p-7">
+            <div className="flex flex-col gap-5 lg:pt-1">
               <div>
-                <div className="mb-3 flex flex-wrap items-center gap-2">
-                  <span className="rounded-sm bg-second/15 px-2.5 py-1 text-[10px] font-bold uppercase leading-none tracking-wider text-third md:text-[11px]">
-                    {product.kategoriId}
-                  </span>
-                  <span className="rounded-sm bg-third/5 px-2.5 py-1 text-[10px] font-bold uppercase leading-none tracking-wider text-third/70 md:text-[11px]">
-                    {product.brandId}
-                  </span>
-                </div>
-                <h1 className="font-poppins text-[clamp(16px,2vw,26px)] font-extrabold uppercase leading-snug text-third">
+                <Link
+                  href={`/brand/${product.brandId}`}
+                  className="text-[12px] font-medium text-third/55 transition-colors hover:text-third md:text-[13px]"
+                >
+                  {product.brandId}
+                </Link>
+                <h1 className="mt-1.5 font-boldonse text-[clamp(16px,1.9vw,26px)] font-bold uppercase leading-[1.35] text-third">
                   {product.name}
                 </h1>
-                <div className="mt-3 flex items-center gap-1.5 text-[12px] text-third/45">
-                  <Eye className="h-3.5 w-3.5" />
-                  <span>Dilihat {product.views_count ?? 0} kali</span>
-                </div>
               </div>
 
-              <div className="h-px bg-third/10" />
-
-              <div className="flex flex-col gap-3">
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  {waUrl && (
-                    <Link
-                      href={waUrl}
-                      suppressHydrationWarning
-                      className="group flex flex-col gap-2 rounded-sm bg-bg-site px-4 py-3 ring-1 ring-third/10 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:ring-third/25"
-                    >
-                      <p className="text-[11px] font-semibold uppercase leading-none tracking-wider text-third/50">
-                        Harga Offline
-                      </p>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <p className="text-[20px] font-black leading-none text-third md:text-[22px]">
-                          {formattedPrice || `Rp ${product.offlinePrice?.toLocaleString()}`}
-                        </p>
-                        {discount && (
-                          <span className="rounded-sm border border-amber-600 bg-amber-100 px-1.5 py-[2px] text-[11px] font-bold leading-none text-third">
-                            -{discount}%
-                          </span>
-                        )}
-                      </div>
-                      {pricelistNum && (
-                        <span
-                          className={`text-[12px] font-semibold leading-none text-red-500 ${
-                            discount ? "line-through" : ""
-                          }`}
-                        >
-                          Pricelist: {formatPrice(pricelistNum)}
-                        </span>
-                      )}
-                    </Link>
-                  )}
-                  {waUrl && (
-                    <Link
-                      href={waUrl}
-                      suppressHydrationWarning
-                      className="group flex flex-col gap-2 rounded-sm bg-second/10 px-4 py-3 ring-1 ring-second/40 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:ring-second"
-                    >
-                      <p className="text-[11px] font-semibold uppercase leading-none tracking-wider text-third/50">
-                        Special Price
-                      </p>
-                      <p className="text-[20px] font-black leading-none text-red-500 md:text-[22px]">
-                        Rp.XXXXXXX
-                      </p>
-                      <span className="text-[12px] font-semibold leading-none text-third/60">
-                        Tanya via WhatsApp
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    {strikePrice && (
+                      <span className="text-[14px] font-semibold text-red-500 line-through md:text-[15px]">
+                        {formatPrice(strikePrice)}
                       </span>
-                    </Link>
+                    )}
+                    {mainPriceText && (
+                      <span className="text-[26px] font-black leading-none text-third md:text-[30px]">
+                        {mainPriceText}
+                      </span>
+                    )}
+                    {discount && (
+                      <span className="self-center rounded-sm border border-amber-600 bg-amber-100 px-1.5 py-[3px] text-[11px] font-bold leading-none text-third">
+                        -{discount}%
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-1.5 text-[13px] text-third/55">
+                    <Eye className="h-4 w-4" />
+                    <span className="font-semibold text-third">{product.views_count ?? 0}</span>
+                    <span>dilihat</span>
+                  </div>
+                </div>
+
+                {waUrl && (
+                  <Link
+                    href={waUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    suppressHydrationWarning
+                    className="text-[12px] text-third/60"
+                  >
+                    Special Price: <span className="font-bold text-red-500">Rp.XXXXXXX</span>{" "}
+                    <span className="underline underline-offset-2 transition-colors hover:text-third">
+                      Tanya via WhatsApp
+                    </span>
+                  </Link>
+                )}
+              </div>
+
+              <div className={dashed} />
+
+              {product.description && (
+                <div>
+                  <h2 className="text-[15px] font-bold text-third">Deskripsi:</h2>
+                  <p
+                    className={`mt-2 whitespace-pre-line text-[13px] leading-relaxed text-third/70 ${
+                      descOpen ? "" : "line-clamp-4"
+                    }`}
+                  >
+                    {product.description}
+                  </p>
+                  {longDesc && (
+                    <button
+                      onClick={() => setDescOpen((o) => !o)}
+                      className="mt-1.5 text-[13px] font-bold text-third underline-offset-2 hover:underline"
+                    >
+                      {descOpen ? "Tutup" : "Lihat Selengkapnya"}
+                    </button>
                   )}
                 </div>
+              )}
+
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <button
+                  onClick={() => openDrawer("features")}
+                  className="flex items-center justify-between gap-3 rounded-sm border border-third/20 bg-white px-4 py-3 text-[13px] font-bold text-third transition-colors duration-200 hover:border-third hover:bg-third hover:text-white"
+                >
+                  <span className="flex items-center gap-2.5">
+                    <ListChecks size={17} />
+                    Fitur Produk
+                  </span>
+                  <ChevronRight size={16} />
+                </button>
+                <button
+                  onClick={() => openDrawer("specifications")}
+                  className="flex items-center justify-between gap-3 rounded-sm border border-third/20 bg-white px-4 py-3 text-[13px] font-bold text-third transition-colors duration-200 hover:border-third hover:bg-third hover:text-white"
+                >
+                  <span className="flex items-center gap-2.5">
+                    <FileText size={17} />
+                    Spesifikasi
+                  </span>
+                  <ChevronRight size={16} />
+                </button>
               </div>
 
               {variants.length > 0 && (
-                <>
-                  <div className="h-px bg-third/10" />
-                  <div className="flex flex-col gap-4 md:gap-5">
-                    {variants.map((variant) => (
-                      <div key={variant.id}>
-                        <div className="mb-2.5 flex items-center gap-2 md:mb-3">
-                          <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-third/60 md:text-[13px]">
-                            Pilih {variant.type} :
-                          </p>
-                          {selectedOptions[variant.id] && (
-                            <span className="text-[12px] font-bold text-third md:text-[13px]">
-                              {selectedOptions[variant.id].name}
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex w-full flex-wrap gap-1">
-                          {variant.options.map((option) => {
-                            const isSelected = selectedOptions[variant.id]?.id === option.id;
-                            return (
-                              <button
-                                key={option.id}
-                                type="button"
-                                onClick={() => toggleOption(variant.id, option)}
-                                className={`relative flex items-center gap-2 border-2 transition-all duration-200 rounded-md ${
-                                  isSelected
-                                    ? "border-second bg-second/10 shadow-[0_2px_12px_rgba(249,173,82,0.25)]"
-                                    : "border-third/15 hover:border-third/40"
-                                }`}
-                              >
-                                  <span
-                                    className={`text-[14px] font-bold leading-tight transition-colors md:text-[15px] px-3 py-1 ${
-                                      isSelected ? "text-third" : "text-third/65"
-                                    }`}
-                                  >
-                                    {option.name}
-                                  </span>
-                                {isSelected && (
-                                  <div className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-sm bg-second shadow-sm">
-                                    <svg className="h-3 w-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                      <polyline points="20 6 9 17 4 12" />
-                                    </svg>
-                                  </div>
-                                )}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    ))}
-                    {!allVariantsSelected && (
-                      <p className="flex items-center gap-1.5 rounded-sm bg-second/10 px-3 py-2 text-[11px] text-third/60">
-                        <svg className="h-3.5 w-3.5 flex-shrink-0 text-second" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <circle cx="12" cy="12" r="10" />
-                          <line x1="12" y1="8" x2="12" y2="12" />
-                          <line x1="12" y1="16" x2="12.01" y2="16" />
-                        </svg>
-                        Pilih{" "}
-                        {variants
-                          .filter((v) => !selectedOptions[v.id])
-                          .map((v) => v.type)
-                          .join(", ")}{" "}
-                        terlebih dahulu
+                <div className="flex flex-col gap-5">
+                  {variants.map((variant) => (
+                    <div key={variant.id}>
+                      <p className="mb-3 text-[14px] text-third/55">
+                        {variant.type}:{" "}
+                        {selectedOptions[variant.id] && (
+                          <span className="font-bold text-third">
+                            {selectedOptions[variant.id].name}
+                          </span>
+                        )}
                       </p>
-                    )}
-                  </div>
-                </>
+                      <div className="flex flex-wrap gap-2.5">
+                        {variant.options.map((option) => {
+                          const isSelected = selectedOptions[variant.id]?.id === option.id;
+                          return (
+                            <button
+                              key={option.id}
+                              type="button"
+                              onClick={() => toggleOption(variant.id, option)}
+                              className={`min-w-[56px] rounded-sm border px-4 py-2.5 text-[13px] font-bold leading-none transition-colors duration-200 ${
+                                isSelected
+                                  ? "border-third bg-third/10 text-third"
+                                  : "border-third/15 bg-white text-third/70 hover:border-third/40"
+                              }`}
+                            >
+                              {option.name}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                  {!allVariantsSelected && (
+                    <p className="text-[12px] italic text-third/50">
+                      Pilih{" "}
+                      {variants
+                        .filter((v) => !selectedOptions[v.id])
+                        .map((v) => v.type)
+                        .join(", ")}{" "}
+                      terlebih dahulu
+                    </p>
+                  )}
+                </div>
               )}
 
-              <div className="h-px bg-third/10" />
-
               <div className="flex flex-col gap-3">
-                <div className="flex items-stretch gap-2.5">
-                  <div className="flex items-center overflow-hidden rounded-sm ring-1 ring-third/20">
+                <div className="flex items-stretch gap-3">
+                  <div className="flex items-center overflow-hidden rounded-sm border border-third/20 bg-white">
                     <button
                       onClick={() => setQty((q) => Math.max(1, q - 1))}
-                      className="flex h-11 w-9 items-center justify-center text-third transition-colors hover:bg-third/5"
+                      aria-label="Kurangi jumlah"
+                      className="flex h-12 w-9 items-center justify-center text-third transition-colors hover:bg-third/5"
                     >
                       <ChevronDown size={16} strokeWidth={3} />
                     </button>
                     <span className="w-8 text-center text-[15px] font-bold text-third">{qty}</span>
                     <button
                       onClick={() => setQty((q) => q + 1)}
-                      className="flex h-11 w-9 items-center justify-center text-third transition-colors hover:bg-third/5"
+                      aria-label="Tambah jumlah"
+                      className="flex h-12 w-9 items-center justify-center text-third transition-colors hover:bg-third/5"
                     >
                       <ChevronUp size={16} strokeWidth={3} />
                     </button>
@@ -752,7 +939,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
                   <button
                     disabled={!allVariantsSelected}
-                    className="flex h-11 flex-1 items-center justify-center gap-2 rounded-sm bg-second px-4 text-[14px] font-bold uppercase tracking-wider text-third transition-all duration-200 hover:bg-third hover:text-white active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-third/40 disabled:hover:bg-slate-200 disabled:hover:text-third/40 md:text-[15px]"
+                    className="flex h-12 flex-1 items-center justify-center gap-2 rounded-sm bg-third px-4 text-[14px] font-bold text-white transition-all duration-200 hover:bg-second hover:text-third active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-third/40 disabled:hover:bg-slate-200 disabled:hover:text-third/40"
                     onClick={async () => {
                       try {
                         await createWishlist(product.id, qty);
@@ -766,170 +953,84 @@ export default function ProductDetail({ product }: { product?: any }) {
                       }
                     }}
                   >
-                    <ShoppingCart strokeWidth={2.5} className="h-5 w-5" />
-                    <span>{product.stock < 0 ? "Pre-Order" : "Keranjang"}</span>
+                    <ShoppingCart strokeWidth={2.5} className="h-[18px] w-[18px]" />
+                    <span>{product.stock < 0 ? "Pre-Order" : "Tambah ke Keranjang"}</span>
                   </button>
-
-                  <Link
-                    href={`${product.tautan || "https://www.tokopedia.com/bandarmusikjakarta"}`}
-                    target="_blank"
-                    suppressHydrationWarning
-                    className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-sm bg-white ring-1 ring-third/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
-                  >
-                    <Image
-                      src={"/tokped.webp"}
-                      alt="Tokopedia - Bandar Musik Jakarta"
-                      width={28}
-                      height={28}
-                    />
-                  </Link>
                 </div>
 
-                {waUrl && (
-                  <Link
-                    href={waUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex w-full items-center justify-center gap-x-3 rounded-sm bg-third px-5 py-3 text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-third/20"
-                  >
-                    <FaWhatsapp size={26} className="flex-shrink-0 text-second" />
-                    <div>
-                      <p className="text-[10px] uppercase leading-none tracking-wider text-white/60">
-                        Pembelian Melalui
-                      </p>
-                      <p className="mt-1 text-[17px] font-extrabold leading-none tracking-tight md:text-[19px]">
-                        Whatsapp
-                      </p>
-                    </div>
-                  </Link>
-                )}
+                <div className="flex items-stretch gap-3">
+  {waUrl && (
+    <Link
+      href={waUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex h-12 flex-1 items-center justify-center gap-2.5 rounded-sm border border-third bg-transparent px-4 text-[14px] font-bold text-third transition-colors duration-200 hover:bg-third hover:text-white"
+    >
+      <FaWhatsapp size={20} className="flex-shrink-0" />
+      Tanya Stok via WhatsApp
+    </Link>
+  )}
+  <Link
+    href={`${product.tautan || "https://www.tokopedia.com/bandarmusikjakarta"}`}
+    target="_blank"
+    suppressHydrationWarning
+    aria-label="Beli di Tokopedia"
+    className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-sm border border-third/20 bg-white transition-colors duration-200 hover:border-third"
+  >
+    <Image
+      src={"/tokped.webp"}
+      alt="Tokopedia - Bandar Musik Jakarta"
+      width={26}
+      height={26}
+    />
+  </Link>
+</div>
 
-                <div className="flex items-start gap-x-2 rounded-sm bg-second/10 px-3 py-2.5 text-third">
-                  <Megaphone size={15} className="mt-0.5 flex-shrink-0 text-second" />
-                  <p className="text-[11px] italic leading-snug md:text-[12px]">
-                    Harap Tanya Ketersediaan Barang Melalui Whatsapp Sebelum Melakukan Pemesanan.
-                  </p>
-                </div>
+<div
+  role="alert"
+  className="flex items-start gap-2.5 rounded-sm border border-amber-500/50 bg-amber-50 px-3.5 py-3 text-amber-900"
+>
+  <TriangleAlert size={16} className="mt-0.5 flex-shrink-0 text-amber-600" />
+  <p className="text-[12px] font-semibold leading-snug md:text-[13px]">
+    Harap Tanya Ketersediaan Barang Melalui Whatsapp Sebelum Melakukan Pemesanan.
+  </p>
+</div>
               </div>
 
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-                {trustItems.map(({ Icon, title, sub }) => (
-                  <div
-                    key={title}
-                    className="flex items-start gap-2.5 rounded-sm bg-bg-site px-3 py-3 ring-1 ring-third/5"
-                  >
-                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-sm bg-white text-third ring-1 ring-third/10">
-                      <Icon size={16} strokeWidth={2} />
-                    </div>
-                    <div>
-                      <p className="text-[12px] font-bold leading-tight text-third">{title}</p>
-                      <p className="mt-0.5 text-[11px] leading-snug text-third/60">{sub}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-8 grid items-start gap-6 md:mt-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:gap-10">
-            <div className="overflow-hidden rounded-md bg-white shadow-sm ring-1 ring-third/10">
-              <div
-                className="flex overflow-x-auto border-b border-third/10"
-                style={{ scrollbarWidth: "none" }}
-              >
-                {(["description", "features", "specifications"] as Tab[]).map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => setTab(t)}
-                    className={`relative flex-shrink-0 whitespace-nowrap px-5 py-3.5 text-[12px] font-bold uppercase tracking-wider transition-colors duration-150 md:px-6 md:text-[13px] ${
-                      tab === t ? "text-third" : "text-third/40 hover:text-third/70"
-                    }`}
-                  >
-                    {t === "description" ? "Deskripsi" : t === "features" ? "Fitur" : "Spesifikasi"}
-                    <span
-                      className={`absolute bottom-0 left-0 h-[2px] w-full bg-second transition-transform duration-300 ${
-                        tab === t ? "scale-x-100" : "scale-x-0"
+              <div className={`${dashed} pt-5`}>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-0">
+                  {trustItems.map(({ Icon, title, sub }, i) => (
+                    <div
+                      key={title}
+                      className={`flex items-start gap-2.5 sm:px-4 ${
+                        i === 0 ? "sm:pl-0" : "sm:border-l sm:border-dashed sm:border-third/25"
                       }`}
-                    />
-                  </button>
-                ))}
-              </div>
-
-              <div
-                ref={tabContentRef}
-                className="p-5 text-[13px] leading-relaxed text-third/75 will-change-transform md:p-7 md:text-[14px]"
-              >
-                {tab === "description" && (
-                  <p className="whitespace-pre-line">{product.description}</p>
-                )}
-
-                {tab === "features" && (
-                  <ul className="flex list-none flex-col gap-2.5">
-                    {product.fitur && product.fitur.length > 0 ? (
-                      product.fitur.map((f: string, i: number) => (
-                        <li key={i} className="flex items-start gap-3">
-                          <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-sm bg-second" />
-                          {f}
-                        </li>
-                      ))
-                    ) : (
-                      <p className="text-sm italic text-third/40">Tidak ada informasi fitur.</p>
-                    )}
-                  </ul>
-                )}
-
-                {tab === "specifications" && (
-                  <div className="grid grid-cols-1 gap-x-10 sm:grid-cols-2">
-                    {product.spesifikasi && product.spesifikasi.length > 0 ? (
-                      product.spesifikasi.map((s: string, i: number) => (
-                        <div
-                          key={i}
-                          className="flex items-start gap-2.5 border-b border-third/10 py-2.5"
-                        >
-                          <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-sm bg-second" />
-                          <span className="text-[12px] text-third md:text-[13px]">{s}</span>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="col-span-2 text-sm italic text-third/40">
-                        Tidak ada informasi spesifikasi.
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="overflow-hidden rounded-md bg-white shadow-sm ring-1 ring-third/10 lg:sticky lg:top-24">
-              <div className="border-b border-third/10 px-5 py-3.5 md:px-6">
-                <p className="text-[12px] font-bold uppercase tracking-wider text-third md:text-[13px]">
-                  Informasi Produk
-                </p>
-              </div>
-              <div className="flex flex-col">
-                {metaItems.map((m, i) => (
-                  <div
-                    key={m.label}
-                    className={`flex items-center justify-between gap-4 px-5 py-3 md:px-6 ${
-                      i !== metaItems.length - 1 ? "border-b border-third/10" : ""
-                    }`}
-                  >
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-third/45">
-                      {m.label}
-                    </span>
-                    <span className="text-right text-[13px] font-semibold text-third md:text-[14px]">
-                      {m.value || "-"}
-                    </span>
-                  </div>
-                ))}
+                    >
+                      <Icon size={22} strokeWidth={1.75} className="mt-0.5 flex-shrink-0 text-third" />
+                      <div>
+                        <p className="text-[12px] font-bold leading-tight text-third md:text-[13px]">
+                          {title}
+                        </p>
+                        <p className="mt-0.5 text-[11px] leading-snug text-third/60 md:text-[12px]">
+                          {sub}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="mt-12 md:mt-16">
+          <div className={`mt-12 pt-10 md:mt-16 md:pt-14 ${dashed}`}>
             <ProductFaq />
-            {related && related.length > 0 && <RelatedProducts related={related} />}
           </div>
+
+          {related && related.length > 0 && (
+            <div className={`mt-12 pt-10 md:mt-16 md:pt-14 ${dashed}`}>
+              <RelatedProducts related={related} />
+            </div>
+          )}
         </div>
       </div>
     </>
