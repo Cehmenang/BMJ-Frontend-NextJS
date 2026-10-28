@@ -335,8 +335,8 @@ export default function ProductDetail({ product }: { product?: any }) {
       gsap.killTweensOf(target);
       gsap.fromTo(
         target,
-        { scale: 0.7, opacity: 0.5 },
-        { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(1.6)" }
+        { opacity: 0.7 },
+        { opacity: 1, duration: 0.35, ease: "back.out(1.6)" }
       );
       callback();
     });
@@ -479,7 +479,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
                 <div
                   ref={imgWrapRef}
-                  className="aspect-square w-full bg-black"
+                  className="aspect-square w-full"
                 >
                   {showingVideo && videoId ? (
                     videoPlaying ? (
@@ -686,16 +686,11 @@ export default function ProductDetail({ product }: { product?: any }) {
                                 type="button"
                                 onClick={() => toggleOption(variant.id, option)}
                                 className={`relative flex items-center gap-2 border-2 transition-all duration-200 ${
-                                  variant.type === "Warna"
-                                    ? "h-9 w-9 rounded-full md:h-10 md:w-10"
-                                    : "rounded-sm px-3 py-1.5 md:py-2"
-                                } ${
                                   isSelected
                                     ? "border-second bg-second/10 shadow-[0_2px_12px_rgba(249,173,82,0.25)]"
                                     : "border-third/15 hover:border-third/40"
-                                } ${bgVariantColor[option.name.toLowerCase().split(" ").join("")] ?? ""}`}
+                                }`}
                               >
-                                {variant.type !== "Warna" && (
                                   <span
                                     className={`text-[14px] font-bold leading-tight transition-colors md:text-[15px] ${
                                       isSelected ? "text-third" : "text-third/65"
@@ -703,7 +698,6 @@ export default function ProductDetail({ product }: { product?: any }) {
                                   >
                                     {option.name}
                                   </span>
-                                )}
                                 {isSelected && (
                                   <div className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-sm bg-second shadow-sm">
                                     <svg className="h-3 w-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
