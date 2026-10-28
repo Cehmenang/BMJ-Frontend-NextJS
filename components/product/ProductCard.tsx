@@ -54,314 +54,249 @@ export default function ProductCard({
       ? Math.round(((pricelist - offlinePrice) / pricelist) * 100)
       : null;
 
-  // ── Promo price handling ──────────────────────────────────
   const promoPrice = product.promo ? parseInt(product.promo) : null;
-  // harga acuan yang dicoret: pakai offlinePrice kalau ada, kalau ga pakai pricelist
   const promoBasePrice = offlinePrice ?? pricelist;
   const promoDiscount =
     promoPrice && promoBasePrice && promoBasePrice > promoPrice
       ? Math.round(((promoBasePrice - promoPrice) / promoBasePrice) * 100)
       : null;
 
-  // ── LIST VIEW ──────────────────────────────────────────────
+  const stockLabel = product.stock == 0 ? "On-Stock" : "Out-Stock";
+  const stockColor = product.stock == 0 ? "text-red-500" : "text-third/60";
+
+  const copyLink = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigator.clipboard.writeText(
+      `${window.location.origin}/produk/${product.url}`
+    );
+    showToast("Berhasil disalin!");
+  };
+
+  const addToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    showToast("Masuk dikeranjang!");
+  };
+
+  const imageSrc = (index: number) =>
+    `${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[index]}`;
+
+  const toastNode = (
+    <div
+      className={`absolute top-3 left-1/2 -translate-x-1/2 z-30 transition-all duration-300 whitespace-nowrap ${
+        toast.show ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
+      }`}
+    >
+      <div className="bg-third/90 text-white text-[11px] font-medium px-3 py-1.5 rounded-full shadow-lg flex items-center gap-2 backdrop-blur-sm">
+        <InfoIcon className="w-3.5 h-3.5 text-second flex-shrink-0" />
+        {toast.msg}
+      </div>
+    </div>
+  );
+
+  const priceNode = (align: "center" | "left") => (
+    <div
+      className={`flex flex-col gap-1.5 ${
+        align === "center" ? "items-center" : "items-start"
+      }`}
+    >
+      {promoPrice ? (
+        <>
+          <div className="flex items-center gap-1.5 flex-wrap justify-center">
+            <span className="font-display text-base font-bold text-second leading-none">
+              {formatPrice(promoPrice)}
+            </span>
+            {promoDiscount && (
+              <span className="text-[10px] bg-second/15 text-second px-2 py-[3px] rounded-full font-bold leading-none">
+                -{promoDiscount}%
+              </span>
+            )}
+          </div>
+          {promoBasePrice && (
+            <span className="text-[11px] text-third/40 line-through leading-none">
+              {formatPrice(promoBasePrice)}
+            </span>
+          )}
+          {product.namaPromo && (
+            <span className="text-[10px] text-second font-semibold leading-none">
+              {product.namaPromo}
+            </span>
+          )}
+        </>
+      ) : (
+        <>
+          {offlinePrice && (
+            <span className="font-display text-base font-bold text-third leading-none">
+              {formatPrice(offlinePrice)}
+            </span>
+          )}
+          {pricelist && (
+            <div className="flex items-center gap-1.5 flex-wrap justify-center">
+              {discount && (
+                <span className="text-[10px] bg-second/15 text-second px-2 py-[3px] rounded-full font-bold leading-none">
+                  -{discount}%
+                </span>
+              )}
+              <span className="text-[11px] text-third/40 line-through leading-none">
+                {formatPrice(pricelist)}
+              </span>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+
   if (listView) {
     return (
       <Link
         href={`/produk/${product.url}`}
-        className="group flex gap-4 p-3 rounded-2xl border border-slate-200 hover:border-slate-300 hover:bg-gray-50 transition-all duration-200 relative"
+        className="group relative flex gap-4 p-3 rounded-3xl bg-white ring-1 ring-third/5 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-third/10"
       >
-        {/* Image */}
-        <div className="relative w-28 h-28 md:w-36 md:h-36 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100">
+        <div className="relative w-28 h-28 md:w-36 md:h-36 flex-shrink-0 rounded-2xl overflow-hidden bg-gray-50">
           {isNew && (
-            <img src="/BadgeBaru.webp" alt="Badge Baru" width={50} height={50} className="absolute top-2 left-2 z-20"/>
+            <img src="/BadgeBaru.webp" alt="Badge Baru" width={44} height={44} className="absolute top-2 left-2 z-20" />
           )}
           {product.promo && (
-            <span className="absolute bg-amber-600 text-white z-[15] top-2 right-2 text-[9px] font-bold px-2 py-[2px] rounded-sm shadow-sm">
+            <span className="absolute top-2 right-2 z-20 bg-second text-third text-[9px] font-bold px-2 py-[3px] rounded-full shadow-sm">
               PROMO
             </span>
           )}
           <Image
-            width={200}
-            height={200}
+            fill
+            sizes="144px"
             alt={product.name}
-            src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0]}`}
-            className={`w-full h-full object-cover translate-y-0 opacity-100 ${
-              product.images.length > 1 && "group-hover:opacity-0"
-            } transition duration-500`}
+            src={imageSrc(0)}
+            className={`object-cover transition-opacity duration-500 ${
+              product.images.length > 1 ? "group-hover:opacity-0" : ""
+            }`}
             loading="lazy"
           />
           {product.images.length > 1 && (
             <Image
-              width={200}
-              height={200}
+              fill
+              sizes="144px"
               alt={product.name}
-              src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[1]}`}
-              className="w-full h-full object-cover opacity-0 group-hover:opacity-100 transition duration-500 absolute inset-0"
+              src={imageSrc(1)}
+              className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
               loading="lazy"
             />
           )}
         </div>
 
-        {/* Info */}
         <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
           <div>
-            {/* Category + stock */}
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-[11px] text-third/50 font-medium">
-                {product.kategoriId}
-              </span>
-              <span
-                className={`text-[10px] font-bold ${
-                  product.stock == 0 ? "text-red-500" : "text-gray-400"
-                }`}
-              >
-                {product.stock == 0 ? "On-Stock" : "Out-Stock"}
-              </span>
-            </div>
-
-            {/* Name */}
-            <p className="text-[13px] md:text-[15px] font-extrabold text-third leading-snug line-clamp-2 font-inter">
-              {product.name.toUpperCase()}
+            <h3 className="line-clamp-2 text-left font-display text-base font-bold lg:text-sm xl:text-base text-third">
+              {product.name}
+            </h3>
+            <p className="mt-2 line-clamp-2 text-left text-xs leading-relaxed text-third/60">
+              {product.kategoriId} • <span className={`font-semibold ${stockColor}`}>{stockLabel}</span>
             </p>
           </div>
 
-          {/* Price */}
-          <div className="flex items-end justify-between mt-2 gap-2">
-            <div className="flex flex-col gap-1">
-              {promoPrice ? (
-                <>
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="font-bold text-[15px] md:text-[17px] text-amber-700 leading-none">
-                      {formatPrice(promoPrice)}
-                    </span>
-                    {promoDiscount && (
-                      <span className="text-[10px] bg-amber-100 border border-amber-600 text-third px-1.5 py-[1px] rounded-sm font-bold">
-                        -{promoDiscount}%
-                      </span>
-                    )}
-                  </div>
-                  {promoBasePrice && (
-                    <span className="text-[10px] text-third/40 line-through leading-none">
-                      {formatPrice(promoBasePrice)}
-                    </span>
-                  )}
-                  {product.namaPromo && (
-                    <span className="text-[10px] text-amber-700 font-semibold italic leading-none">
-                      {product.namaPromo}
-                    </span>
-                  )}
-                </>
-              ) : (
-                <>
-                  {offlinePrice && (
-                    <span className="font-bold text-[15px] md:text-[17px] text-red-500 leading-none">
-                      {formatPrice(offlinePrice)}
-                    </span>
-                  )}
-                  {pricelist && (
-                    <div className="flex gap-1.5 items-center flex-wrap">
-                      {discount && (
-                        <span className="text-[11px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">
-                          -{discount}%
-                        </span>
-                      )}
-                      <span className="font-semibold text-[10px] text-third/50 italic tracking-tighter leading-none">
-                        Pricelist: {formatPrice(pricelist)}
-                      </span>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
+          <div className="flex items-end justify-between mt-3 gap-2">
+            {priceNode("left")}
 
-            {/* Action buttons — always visible on list view */}
             <div className="flex gap-2 flex-shrink-0">
               <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigator.clipboard.writeText(
-                    `${window.location.origin}/produk/${product.url}`
-                  );
-                  showToast("Berhasil disalin!");
-                }}
-                className="w-8 h-8 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center text-gray-400 hover:text-third transition-colors duration-150 cursor-pointer"
+                onClick={copyLink}
+                className="w-9 h-9 rounded-full bg-third/5 flex items-center justify-center text-third/60 hover:bg-third/10 hover:text-third transition-colors duration-150 cursor-pointer"
                 title="Salin tautan produk"
               >
-                <Navigation className="w-3.5 h-3.5" />
+                <Navigation className="w-4 h-4" />
               </button>
               <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  showToast("Masuk dikeranjang!");
-                }}
-                className="w-8 h-8 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center text-gray-400 hover:text-second transition-colors duration-150 cursor-pointer"
+                onClick={addToCart}
+                className="w-9 h-9 rounded-full bg-third flex items-center justify-center text-white hover:bg-second hover:text-third transition-colors duration-150 cursor-pointer"
                 title="Tambah ke keranjang"
               >
-                <ShoppingCart className="w-3.5 h-3.5" />
+                <ShoppingCart className="w-4 h-4" />
               </button>
             </div>
           </div>
         </div>
 
-        {/* Toast */}
-        <div
-          className={`absolute top-3 left-1/2 -translate-x-1/2 z-20 transition-all duration-300 whitespace-nowrap ${
-            toast.show ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
-          }`}
-        >
-          <div className="bg-amber-800/60 text-white text-[11px] font-medium px-2 py-1 rounded-full shadow-lg flex items-center gap-2 italic">
-            <InfoIcon className="w-3.5 h-3.5 text-second flex-shrink-0" />
-            {toast.msg}
-          </div>
-        </div>
+        {toastNode}
       </Link>
     );
   }
 
-  // ── GRID VIEW ───────────────────────────────────
   return (
-    <Link href={`/produk/${product.url}`} className="flex flex-shrink-0 w-auto md:w-[200px] group flex-col gap-y-4 relative">
-      {isNew && (
-        <img src="/BadgeBaru.webp" alt="Badge Baru" width={50} height={50} className="absolute top-2 left-2 z-20"/>
-      )}
-      <div className="md:w-[100%] transition group relative overflow-hidden rounded-2xl border-1 border-slate-200 hover:border-slate-300 hover:bg-gray-200 transition">
+    <Link
+      href={`/produk/${product.url}`}
+      className="group relative flex flex-shrink-0 w-auto md:w-[200px] flex-col rounded-3xl bg-white p-3 ring-1 ring-third/5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-third/10"
+    >
+      <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-gray-50">
+        {isNew && (
+          <img src="/BadgeBaru.webp" alt="Badge Baru" width={50} height={50} className="absolute top-2 left-2 z-20" />
+        )}
 
-        {/* Badge promo — pojok kanan atas, kecil, ga nutupin gambar */}
         {product.promo && (
-          <span className="absolute top-[10px] right-[10px] z-[15] bg-amber-600 text-white text-[11px] font-bold px-3 py-[2px] rounded-sm shadow-md">
+          <span className="absolute top-2.5 right-2.5 z-20 bg-second text-third text-[10px] font-bold px-3 py-1 rounded-full shadow-md">
             {product.namaPromo ? product.namaPromo : "Promo"}
           </span>
         )}
 
         <Image
-          width={500}
-          height={500}
+          fill
+          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
           alt={product.name}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          src={`${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0]}`}
-          className={`translate-y-0 opacity-100 ${product.images.length > 1 && "group-hover:translate-y-[280px] group-hover:opacity-0"} transition duration-700`}
-          loading="lazy"
-        />
-        <Image
-          width={500}
-          height={500}
-          alt={product.name}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          src={
-            product.images.length > 1
-              ? `${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[1]}`
-              : `${process.env.NEXT_PUBLIC_SERVER_API}/storage/${product.images[0]}`
-          }
-          loading="lazy"
-          className={`translate-y-[-280px] opacity-0 ${product.images.length > 1 && "group-hover:translate-y-0 group-hover:opacity-100"} transition duration-700 absolute top-0`}
-        />
-
-        {/* Toast popup */}
-        <div
-          className={`absolute top-3 left-1/2 -translate-x-1/2 z-20 transition-all duration-300 whitespace-nowrap ${
-            toast.show ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
+          src={imageSrc(0)}
+          className={`object-cover transition-all duration-700 ${
+            product.images.length > 1 ? "group-hover:opacity-0 group-hover:scale-105" : "group-hover:scale-105"
           }`}
-        >
-          <div className="bg-amber-800/60 text-white text-[11px] font-medium px-2 py-1 rounded-full shadow-lg flex items-center gap-2 italic">
-            <InfoIcon className="w-3.5 h-3.5 text-second flex-shrink-0" />
-            {toast.msg}
-          </div>
-        </div>
+          loading="lazy"
+        />
+        {product.images.length > 1 && (
+          <Image
+            fill
+            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+            alt={product.name}
+            src={imageSrc(1)}
+            className="object-cover opacity-0 scale-105 transition-all duration-700 group-hover:opacity-100 group-hover:scale-100"
+            loading="lazy"
+          />
+        )}
 
-        {/* Action buttons */}
-        <div className="absolute bottom-3 right-3 flex flex-col gap-2 translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out z-10">
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              navigator.clipboard.writeText(
-                `${window.location.origin}/produk/${product.url}`
-              );
-              showToast("Berhasil disalin!");
-            }}
-            className="w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center text-gray-400 hover:text-third transition-colors duration-150 cursor-pointer"
-            title="Salin tautan produk"
-          >
-            <Navigation className="w-4 h-4" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              showToast("Masuk dikeranjang!");
-            }}
-            className="w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center text-gray-400 hover:text-second transition-colors duration-150 cursor-pointer"
-            title="Tambah ke keranjang"
-          >
-            <ShoppingCart className="w-4 h-4" />
-          </button>
-        </div>
+        <button
+          onClick={copyLink}
+          className="absolute bottom-2.5 right-2.5 z-20 flex h-9 w-9 translate-y-2 items-center justify-center rounded-full bg-white/90 text-third/60 opacity-0 shadow-md backdrop-blur-sm transition-all duration-300 hover:text-third group-hover:translate-y-0 group-hover:opacity-100 cursor-pointer"
+          title="Salin tautan produk"
+        >
+          <Navigation className="w-4 h-4" />
+        </button>
+
+        {toastNode}
       </div>
 
-      {/* Info */}
-      <div className="px-0.5">
-        <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[11px] text-third/50 font-medium">
-            {product.kategoriId}
-          </span>
-          <span
-            className={`text-[10px] font-bold ${
-              product.stock == 0 ? "text-red-500" : "text-gray-400"
-            }`}
-          >
-            {product.stock == 0 ? "On-Stock" : "Out-Stock"}
-          </span>
-        </div>
+      <div className="flex flex-1 flex-col px-1 pt-4">
+        <h3 className="line-clamp-2 min-h-[2.4rem] text-center font-display text-base font-bold leading-snug lg:text-sm xl:min-h-[2.75rem] xl:text-base text-third">
+          {product.name}
+        </h3>
 
-        <p className="text-[14px] font-extrabold text-third leading-snug mb-3 line-clamp-2 min-h-[40px] font-inter">
-          {product.name.toUpperCase()}
+        <p className="mt-2 line-clamp-2 text-center text-xs leading-relaxed text-third/60">
+          {product.kategoriId} • <span className={`font-semibold ${stockColor}`}>{stockLabel}</span>
         </p>
 
-        <div className="bott-card-product flex justify-between">
-          <div className="flex flex-col gap-y-2">
-            {promoPrice ? (
-              <>
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="font-bold text-[15px] text-amber-700 leading-none">
-                    {formatPrice(promoPrice)}
-                  </span>
-                  {promoDiscount && (
-                    <span className="text-[11px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">
-                      -{promoDiscount}%
-                    </span>
-                  )}
-                </div>
-                {promoBasePrice && (
-                  <span className="text-[11px] text-third/40 line-through leading-none">
-                    {formatPrice(promoBasePrice)}
-                  </span>
-                )}
-              </>
-            ) : (
-              <>
-                <span className="font-bold text-[15px] text-red-500 leading-none">
-                  {offlinePrice && formatPrice(offlinePrice)}
-                </span>
-                {pricelist && (
-                  <div className="font-semibold text-[10px] text-third/50 italic tracking-tighter leading-none flex gap-x-1 items-center">
-                    {discount && (
-                      <span className="text-[11px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">
-                        -{discount}%
-                      </span>
-                    )}
-                    <span>Pricelist: {formatPrice(pricelist)}</span>
-                  </div>
-                )}
-              </>
-            )}
-            {isAdmin && 
-              <p className="text-gray-400 text-[12px]">
-                {new Date(product.created_at).toLocaleString("id-ID", {
-                  dateStyle: "medium", 
-                  timeStyle: "short", 
-                })}
-              </p>
-            }
-          </div>
+        <div className="mt-3 flex flex-1 items-center justify-center">
+          {priceNode("center")}
         </div>
+
+        {isAdmin && (
+          <p className="mt-2 text-center text-[11px] text-third/40">
+            {new Date(product.created_at).toLocaleString("id-ID", {
+              dateStyle: "medium",
+              timeStyle: "short",
+            })}
+          </p>
+        )}
+
+        <button
+          onClick={addToCart}
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-third py-2.5 text-[11px] font-bold uppercase tracking-wider text-white transition-all duration-200 hover:bg-second hover:text-third active:scale-[0.98] cursor-pointer"
+        >
+          <ShoppingCart className="w-3.5 h-3.5" />
+          Tambah Keranjang
+        </button>
       </div>
     </Link>
   );
