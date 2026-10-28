@@ -677,7 +677,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                             </span>
                           )}
                         </div>
-                        <div className="flex w-full flex-wrap gap-2 md:gap-2.5">
+                        <div className="flex w-full flex-wrap gap-1">
                           {variant.options.map((option) => {
                             const isSelected = selectedOptions[variant.id]?.id === option.id;
                             return (
@@ -685,14 +685,14 @@ export default function ProductDetail({ product }: { product?: any }) {
                                 key={option.id}
                                 type="button"
                                 onClick={() => toggleOption(variant.id, option)}
-                                className={`relative flex items-center gap-2 border-2 transition-all duration-200 ${
+                                className={`relative flex items-center gap-2 border-2 transition-all duration-200 rounded-md ${
                                   isSelected
                                     ? "border-second bg-second/10 shadow-[0_2px_12px_rgba(249,173,82,0.25)]"
                                     : "border-third/15 hover:border-third/40"
                                 }`}
                               >
                                   <span
-                                    className={`text-[14px] font-bold leading-tight transition-colors md:text-[15px] ${
+                                    className={`text-[14px] font-bold leading-tight transition-colors md:text-[15px] px-3 py-1 ${
                                       isSelected ? "text-third" : "text-third/65"
                                     }`}
                                   >
