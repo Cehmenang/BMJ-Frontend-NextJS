@@ -82,34 +82,11 @@ export default function TrendingCard({
 
       {/* Selalu ditumpuk vertikal supaya muat di kartu sempit */}
       <div className="mt-4 flex w-full flex-col items-center gap-2">
-        <div
-          className={[
-            "flex items-center gap-3 rounded-full px-3 py-1.5 text-sm font-semibold",
-            isHighlight ? "bg-primary/15 text-primary" : "bg-third/5 text-third",
-          ].join(" ")}
-        >
-          <button
-            onClick={() => setQty((q) => Math.max(1, q - 1))}
-            aria-label="Kurangi jumlah"
-            className="h-4 w-4 leading-none"
-          >
-            −
-          </button>
-          <span className="w-3 text-center">{qty}</span>
-          <button
-            onClick={() => setQty((q) => q + 1)}
-            aria-label="Tambah jumlah"
-            className="h-4 w-4 leading-none"
-          >
-            +
-          </button>
-        </div>
-
         <button
           onClick={handleAddToCart}
-          className="w-full whitespace-nowrap rounded-full bg-primary px-4 py-2 text-[11px] font-bold uppercase tracking-wide text-second transition-transform hover:brightness-105 active:scale-95"
+          className="w-full whitespace-nowrap rounded-full bg-third px-4 py-2 text-[11px] font-bold uppercase tracking-wide text-white transition-transform hover:brightness-105 active:scale-95"
         >
-          Add to Cart
+          Tambah Keranjang
         </button>
       </div>
     </div>
