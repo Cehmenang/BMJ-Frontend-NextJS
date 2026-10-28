@@ -507,8 +507,6 @@ export default function ProductDetail({ product }: { product?: any }) {
                   ) : (
                     <ZoomImage
                       src={currentSrc}
-                      width="400"
-                      height="400"
                       alt={product.name}
                       productRef={mainImgRef}
                     />
