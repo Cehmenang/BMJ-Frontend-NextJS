@@ -24,11 +24,10 @@ export type Product = {
 
 const AUTO_DELAY = 3500;
 const SLIDE_DURATION = 0.7;
-const PROMO_IMAGE = "/promo.jpg";
+const PROMO_IMAGE = "/litejam.webp";
 const PROMO_HREF = "/produk";
-const PROMO_LABEL = "PROMO";
-const PROMO_TITLE = "Judul Promo Kamu";
-const PROMO_DESC = "Tulis deskripsi singkat promo atau campaign di sini.";
+const PROMO_TITLE = "LAGI VIRAL";
+const PROMO_DESC = "Smart Gitar Litejam, Dengan Fretboard Nyala-Nyala Untuk Belajar Chord dan Scale!";
 
 export default function LatestProducts() {
   const [products, setProducts] = useState<any>([]);
@@ -176,9 +175,7 @@ export default function LatestProducts() {
           <h2 className="font-boldonse text-[clamp(22px,3.5vw,42px)] font-bold text-third leading-tight">
             PRODUK <em className="text-second not-italic">TERBARU</em>
           </h2>
-          <span className="inline-block px-3 py-1 md:px-5 rotate-2 border-2 border-third bg-second text-third text-[10px] md:text-lg font-boldonse rounded-tr-2xl whitespace-nowrap">
-            HADIR SAAT INI
-          </span>
+          <span className="px-3 absolute top-[-30px] right-[20px] md:static md:px-5 py-1 rotate-2 border-2 border-third bg-second text-third text-[8px] md:text-lg font-boldonse rounded-tr-2xl">HADIR SAAT INI</span>  
         </div>
 
         <div className="hidden md:flex items-center gap-2">{arrowButtons}</div>
@@ -198,9 +195,6 @@ export default function LatestProducts() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
-            <span className="inline-block mb-2 px-3 py-0.5 border-2 border-third bg-second text-third text-[10px] sm:text-xs font-boldonse rounded-tr-xl">
-              {PROMO_LABEL}
-            </span>
             <h3 className="font-boldonse text-white text-lg sm:text-xl leading-snug">
               {PROMO_TITLE}
             </h3>
