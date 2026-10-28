@@ -222,9 +222,7 @@ export default function ProductCard({
   return (
     <Link href={`/produk/${product.url}`} className="flex flex-shrink-0 w-auto md:w-[200px] group flex-col gap-y-4 relative">
       {isNew && (
-        <span className="absolute bg-red-600 text-white z-[15] top-[10px] left-[10px] text-[11px] font-bold px-3 py-[2px] rounded-sm">
-          Baru
-        </span>
+        <img src="/BadgeBaru.webp" alt="Badge Baru" width={40} height={40}/>
       )}
       <div className="md:w-[100%] transition group relative overflow-hidden rounded-2xl border-1 border-slate-200 hover:border-slate-300 hover:bg-gray-200 transition">
 
