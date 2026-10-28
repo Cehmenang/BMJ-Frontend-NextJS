@@ -94,15 +94,12 @@ export default function LatestProducts() {
   return (
     <section className="py-10 sm:py-16 bg-bg-site overflow-hidden px-4 sm:px-8 md:px-14">
       <div className="mb-6 sm:mb-8 flex items-end justify-between">
-    <div>
-      <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-third-light mb-2">
-        Baru Masuk
-      </p>
-      {/* Menggunakan font-boldonse dan uppercase agar konsisten dengan header sebelumnya */}
-      <h2 className="text-md md:text-4xl font-boldonse text-[clamp(22px,3.5vw,42px)] font-bold text-third leading-9 uppercase">
-        PRODUK <em className="text-second not-italic">TERBARU</em>
-      </h2>
-    </div>
+      <div className="flex items-center gap-x-4 relative">
+          <h2 className="text-md md:text-4xl font-boldonse text-[clamp(22px,3.5vw,42px)] font-bold text-third leading-9">
+            PRODUK <em className="text-second not-italic">TERBARU</em>
+          </h2>
+          <span className="px-3 absolute top-[-5px] right-[30px] md:static md:px-5 py-1 rotate-2 border-2 border-third bg-second text-third text-[8px] md:text-lg font-boldonse rounded-tr-2xl">HADIR SAAT INI</span>
+        </div>
 
     <div className="flex items-center gap-4">
       <Link
