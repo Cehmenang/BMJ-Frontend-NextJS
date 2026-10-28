@@ -3,8 +3,8 @@ import { useState } from "react";
 
 export default function ZoomImage({
     src,
-    width,
-    height,
+    width="100%",
+    height="100%",
     magnifierHeight = 1000,
     magnifieWidth = 1000,
     zoomLevel = 3,
@@ -25,10 +25,11 @@ export default function ZoomImage({
     const [showMagnifier, setShowMagnifier] = useState(false);
     return (
       <div
-        style={{
+       style={{
           position: "relative",
           height: height,
-          width: width
+          width: width,
+          overflow: "hidden"
         }}
       >
         <Image
@@ -36,60 +37,50 @@ export default function ZoomImage({
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           ref={productRef}
           src={src}
-          style={{ height: height, width: width }}
+          alt={alt}
+          style={{ 
+            height: "100%", 
+            width: "100%",
+            display: "block",   
+            objectFit: "cover" 
+          }}
           onMouseEnter={(e) => {
-            // update image size and turn-on magnifier
             const elem = e.currentTarget;
             const { width, height } = elem.getBoundingClientRect();
             setSize([width, height]);
             setShowMagnifier(true);
           }}
           onMouseMove={(e) => {
-            // update cursor position
             const elem = e.currentTarget;
             const { top, left } = elem.getBoundingClientRect();
-  
-            // calculate cursor position on the image
-            const x = e.pageX - left - window.pageXOffset;
-            const y = e.pageY - top - window.pageYOffset;
+            const x = e.pageX - left - window.scrollX;
+            const y = e.pageY - top - window.scrollY;
             setXY([x, y]);
           }}
           onMouseLeave={() => {
-            // close magnifier
             setShowMagnifier(false);
           }}
-          alt={alt}
         />
   
         <div
           style={{
             display: showMagnifier ? "" : "none",
             position: "absolute",
-  
-            // prevent magnifier blocks the mousemove event of img
             pointerEvents: "none",
-            // set size of magnifier
             height: `${magnifierHeight}px`,
             width: `${magnifieWidth}px`,
-            // move element center to cursor pos
             top: `${y - magnifierHeight / 2}px`,
             left: `${x - magnifieWidth / 2}px`,
-            opacity: "1", // reduce opacity so you can verify position
+            opacity: "1",
             border: "1px solid lightgray",
             backgroundColor: "white",
             backgroundImage: `url('${src}')`,
             backgroundRepeat: "no-repeat",
-  
-            //calculate zoomed image size
-            backgroundSize: `${imgWidth * zoomLevel}px ${
-              imgHeight * zoomLevel
-            }px`,
-  
-            //calculate position of zoomed image.
+            backgroundSize: `${imgWidth * zoomLevel}px ${imgHeight * zoomLevel}px`,
             backgroundPositionX: `${-x * zoomLevel + magnifieWidth / 2}px`,
             backgroundPositionY: `${-y * zoomLevel + magnifierHeight / 2}px`
           }}
-        ></div>
+        />
       </div>
     );
   }
