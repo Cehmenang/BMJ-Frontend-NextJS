@@ -61,6 +61,8 @@ export default function ProductCard({
       ? Math.round(((promoBasePrice - promoPrice) / promoBasePrice) * 100)
       : null;
 
+  const badgeValue = promoPrice ? promoDiscount : discount;
+
   const stockLabel = product.stock == 0 ? "On-Stock" : "Out-Stock";
   const stockColor = product.stock == 0 ? "text-red-500" : "text-third/60";
 
@@ -105,21 +107,13 @@ export default function ProductCard({
 
   const priceNode = (align: "center" | "left") => {
     const itemsAlign = align === "center" ? "items-center" : "items-start";
-    const justifyAlign = align === "center" ? "justify-center" : "justify-start";
 
     if (promoPrice) {
       return (
         <div className={`flex flex-col gap-y-1.5 ${itemsAlign}`}>
-          <div className={`flex items-center gap-1.5 flex-wrap ${justifyAlign}`}>
-            <span className="font-bold text-[15px] text-amber-700 leading-none">
-              {formatPrice(promoPrice)}
-            </span>
-            {promoDiscount && (
-              <span className="text-[11px] bg-amber-100 border border-amber-600 text-third px-2 py-[2px] rounded-sm font-bold">
-                -{promoDiscount}%
-              </span>
-            )}
-          </div>
+          <span className="font-bold text-[15px] text-amber-700 leading-none">
+            {formatPrice(promoPrice)}
+          </span>
           {promoBasePrice && (
             <span className="text-[11px] text-red-500 line-through leading-none">
               {formatPrice(promoBasePrice)}
@@ -137,16 +131,9 @@ export default function ProductCard({
     if (offlinePrice) {
       return (
         <div className={`flex flex-col gap-y-1.5 ${itemsAlign}`}>
-          <div className="relative inline-block">
-            <span className="block font-bold text-[15px] text-third leading-none">
-              {formatPrice(offlinePrice)}
-            </span>
-            {discount && (
-              <span className="absolute -top-3 left-full ml-1 whitespace-nowrap text-[10px] bg-amber-100 border border-amber-600 text-third px-1.5 py-[1px] rounded-sm font-bold leading-tight">
-                -{discount}%
-              </span>
-            )}
-          </div>
+          <span className="font-bold text-[15px] text-third leading-none">
+            {formatPrice(offlinePrice)}
+          </span>
           {pricelist && (
             <span className="text-[11px] text-red-500 line-through leading-none">
               {formatPrice(pricelist)}
@@ -204,9 +191,15 @@ export default function ProductCard({
           )}
         </div>
 
-        <div className="flex min-w-0 flex-1 flex-col justify-between p-3">
+        <div className="relative flex min-w-0 flex-1 flex-col justify-between p-3">
+          {badgeValue && (
+            <span className="absolute right-2 top-2 z-20 whitespace-nowrap rounded-sm border border-amber-600 bg-amber-100 px-1.5 py-[1px] text-[10px] font-bold leading-tight text-third shadow-sm">
+              -{badgeValue}%
+            </span>
+          )}
+
           <div>
-            <h3 className="line-clamp-2 text-left font-display text-base font-bold lg:text-sm xl:text-base text-third">
+            <h3 className="line-clamp-2 pr-12 text-left font-display text-base font-bold lg:text-sm xl:text-base text-third">
               {product.name}
             </h3>
             <p className="mt-2 line-clamp-2 text-left text-xs leading-relaxed text-third/60">
@@ -296,7 +289,13 @@ export default function ProductCard({
         {toastNode}
       </div>
 
-      <div className="flex flex-1 flex-col px-3 pb-4 pt-4">
+      <div className="relative flex flex-1 flex-col px-3 pb-4 pt-5">
+        {badgeValue && (
+          <span className="absolute left-1/2 top-0 z-20 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-sm border border-amber-600 bg-amber-100 px-2 py-[2px] text-[11px] font-bold leading-tight text-third shadow-md">
+            -{badgeValue}%
+          </span>
+        )}
+
         <h3 className="line-clamp-2 min-h-[2.4rem] text-center font-display text-base font-bold leading-snug lg:text-sm xl:min-h-[2.75rem] xl:text-base text-third">
           {product.name}
         </h3>
