@@ -25,8 +25,8 @@ export default async function TrendingProducts() {
           <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-third-light mb-2">
             Lagi panas nih
           </p>
-          <h2 className="font-boldonse text-[clamp(22px,3.5vw,42px)] font-bold text-third leading-[1.1]">
-            ALAT <em className="text-second not-italic">PALING DICARI MINGGU INI</em>
+          <h2 className="text-2xl md:text-4xl font-boldonse text-[clamp(22px,3.5vw,42px)] font-bold text-third leading-[1.1] relative">
+            ALAT <em className="text-second not-italic">PALING DICARI</em><span className="absolute right-0 bottom-2 px-5 py-2 border-2 border-third bg-primary text-third">MINGGU INI</span>
           </h2>
         </div>
 
