@@ -479,7 +479,7 @@ export default function ProductDetail({ product }: { product?: any }) {
 
                 <div
                   ref={imgWrapRef}
-                  className="aspect-square w-full p-4 md:p-8 lg:aspect-[4/3.4]"
+                  className="aspect-square w-full p-4 md:p-8"
                 >
                   {showingVideo && videoId ? (
                     videoPlaying ? (
