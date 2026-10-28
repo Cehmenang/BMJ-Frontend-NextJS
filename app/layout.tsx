@@ -3,6 +3,7 @@ import "./globals.css";
 import LayoutNav from "@/components/navbar/LayoutNav";
 import QuickAction from "@/components/quick/QuickAction";
 import LayoutFooter from "@/components/footer/LayoutFooter";
+import { Boldonse } from "next/font/google";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -135,6 +136,12 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.bandarmusikjakarta.com"),
 };
 
+const boldonse = Boldonse({
+  subsets: ['latin'],
+  variable: '--font-boldonse',
+  weight: '400',
+})
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -150,7 +157,7 @@ export default function RootLayout({
       </head>
 
 
-      <body className={"font-poppins antialiased"}>
+      <body className={`font-poppins antialiased ${boldonse.variable}`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

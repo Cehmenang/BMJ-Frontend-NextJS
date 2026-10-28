@@ -42,7 +42,6 @@ export default function TrendingCarousel({ products }: TrendingCarouselProps) {
 
   const canSlide = products.length > visibleCount;
   const maxStartIndex = Math.max(0, products.length - visibleCount);
-  // Jaga-jaga kalau layar di-resize dan startIndex melewati batas.
   const safeStart = Math.min(startIndex, maxStartIndex);
 
   const visibleProducts = products.slice(safeStart, safeStart + visibleCount);
@@ -98,7 +97,6 @@ export default function TrendingCarousel({ products }: TrendingCarouselProps) {
         </button>
       )}
 
-      {/* Jumlah kolom langsung mengikuti visibleCount, tidak bergantung breakpoint Tailwind */}
       <div
         className="grid items-center gap-x-4 px-2 sm:px-4 xl:gap-x-6"
         style={{
