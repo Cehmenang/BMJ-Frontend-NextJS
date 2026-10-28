@@ -73,7 +73,7 @@ export default function ProductCard({
         {/* Image */}
         <div className="relative w-28 h-28 md:w-36 md:h-36 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100">
           {isNew && (
-            <img src="/BadgeBaru.webp" alt="Badge Baru" width={40} height={40}/>
+            <img src="/BadgeBaru.webp" alt="Badge Baru" width={60} height={60} className="absolute top-4 left-3"/>
           )}
           {product.promo && (
             <span className="absolute bg-amber-600 text-white z-[15] top-2 right-2 text-[9px] font-bold px-2 py-[2px] rounded-sm shadow-sm">
@@ -222,7 +222,7 @@ export default function ProductCard({
   return (
     <Link href={`/produk/${product.url}`} className="flex flex-shrink-0 w-auto md:w-[200px] group flex-col gap-y-4 relative">
       {isNew && (
-        <img src="/BadgeBaru.webp" alt="Badge Baru" width={40} height={40}/>
+        <img src="/BadgeBaru.webp" alt="Badge Baru" width={60} height={60} className="absolute top-4 left-3"/>
       )}
       <div className="md:w-[100%] transition group relative overflow-hidden rounded-2xl border-1 border-slate-200 hover:border-slate-300 hover:bg-gray-200 transition">
 
