@@ -483,88 +483,109 @@ export default function ProductDetail({ product }: { product?: any }) {
         }`}
       />
       <aside
-        aria-hidden={!drawerOpen}
-        className={`fixed inset-y-0 left-0 z-[65] flex w-full max-w-[440px] flex-col bg-white shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
-          drawerOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="flex items-center justify-between border-b border-dashed border-third/25 px-5 py-4 md:px-6">
-          <h2 className="font-boldonse text-[13px] font-bold uppercase tracking-wide text-third">
-            {drawerType === "features" ? "Fitur Produk" : "Spesifikasi"}
-          </h2>
-          <button
-            onClick={() => setDrawer(null)}
-            aria-label="Tutup"
-            className="flex h-9 w-9 items-center justify-center rounded-sm text-third ring-1 ring-third/15 transition-colors hover:bg-third hover:text-white"
-          >
-            <X size={16} />
-          </button>
+  aria-hidden={!drawerOpen}
+  className={`fixed inset-y-0 right-0 z-[65] flex w-full max-w-[440px] flex-col bg-white shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+    drawerOpen ? "translate-x-0" : "translate-x-full"
+  }`}
+>
+  <div className="flex items-stretch justify-between border-b border-dashed border-third/25 pl-2 pr-4 md:pl-3 md:pr-5">
+    <div className="flex">
+      {(
+        [
+          { key: "features", label: "Fitur", Icon: ListChecks },
+          { key: "specifications", label: "Spesifikasi", Icon: FileText },
+        ] as { key: DrawerType; label: string; Icon: typeof ListChecks }[]
+      ).map(({ key, label, Icon }) => (
+        <button
+          key={key}
+          onClick={() => setDrawerType(key)}
+          className={`relative flex items-center gap-2 px-4 py-4 text-[12px] font-bold uppercase tracking-wider transition-colors duration-150 md:text-[13px] ${
+            drawerType === key ? "text-third" : "text-third/40 hover:text-third/70"
+          }`}
+        >
+          <Icon size={15} />
+          {label}
+          <span
+            className={`absolute bottom-0 left-0 h-[2px] w-full origin-left bg-second transition-transform duration-300 ${
+              drawerType === key ? "scale-x-100" : "scale-x-0"
+            }`}
+          />
+        </button>
+      ))}
+    </div>
+    <button
+      onClick={() => setDrawer(null)}
+      aria-label="Tutup"
+      className="my-2.5 flex h-9 w-9 items-center justify-center rounded-sm text-third ring-1 ring-third/15 transition-colors hover:bg-third hover:text-white"
+    >
+      <X size={16} />
+    </button>
+  </div>
+
+  <div key={drawerType} className="flex-1 overflow-y-auto px-5 py-5 md:px-6">
+    {drawerType === "features" && (
+      <ul className="flex list-none flex-col">
+        {product.fitur && product.fitur.length > 0 ? (
+          product.fitur.map((f: string, i: number) => (
+            <li
+              key={i}
+              className="flex items-start gap-3 border-b border-dashed border-third/20 py-3 text-[13px] leading-relaxed text-third/80 last:border-b-0"
+            >
+              <span className="mt-[7px] h-1.5 w-1.5 flex-shrink-0 bg-second" />
+              {f}
+            </li>
+          ))
+        ) : (
+          <p className="text-sm italic text-third/40">Tidak ada informasi fitur.</p>
+        )}
+      </ul>
+    )}
+
+    {drawerType === "specifications" && (
+      <div className="flex flex-col gap-7">
+        <div>
+          <p className="mb-2 text-[11px] font-bold uppercase tracking-wider text-third/45">
+            Informasi Produk
+          </p>
+          <div className="flex flex-col">
+            {metaItems.map((m) => (
+              <div
+                key={m.label}
+                className="flex items-center justify-between gap-4 border-b border-dashed border-third/20 py-2.5 last:border-b-0"
+              >
+                <span className="text-[12px] text-third/55">{m.label}</span>
+                <span className="text-right text-[13px] font-semibold text-third">
+                  {m.value || "-"}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-5 py-5 md:px-6">
-          {drawerType === "features" && (
+        <div>
+          <p className="mb-2 text-[11px] font-bold uppercase tracking-wider text-third/45">
+            Spesifikasi
+          </p>
+          {product.spesifikasi && product.spesifikasi.length > 0 ? (
             <ul className="flex list-none flex-col">
-              {product.fitur && product.fitur.length > 0 ? (
-                product.fitur.map((f: string, i: number) => (
-                  <li
-                    key={i}
-                    className="flex items-start gap-3 border-b border-dashed border-third/20 py-3 text-[13px] leading-relaxed text-third/80 last:border-b-0"
-                  >
-                    <span className="mt-[7px] h-1.5 w-1.5 flex-shrink-0 bg-second" />
-                    {f}
-                  </li>
-                ))
-              ) : (
-                <p className="text-sm italic text-third/40">Tidak ada informasi fitur.</p>
-              )}
+              {product.spesifikasi.map((s: string, i: number) => (
+                <li
+                  key={i}
+                  className="flex items-start gap-3 border-b border-dashed border-third/20 py-2.5 text-[13px] leading-relaxed text-third/80 last:border-b-0"
+                >
+                  <span className="mt-[7px] h-1.5 w-1.5 flex-shrink-0 bg-second" />
+                  {s}
+                </li>
+              ))}
             </ul>
-          )}
-
-          {drawerType === "specifications" && (
-            <div className="flex flex-col gap-7">
-              <div>
-                <p className="mb-2 text-[11px] font-bold uppercase tracking-wider text-third/45">
-                  Informasi Produk
-                </p>
-                <div className="flex flex-col">
-                  {metaItems.map((m) => (
-                    <div
-                      key={m.label}
-                      className="flex items-center justify-between gap-4 border-b border-dashed border-third/20 py-2.5 last:border-b-0"
-                    >
-                      <span className="text-[12px] text-third/55">{m.label}</span>
-                      <span className="text-right text-[13px] font-semibold text-third">
-                        {m.value || "-"}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <p className="mb-2 text-[11px] font-bold uppercase tracking-wider text-third/45">
-                  Spesifikasi
-                </p>
-                {product.spesifikasi && product.spesifikasi.length > 0 ? (
-                  <ul className="flex list-none flex-col">
-                    {product.spesifikasi.map((s: string, i: number) => (
-                      <li
-                        key={i}
-                        className="flex items-start gap-3 border-b border-dashed border-third/20 py-2.5 text-[13px] leading-relaxed text-third/80 last:border-b-0"
-                      >
-                        <span className="mt-[7px] h-1.5 w-1.5 flex-shrink-0 bg-second" />
-                        {s}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-sm italic text-third/40">Tidak ada informasi spesifikasi.</p>
-                )}
-              </div>
-            </div>
+          ) : (
+            <p className="text-sm italic text-third/40">Tidak ada informasi spesifikasi.</p>
           )}
         </div>
-      </aside>
+      </div>
+    )}
+  </div>
+</aside>
 
       <div className="min-h-screen bg-bg-site font-sans">
         <div className="mx-auto w-full max-w-[1400px] px-4 pb-16 sm:px-8 md:px-14 md:pb-24">
@@ -778,8 +799,8 @@ export default function ProductDetail({ product }: { product?: any }) {
                 >
                   {product.brandId}
                 </Link>
-                <h1 className="mt-1.5 font-boldonse text-[clamp(16px,1.9vw,26px)] font-bold uppercase leading-[1.35] text-third">
-                  {product.name}
+                <h1 className="mt-1.5 font-poppins text-[clamp(20px,2.2vw,30px)] font-black uppercase leading-tight text-third">
+                    {product.name}
                 </h1>
               </div>
 
