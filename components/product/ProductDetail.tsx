@@ -872,20 +872,18 @@ export default function ProductDetail({ product }: { product?: any }) {
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <button
                   onClick={() => openDrawer("features")}
-                  className="flex items-center justify-between gap-3 rounded-sm border border-third/20 bg-white px-4 py-3 text-[13px] font-bold text-third transition-colors duration-200 hover:border-third hover:bg-third hover:text-white"
+                  className="flex items-center justify-between gap-3 rounded-sm border border-third/20 bg-second px-4 py-3 text-[13px] font-bold text-white transition-colors duration-200 hover:border-third hover:bg-white hover:text-third"
                 >
                   <span className="flex items-center gap-2.5">
-                    <ListChecks size={17} />
-                    Fitur Produk
+                    Fitur
                   </span>
                   <ChevronRight size={16} />
                 </button>
                 <button
                   onClick={() => openDrawer("specifications")}
-                  className="flex items-center justify-between gap-3 rounded-sm border border-third/20 bg-white px-4 py-3 text-[13px] font-bold text-third transition-colors duration-200 hover:border-third hover:bg-third hover:text-white"
+                  className="flex items-center justify-between gap-3 rounded-sm border border-third/20 bg-second px-4 py-3 text-[13px] font-bold text-white transition-colors duration-200 hover:border-third hover:bg-white hover:text-third"
                 >
                   <span className="flex items-center gap-2.5">
-                    <FileText size={17} />
                     Spesifikasi
                   </span>
                   <ChevronRight size={16} />
