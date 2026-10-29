@@ -5,6 +5,8 @@ import { useEffect, useState, useRef, useCallback } from "react"
 
 const ALPHABET = ["Semua","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
 
+const NO_SCROLLBAR = "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+
 export default function Brands() {
   const [brands, setBrands] = useState<IBrand[] | null>(null)
   const [activeFilter, setActiveFilter] = useState("Semua")
@@ -31,37 +33,32 @@ export default function Brands() {
 
   const animateHero = () => {
     const gsap = gsapRef.current
-    if (!gsap || !heroRef.current) return
+    const root = heroRef.current
+    if (!gsap || !root) return
     const tl = gsap.timeline()
     tl.fromTo(
-      heroRef.current.querySelector("[data-hero-tag]"),
-      { opacity: 0, y: 16 },
-      { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
+      root.querySelector("[data-hero-tag]"),
+      { opacity: 0, y: 14 },
+      { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }
     )
-    .fromTo(
-      heroRef.current.querySelector("[data-hero-title]"),
-      { opacity: 0, y: 28 },
-      { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
-      "-=0.3"
-    )
-    .fromTo(
-      heroRef.current.querySelector("[data-hero-sub]"),
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
-      "-=0.3"
-    )
-    .fromTo(
-      heroRef.current.querySelector("[data-hero-search]"),
-      { opacity: 0, y: 16 },
-      { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" },
-      "-=0.25"
-    )
-    .fromTo(
-      heroRef.current.querySelector("[data-hero-deco]"),
-      { opacity: 0, x: 40 },
-      { opacity: 1, x: 0, duration: 1.2, ease: "power1.out" },
-      "-=1"
-    )
+      .fromTo(
+        root.querySelector("[data-hero-title]"),
+        { opacity: 0, y: 22 },
+        { opacity: 1, y: 0, duration: 0.55, ease: "power2.out" },
+        "-=0.25"
+      )
+      .fromTo(
+        root.querySelector("[data-hero-sub]"),
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" },
+        "-=0.3"
+      )
+      .fromTo(
+        root.querySelector("[data-hero-search]"),
+        { opacity: 0, y: 14 },
+        { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" },
+        "-=0.3"
+      )
   }
 
   const animateSection = useCallback((letter: string) => {
@@ -76,13 +73,13 @@ export default function Brands() {
 
     gsap.fromTo(
       bigLetter,
-      { opacity: 0, x: -20 },
+      { opacity: 0, x: -16 },
       { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }
     )
     gsap.fromTo(
       items,
-      { opacity: 0, y: 12 },
-      { opacity: 1, y: 0, duration: 0.4, ease: "power2.out", stagger: 0.03, delay: 0.1 }
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 0.4, ease: "power2.out", stagger: 0.025, delay: 0.1 }
     )
   }, [])
 
@@ -109,10 +106,20 @@ export default function Brands() {
     animatedSections.current.clear()
   }, [activeFilter, search])
 
-  // Lock body scroll saat alpha modal mobile terbuka
   useEffect(() => {
     document.body.style.overflow = showAlphaModal ? "hidden" : ""
-    return () => { document.body.style.overflow = "" }
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [showAlphaModal])
+
+  useEffect(() => {
+    if (!showAlphaModal) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowAlphaModal(false)
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
   }, [showAlphaModal])
 
   const grouped = (() => {
@@ -146,67 +153,86 @@ export default function Brands() {
     }
   }
 
-  const displayedLetters = activeFilter === "Semua"
-    ? availableLetters
-    : availableLetters.filter((l) => l === activeFilter)
+  const displayedLetters =
+    activeFilter === "Semua"
+      ? availableLetters
+      : availableLetters.filter((l) => l === activeFilter)
+
+  const letterBtn = (isActive: boolean, isAvailable: boolean) =>
+    isActive
+      ? "bg-second text-third"
+      : isAvailable
+      ? "bg-third/5 text-third/70 hover:bg-third/10 hover:text-third"
+      : "cursor-default bg-transparent text-third/20"
 
   return (
-    <div className="min-h-screen bg-bg-site">
+    <div className="min-h-screen bg-bg-site font-sans">
+      <div ref={heroRef} className="border-b border-dashed border-third/25 pb-8 pt-[96px] md:pb-10 md:pt-[120px]">
+        <div className="mx-auto w-full max-w-[1400px] px-4 sm:px-8 md:px-14">
+          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-10">
+            <div>
+              <p
+                data-hero-tag
+                className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-third/50"
+                style={{ opacity: 0 }}
+              >
+                Partner Resmi
+              </p>
+              <h1
+                data-hero-title
+                className="font-boldonse text-[clamp(22px,3.5vw,42px)] font-bold uppercase leading-[1.25] text-third"
+                style={{ opacity: 0 }}
+              >
+                Daftar <em className="not-italic text-second">Brand</em>
+              </h1>
+              <p
+                data-hero-sub
+                className="mt-3 max-w-lg text-[13px] leading-relaxed text-third/60 md:text-[14px]"
+                style={{ opacity: 0 }}
+              >
+                Temukan semua brand alat musik yang tersedia di Bandar Musik Jakarta.
+              </p>
+            </div>
 
-      {/* Hero */}
-      <div ref={heroRef} className="relative overflow-hidden bg-third pt-32 pb-16 px-6 md:px-20">
-        <span
-          data-hero-deco
-          className="pointer-events-none select-none absolute -right-6 -top-8 text-[clamp(100px,18vw,220px)] font-black text-white/5 leading-none font-play"
-          style={{ opacity: 0 }}
-        >
-          BRAND
-        </span>
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
-            backgroundSize: "40px 40px"
-          }}
-        />
-        <div className="relative z-10 max-w-6xl mx-auto">
-          <p data-hero-tag className="text-second text-[11px] font-poppins font-semibold tracking-[0.2em] uppercase mb-3" style={{ opacity: 0 }}>
-            Bagian
-          </p>
-          <h1 data-hero-title className="font-poppins tracking-tight text-[clamp(32px,5vw,64px)] font-bold text-primary leading-tight mb-4" style={{ opacity: 0 }}>
-            Daftar <em className="text-second italic font-play">Brand</em>
-          </h1>
-          <p data-hero-sub className="font-poppins text-primary/60 text-[13px] md:text-[14px] max-w-lg leading-relaxed" style={{ opacity: 0 }}>
-            Temukan semua brand alat musik yang tersedia di Bandar Musik Jakarta.
-          </p>
-          <div data-hero-search className="mt-8 flex items-center gap-3 bg-white/8 border border-white/12 rounded-xl px-4 py-3 max-w-md" style={{ opacity: 0 }}>
-            <svg className="w-4 h-4 text-primary/40 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => { setSearch(e.target.value); setActiveFilter("Semua") }}
-              placeholder="Cari brand…"
-              className="flex-1 bg-transparent text-[13px] font-poppins text-primary placeholder:text-primary/35 outline-none border-none"
-            />
-            {search && (
-              <button onClick={() => setSearch("")} className="text-primary/40 hover:text-primary/70 transition-colors">
-                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </button>
-            )}
+            <div
+              data-hero-search
+              className="flex w-full items-center gap-3 rounded-sm bg-white px-4 py-3 shadow-sm ring-1 ring-third/10 transition-shadow duration-200 focus-within:ring-third/40 md:max-w-sm"
+              style={{ opacity: 0 }}
+            >
+              <svg className="h-4 w-4 flex-shrink-0 text-third/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value)
+                  setActiveFilter("Semua")
+                }}
+                placeholder="Cari brand…"
+                className="min-w-0 flex-1 border-none bg-transparent font-poppins text-[14px] text-third outline-none placeholder:text-third/35"
+              />
+              {search && (
+                <button
+                  onClick={() => setSearch("")}
+                  aria-label="Hapus pencarian"
+                  className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-sm bg-third/5 text-third/60 transition-colors hover:bg-third/10 hover:text-third"
+                >
+                  <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* ── Sticky alphabet bar ── */}
-      <div className="sticky top-[60px] md:top-[66px] z-30 bg-bg-site/90 backdrop-blur-md border-b border-third/8">
-        <div className="max-w-6xl mx-auto px-4 md:px-20 py-3">
-
-          {/* DESKTOP — scroll horizontally */}
-          <div className="hidden md:flex items-center gap-1 overflow-x-auto">
+      <div className="sticky top-[60px] z-30 border-b border-dashed border-third/25 bg-bg-site/90 backdrop-blur-md md:top-[66px]">
+        <div className="mx-auto w-full max-w-[1400px] px-4 py-3 sm:px-8 md:px-14">
+          <div className={`hidden items-center gap-1 overflow-x-auto md:flex ${NO_SCROLLBAR}`}>
             {ALPHABET.map((letter) => {
               const isAvailable = letter === "Semua" || availableLetters.includes(letter)
               const isActive = activeFilter === letter
@@ -215,15 +241,9 @@ export default function Brands() {
                   key={letter}
                   onClick={() => isAvailable && scrollTo(letter)}
                   disabled={!isAvailable}
-                  className={`
-                    min-w-[32px] h-8 px-1.5 rounded-md text-[11px] font-poppins font-semibold transition-all duration-150 flex-shrink-0
-                    ${isActive
-                      ? "bg-second text-third shadow-sm scale-105"
-                      : isAvailable
-                        ? "text-third/70 hover:text-third hover:bg-third/8"
-                        : "text-third/20 cursor-default"
-                    }
-                  `}
+                  className={`h-8 flex-shrink-0 rounded-sm px-2.5 font-poppins text-[11px] font-bold uppercase tracking-wider transition-colors duration-150 ${
+                    letter === "Semua" ? "min-w-[64px]" : "min-w-[32px]"
+                  } ${letterBtn(isActive, isAvailable)}`}
                 >
                   {letter}
                 </button>
@@ -231,70 +251,58 @@ export default function Brands() {
             })}
           </div>
 
-          {/* MOBILE — active filter chip + trigger button */}
-          <div className="flex md:hidden items-center justify-between gap-3">
-            <div className="flex items-center gap-2 overflow-x-auto pb-0.5">
-              {/* Show a few quick-access letters */}
+          <div className="flex items-center justify-between gap-3 md:hidden">
+            <div className={`flex items-center gap-2 overflow-x-auto ${NO_SCROLLBAR}`}>
               {["Semua", ...availableLetters.slice(0, 6)].map((letter) => {
                 const isActive = activeFilter === letter
                 return (
                   <button
                     key={letter}
                     onClick={() => scrollTo(letter)}
-                    className={`
-                      flex-shrink-0 h-7 px-2.5 rounded-md text-[11px] font-poppins font-semibold transition-all duration-150
-                      ${isActive
-                        ? "bg-second text-third"
-                        : "text-third/60 bg-third/6 hover:bg-third/10"
-                      }
-                    `}
+                    className={`h-8 flex-shrink-0 rounded-sm px-3 font-poppins text-[11px] font-bold uppercase tracking-wider transition-colors duration-150 ${letterBtn(isActive, true)}`}
                   >
                     {letter}
                   </button>
                 )
               })}
             </div>
-            {/* All letters trigger */}
             <button
               onClick={() => setShowAlphaModal(true)}
-              className="flex-shrink-0 flex items-center gap-1.5 h-7 px-3 rounded-md text-[11px] font-poppins font-semibold text-third/60 bg-third/6 hover:bg-third/10 transition-colors border border-third/10"
+              className="flex h-8 flex-shrink-0 items-center gap-1.5 rounded-sm bg-third px-3 font-poppins text-[11px] font-bold uppercase tracking-wider text-white transition-colors duration-200 hover:bg-second hover:text-third"
             >
-              <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+              <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
               </svg>
               A–Z
             </button>
           </div>
-
         </div>
       </div>
 
-      {/* Mobile alphabet modal */}
       <div
-        className={`fixed inset-0 z-50 md:hidden transition-opacity duration-300 ${
-          showAlphaModal ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        className={`fixed inset-0 z-50 transition-opacity duration-300 md:hidden ${
+          showAlphaModal ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
-        {/* Backdrop */}
         <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowAlphaModal(false)} />
 
-        {/* Sheet from bottom */}
-        <div className={`absolute bottom-0 left-0 right-0 bg-bg-site rounded-t-2xl transition-transform duration-300 ${
-          showAlphaModal ? "translate-y-0" : "translate-y-full"
-        }`}>
-          {/* Handle */}
-          <div className="flex justify-center pt-3 pb-1">
-            <div className="w-10 h-1 rounded-full bg-third/20" />
-          </div>
-
-          <div className="px-5 pt-3 pb-4 flex items-center justify-between border-b border-third/8">
-            <p className="font-poppins text-[13px] font-semibold text-third">Pilih Huruf</p>
+        <div
+          className={`absolute bottom-0 left-0 right-0 rounded-t-md bg-bg-site shadow-2xl transition-transform duration-300 ${
+            showAlphaModal ? "translate-y-0" : "translate-y-full"
+          }`}
+        >
+          <div className="flex items-center justify-between border-b border-dashed border-third/25 px-5 py-4">
+            <p className="text-[12px] font-bold uppercase tracking-wider text-third">Pilih Huruf</p>
             <button
               onClick={() => setShowAlphaModal(false)}
-              className="w-7 h-7 rounded-lg bg-third/7 flex items-center justify-center text-third/60"
+              aria-label="Tutup"
+              className="flex h-8 w-8 items-center justify-center rounded-sm text-third ring-1 ring-third/15 transition-colors hover:bg-third hover:text-white"
             >
-              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+              <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </button>
           </div>
@@ -309,16 +317,9 @@ export default function Brands() {
                     key={letter}
                     onClick={() => isAvailable && scrollTo(letter)}
                     disabled={!isAvailable}
-                    className={`
-                      h-10 rounded-lg text-[12px] font-poppins font-semibold transition-all duration-150
-                      ${letter === "Semua" ? "col-span-2 text-[11px]" : ""}
-                      ${isActive
-                        ? "bg-second text-third shadow-sm"
-                        : isAvailable
-                          ? "bg-third/6 text-third/70 hover:bg-third/12 hover:text-third"
-                          : "bg-third/3 text-third/18 cursor-default"
-                      }
-                    `}
+                    className={`h-10 rounded-sm font-poppins text-[12px] font-bold uppercase transition-colors duration-150 ${
+                      letter === "Semua" ? "col-span-2 text-[11px] tracking-wider" : ""
+                    } ${letterBtn(isActive, isAvailable)}`}
                   >
                     {letter}
                   </button>
@@ -327,110 +328,116 @@ export default function Brands() {
             </div>
           </div>
 
-          {/* Safe area bottom padding */}
           <div className="h-6" />
         </div>
       </div>
 
-      {/* Brand list */}
-      <div className="max-w-6xl mx-auto px-4 md:px-20 py-8 md:py-12">
-
-        {/* Loading skeleton */}
+      <div className="mx-auto w-full max-w-[1400px] px-4 pb-16 pt-6 sm:px-8 md:px-14 md:pb-24 md:pt-8">
         {!brands && (
-          <div className="space-y-10">
+          <div className="animate-pulse">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="animate-pulse">
-                <div className="flex gap-5 md:gap-10">
-                  <div className="w-10 md:w-16 h-14 md:h-16 bg-third/10 rounded-xl flex-shrink-0" />
-                  <div className="flex-1 pt-2 space-y-3">
-                    <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
-                      {[...Array(8)].map((_, j) => (
-                        <div key={j} className="h-4 bg-third/10 rounded-full" />
-                      ))}
-                    </div>
-                  </div>
+              <div key={i} className="flex gap-4 border-b border-dashed border-third/25 py-8 md:gap-10 md:py-10">
+                <div className="h-14 w-10 flex-shrink-0 rounded-sm bg-third/10 md:h-20 md:w-20" />
+                <div className="grid flex-1 grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                  {[...Array(8)].map((_, j) => (
+                    <div key={j} className="h-8 rounded-sm bg-third/10" />
+                  ))}
                 </div>
-                <div className="mt-8 h-px bg-third/8" />
               </div>
             ))}
           </div>
         )}
 
-        {/* Empty state */}
         {brands && displayedLetters.length === 0 && (
           <div className="flex flex-col items-center justify-center py-24 text-third/40">
-            <svg className="w-10 h-10 mb-4 opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+            <svg className="mb-4 h-10 w-10 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
-            <p className="font-poppins text-[13px] text-center">
-              Tidak ada brand untuk "<span className="text-third/60">{search}</span>"
+            <p className="text-center font-poppins text-[13px]">
+              Tidak ada brand untuk &quot;<span className="font-semibold text-third">{search}</span>&quot;
             </p>
+            <button
+              onClick={() => setSearch("")}
+              className="mt-4 rounded-sm bg-third px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-white transition-colors duration-200 hover:bg-second hover:text-third"
+            >
+              Reset Pencarian
+            </button>
           </div>
         )}
 
-        {/* Sections */}
-        <div className="space-y-0">
+        <div>
           {displayedLetters.map((letter, idx) => {
-            const items = grouped[letter] ?? []
+            const items = [...(grouped[letter] ?? [])].sort((a, b) => a.name.localeCompare(b.name))
             return (
               <div
                 key={letter}
                 data-letter={letter}
-                ref={(el) => { sectionRefs.current[letter] = el }}
+                ref={(el) => {
+                  sectionRefs.current[letter] = el
+                }}
+                className={idx < displayedLetters.length - 1 ? "border-b border-dashed border-third/25" : ""}
               >
-                <div className="flex gap-4 md:gap-10 py-8 md:py-10 group">
-
-                  {/* Big letter */}
-                  <div className="flex-shrink-0 w-10 md:w-20 flex items-start justify-center pt-1">
-                    <span
-                      data-big-letter
-                      className="font-poppins text-[44px] md:text-[80px] font-black text-third/50 group-hover:text-third leading-none select-none transition duration-500"
-                      style={{ opacity: 0 }}
-                    >
-                      {letter}
-                    </span>
+                <div className="group flex gap-4 py-8 md:gap-10 md:py-10">
+                  <div className="w-10 flex-shrink-0 md:w-24">
+                    <div className="md:sticky md:top-[150px]">
+                      <span
+                        data-big-letter
+                        className="block font-boldonse text-[40px] font-bold leading-none text-third/25 transition-colors duration-500 group-hover:text-second md:text-[72px]"
+                        style={{ opacity: 0 }}
+                      >
+                        {letter}
+                      </span>
+                      <span className="mt-2 hidden text-[10px] font-bold uppercase tracking-wider text-third/40 md:block">
+                        {items.length} brand
+                      </span>
+                    </div>
                   </div>
 
-                  {/* Brand grid */}
-                  <div className="flex-1 min-w-0">
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-3 gap-y-1">
-                      {items
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map((brand: IBrand, index: number) => (
-                          
-                         <a key={index}
-                            data-brand-item
-                            href={`/brand/${brand.name}`}
-                            className="group flex items-center gap-1.5 py-1.5 text-[12px] md:text-[13px] font-poppins text-third/50 hover:text-third font-normal hover:font-bold transition-colors duration-150 truncate"
-                            style={{ opacity: 0 }}
+                  <div className="min-w-0 flex-1">
+                    <div className="grid grid-cols-2 gap-x-6 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                      {items.map((brand: IBrand, index: number) => (
+                        <a
+                          key={(brand as any).id ?? index}
+                          data-brand-item
+                          href={`/brand/${brand.name}`}
+                          className="group/item flex items-center justify-between gap-2 border-b border-dashed border-third/20 py-2.5 font-poppins text-[12.5px] font-medium text-third/70 transition-colors duration-200 hover:text-third md:text-[13px]"
+                          style={{ opacity: 0 }}
+                        >
+                          <span className="truncate">{brand.name}</span>
+                          <svg
+                            className="h-3.5 w-3.5 flex-shrink-0 -translate-x-1 text-third/30 opacity-0 transition-all duration-200 group-hover/item:translate-x-0 group-hover/item:text-second group-hover/item:opacity-100"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                           >
-                            <span className="truncate">{brand.name}</span>
-                          </a>
-                        ))}
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                          </svg>
+                        </a>
+                      ))}
                     </div>
                   </div>
                 </div>
-
-                {idx < displayedLetters.length - 1 && (
-                  <div className="h-px bg-gradient-to-r from-transparent via-third/12 to-transparent" />
-                )}
               </div>
             )
           })}
         </div>
 
-        {/* Footer */}
         {brands && (
-          <div className="mt-12 md:mt-16 pt-6 md:pt-8 border-t border-third/8 flex items-center justify-between">
-            <p className="font-poppins text-[11px] md:text-[12px] text-third/35">
+          <div className="mt-10 flex items-center justify-between gap-4 border-t border-dashed border-third/25 pt-6 md:mt-14">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-third/40 md:text-[12px]">
               {brands.length} brand tersedia
             </p>
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="flex items-center gap-1.5 text-[11px] md:text-[12px] font-poppins text-third/40 hover:text-third/70 transition-colors"
+              className="flex items-center gap-1.5 rounded-sm bg-third px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-white transition-all duration-200 hover:bg-second hover:text-third active:scale-[0.98]"
             >
               Kembali ke atas
-              <svg className="w-3 h-3 md:w-3.5 md:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="18 15 12 9 6 15" />
               </svg>
             </button>
