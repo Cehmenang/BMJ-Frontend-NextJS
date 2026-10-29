@@ -28,7 +28,7 @@ const faqs = [
   },
   {
     question: "Metode pembayaran apa saja yang tersedia?",
-    answer: "Kami menerima transfer bank dan pembayaran langsung di toko. Untuk pembelian lewat Tokopedia, metode pembayaran mengikuti yang tersedia di Tokopedia.",
+    answer: "Kami menerima transfer bank dan pembayaran langsung di toko. Untuk pembelian lewat E-Commerce, metode pembayaran mengikuti yang tersedia di E-Commerce.",
   },
   {
     question: "Berapa lama waktu pengiriman barang?",
@@ -44,7 +44,11 @@ const faqs = [
   },
   {
     question: "Apakah barang bisa dikembalikan atau ditukar?",
-    answer: "Barang dapat diklaim jika terdapat cacat produksi atau kesalahan pengiriman, dengan syarat kondisi barang masih lengkap bersama box dan aksesorinya. Hubungi kami via Whatsapp untuk detailnya.",
+    answer: "Barang dapat diklaim jika terdapat cacat produksi atau kesalahan pengiriman dalam 2x24 jam, dengan syarat kondisi barang masih lengkap bersama box dan aksesorinya. Hubungi kami via Whatsapp untuk detailnya.",
+  },
+  {
+    question: "Apakah barang saya bisa dipacking kayu?",
+    answer: "Bisa, tapi untuk packing kayunya harus dibeli secara terpisah diluar harga barang. Jadi ada tambahan biaya untuk packing kayu.",
   },
 ];
 
