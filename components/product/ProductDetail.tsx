@@ -492,10 +492,10 @@ export default function ProductDetail({ product }: { product?: any }) {
     <div className="flex">
       {(
         [
-          { key: "features", label: "Fitur", Icon: ListChecks },
-          { key: "specifications", label: "Spesifikasi", Icon: FileText },
-        ] as { key: DrawerType; label: string; Icon: typeof ListChecks }[]
-      ).map(({ key, label, Icon }) => (
+          { key: "features", label: "Fitur" },
+          { key: "specifications", label: "Spesifikasi" },
+        ] as { key: DrawerType; label: string; }[]
+      ).map(({ key, label }) => (
         <button
           key={key}
           onClick={() => setDrawerType(key)}
@@ -503,7 +503,6 @@ export default function ProductDetail({ product }: { product?: any }) {
             drawerType === key ? "text-third" : "text-third/40 hover:text-third/70"
           }`}
         >
-          <Icon size={15} />
           {label}
           <span
             className={`absolute bottom-0 left-0 h-[2px] w-full origin-left bg-second transition-transform duration-300 ${
@@ -872,7 +871,7 @@ export default function ProductDetail({ product }: { product?: any }) {
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <button
                   onClick={() => openDrawer("features")}
-                  className="flex items-center justify-between gap-3 rounded-sm border border-third/20 bg-second px-4 py-3 text-[13px] font-bold text-white transition-colors duration-200 hover:border-third hover:bg-white hover:text-third"
+                  className="flex items-center justify-between gap-3 rounded-sm border border-third/20 bg-primary px-4 py-3 text-[13px] font-bold transition-colors duration-200 hover:border-third hover:bg-white"
                 >
                   <span className="flex items-center gap-2.5">
                     Fitur
@@ -881,7 +880,7 @@ export default function ProductDetail({ product }: { product?: any }) {
                 </button>
                 <button
                   onClick={() => openDrawer("specifications")}
-                  className="flex items-center justify-between gap-3 rounded-sm border border-third/20 bg-second px-4 py-3 text-[13px] font-bold text-white transition-colors duration-200 hover:border-third hover:bg-white hover:text-third"
+                  className="flex items-center justify-between gap-3 rounded-sm border border-third/20 bg-primary px-4 py-3 text-[13px] font-bold transition-colors duration-200 hover:border-third hover:bg-white"
                 >
                   <span className="flex items-center gap-2.5">
                     Spesifikasi
